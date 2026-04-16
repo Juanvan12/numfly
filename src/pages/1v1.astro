@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/layout.astro';
+import SpeedComponent from '../components/Speed.astro';
+---
+
+<Layout>
+  <SpeedComponent />
+</Layout>
+
+<script is:inline>
+  const setupScreen = document.getElementById('screen-speed-setup');
+  if (setupScreen) setupScreen.classList.remove('active');
+</script>

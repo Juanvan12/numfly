@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/layout.astro';
+import AchievementsComponent from '../components/Achievements.astro';
+---
+
+<Layout>
+  <AchievementsComponent />
+</Layout>
+
+<script is:inline>
+  function initAchievementsPage() {
+    if (typeof renderAchievements === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-achievements').classList.add('active');
+      if (typeof applyTranslations === 'function') applyTranslations();
+      renderAchievements();
+    } else {
+      setTimeout(initAchievementsPage, 50);
+    }
+  }
+  initAchievementsPage();
+</script>

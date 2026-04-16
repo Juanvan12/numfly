@@ -1,0 +1,442 @@
+<!-- ══ CONFIRM RESET MODAL ════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-reset">
+  <div class="modal-box">
+    <div class="modal-title" data-i18n="reset_modal_title"></div>
+    <div class="modal-desc" data-i18n="reset_modal_desc"></div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" style="margin-top:0" onclick="closeModal()" data-i18n="cancel"></button>
+      <button class="btn btn-danger" style="margin-top:0" onclick="doReset()" data-i18n="reset_confirm"></button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ USERNAME PICKER (Google new users) ═══════════════════════════ -->
+<div class="username-picker-overlay" id="modal-username-picker">
+  <div class="username-picker-box">
+    <div class="username-picker-icon">👋</div>
+    <div class="username-picker-title" data-i18n="pick_username_title"></div>
+    <div class="username-picker-sub" data-i18n="pick_username_sub"></div>
+    <div class="username-picker-error" id="pick-username-error"></div>
+    <div class="auth-field" style="text-align:left">
+      <label data-i18n="auth_username_label"></label>
+      <input type="text" id="pick-username-input" maxlength="20" autocomplete="off" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:18px;padding:12px 14px;outline:none;transition:border-color .2s;text-align:center;" onkeydown="if(event.key==='Enter')doPickUsername()">
+    </div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="doPickUsername()" data-i18n="pick_username_save"></button>
+  </div>
+</div>
+
+<!-- ══ AUTH MODAL ════════════════════════════════════════════════════ -->
+<div class="auth-overlay" id="modal-auth">
+  <div class="auth-box">
+    <div class="auth-title" data-i18n="auth_join_title"></div>
+    <div class="auth-sub" data-i18n="auth_join_sub"></div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="setAuthTab('register')" id="tab-register" data-i18n="auth_signup"></button>
+      <button class="auth-tab" onclick="setAuthTab('login')" id="tab-login" data-i18n="auth_login"></button>
+    </div>
+    <div id="auth-register-fields">
+      <form onsubmit="event.preventDefault();doRegister()" autocomplete="on">
+        <div class="auth-field"><label data-i18n="auth_username_label"></label><input type="text" id="auth-username" data-i18n-placeholder="auth_username_ph" maxlength="20" autocomplete="username" name="username"></div>
+        <div class="auth-field"><label data-i18n="auth_email_label"></label><input type="email" id="auth-email-reg" placeholder="you@example.com" autocomplete="email" name="email"></div>
+        <div class="auth-field"><label data-i18n="auth_password_label"></label><div class="auth-pw-wrap"><input type="password" id="auth-password-reg" data-i18n-placeholder="auth_password_ph" autocomplete="new-password" name="password"><button type="button" class="auth-eye-btn" onclick="togglePwVis('auth-password-reg',this)" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <div class="auth-field"><label data-i18n="auth_confirm_password_label"></label><div class="auth-pw-wrap"><input type="password" id="auth-password-confirm" data-i18n-placeholder="auth_confirm_password_ph" autocomplete="new-password" name="confirm-password"><button type="button" class="auth-eye-btn" onclick="togglePwVis('auth-password-confirm',this)" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <button type="submit" class="btn btn-primary" style="margin-top:4px"><span id="auth-register-label" data-i18n="auth_create_btn"></span></button>
+      </form>
+    </div>
+    <div id="auth-login-fields" style="display:none">
+      <form onsubmit="event.preventDefault();doLogin()" autocomplete="on">
+        <div class="auth-field"><label data-i18n="auth_email_or_username_label"></label><input type="text" id="auth-email-login" data-i18n-placeholder="auth_email_or_username_ph" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" name="email" style="text-transform:none"></div>
+        <div class="auth-field"><label data-i18n="auth_password_label"></label><div class="auth-pw-wrap"><input type="password" id="auth-password-login" data-i18n-placeholder="auth_password_login_ph" autocomplete="current-password" name="password"><button type="button" class="auth-eye-btn" onclick="togglePwVis('auth-password-login',this)" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <button type="submit" class="btn btn-primary" id="auth-login-btn" style="margin-top:4px"><span id="auth-login-label" data-i18n="auth_login_btn"></span></button>
+      </form>
+      <button type="button" class="btn-guest" style="margin-top:6px" onclick="showForgotPassword()" data-i18n="auth_forgot_pw"></button>
+    </div>
+    <!-- Forgot password panel (shown inside auth modal) -->
+    <div id="auth-forgot-fields" style="display:none">
+      <div class="auth-error" id="forgot-pw-msg" style="color:var(--success);min-height:16px"></div>
+      <div class="auth-field"><label data-i18n="auth_email_label"></label><input type="email" id="forgot-pw-email" placeholder="you@example.com" autocomplete="off" onkeydown="if(event.key==='Enter')doForgotPassword()"></div>
+      <button class="btn btn-primary" id="forgot-pw-btn" style="margin-top:4px" onclick="doForgotPassword()" data-i18n="auth_reset_send"></button>
+      <button type="button" class="btn-guest" style="margin-top:6px" onclick="showForgotPassword(false)" data-i18n="auth_back_to_login"></button>
+    </div>
+    <div class="auth-divider" data-i18n="auth_divider"></div>
+    <button class="btn-google" onclick="doGoogleLogin()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      <span data-i18n="auth_google"></span>
+    </button>
+    <button class="btn-guest" onclick="closeAuthModal()" data-i18n="auth_guest"></button>
+  </div>
+</div>
+
+<!-- ══ EDIT USERNAME MODAL ════════════════════════════════════════════ -->
+<div class="edit-user-overlay" id="modal-edit-username">
+  <div class="edit-user-box">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:6px" data-i18n="edit_username_title"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:16px" id="edit-username-sub"></div>
+    <div class="auth-error" id="edit-username-error"></div>
+    <div class="auth-field"><label data-i18n="auth_username_label"></label><input type="text" id="edit-username-input" maxlength="20" autocomplete="off"></div>
+    <button class="btn btn-primary" style="margin-top:8px" onclick="doEditUsername()" data-i18n="edit_username_save"></button>
+    <button class="btn btn-secondary" style="margin-top:8px" onclick="closeEditUsername()" data-i18n="cancel"></button>
+  </div>
+</div>
+
+<!-- ══ FRIENDS SCREEN ════════════════════════════════════════════════ -->
+<div id="screen-friends" class="screen">
+  <button class="back-link" onclick="showScreen('screen-menu')">← <span data-i18n="back"></span></button>
+  <div class="social-hero">
+    <div class="social-hero-title">👥 <span data-i18n="nav_friends"></span></div>
+    <div class="social-hero-sub" data-i18n="friends_sub"></div>
+  </div>
+  <div style="position:relative;margin-bottom:16px;">
+    <input class="search-input" id="friend-search-input" data-i18n-placeholder="friends_search_ph" maxlength="30" autocomplete="off" onkeydown="if(event.key==='Enter')searchUser()" style="width:100%;padding-right:52px;">
+    <button onclick="searchUser()" style="position:absolute;right:0;top:0;bottom:0;padding:0 16px;background:var(--accent);border:none;border-radius:0 8px 8px 0;color:#000;font-family:'Bebas Neue',sans-serif;font-size:18px;cursor:pointer;">→</button>
+  </div>
+  <div id="friend-search-result" style="margin-bottom:14px;"></div>
+  <!-- Friend requests (incoming) -->
+  <div id="friends-pending-section" style="display:none">
+    <div class="friend-req-section">
+      <div class="friend-req-title">🔔 <span data-i18n="friends_requests_title"></span> <span id="friends-pending-count" class="friend-req-badge">0</span></div>
+      <div id="friends-pending-list"></div>
+    </div>
+  </div>
+  <div id="friends-challenges-section" style="display:none">
+    <div class="friend-req-section">
+      <div class="friend-req-title">⚔ <span data-i18n="challenge_pending_title"></span></div>
+      <div id="friends-challenges-list"></div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:20px;">
+    <div class="ach-section-title" style="margin:0" data-i18n="friends_your"></div>
+    <button onclick="openGroupCompModal()" id="group-comp-btn" style="display:none;padding:7px 14px;background:linear-gradient(135deg,rgba(192,132,252,.15),rgba(168,85,247,.1));border:1px solid rgba(192,132,252,.4);border-radius:20px;color:var(--purple);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;cursor:pointer;white-space:nowrap;flex-shrink:0;">🏆 <span data-i18n="comp_group_title"></span></button>
+  </div>
+  <div id="friends-list"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);padding:12px 0" data-i18n="friends_sign_in_msg"></div></div>
+  <div id="friends-blocked-section" style="display:none;margin-top:20px;">
+    <div class="ach-section-title" style="color:var(--error)">🚫 <span data-i18n="blocked_users"></span></div>
+    <div id="friends-blocked-list"></div>
+  </div>
+  <!-- Inline remove friend confirmation -->
+  <div id="remove-friend-popup" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.75);align-items:center;justify-content:center;padding:20px;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;max-width:300px;width:100%;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px" data-i18n="remove_friend_confirm"></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:20px;color:var(--text)" id="remove-friend-name"></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button onclick="confirmRemoveFriend(false)" style="padding:11px 16px;border:1px solid var(--border2);background:transparent;color:var(--text);border-radius:8px;font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;"><span style="font-size:16px">👋</span> <span data-i18n="remove_friend"></span></button>
+        <button onclick="confirmRemoveFriend(true)" style="padding:11px 16px;border:1px solid var(--border2);background:transparent;color:var(--text);border-radius:8px;font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;"><span style="font-size:16px">🚫</span> <span data-i18n="block_user"></span></button>
+        <button onclick="closeRemoveFriendPopup()" style="padding:11px 16px;border:none;background:transparent;color:var(--muted);border-radius:8px;font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;text-align:center;" data-i18n="cancel"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LEADERBOARD SCREEN ════════════════════════════════════════════ -->
+<div id="screen-leaderboard" class="screen">
+  <button class="back-link" onclick="showScreen('screen-menu')">← <span data-i18n="back"></span></button>
+  <div class="social-hero">
+    <div class="social-hero-title">🏆 <span data-i18n="nav_leaderboard"></span></div>
+    <div class="social-hero-sub" data-i18n="leaderboard_sub"></div>
+  </div>
+  <!-- Scope toggle -->
+  <div style="display:flex;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;">
+    <button id="lb-scope-friends" onclick="setLbScope('friends',this)" style="flex:1;padding:9px 0;border:none;background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;" data-i18n="dc_tab_friends"></button>
+    <button id="lb-scope-global" onclick="setLbScope('global',this)" style="flex:1;padding:9px 0;border:none;background:transparent;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;" data-i18n="dc_tab_global"></button>
+  </div>
+  <!-- General -->
+  <div style="margin-bottom:6px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text);text-transform:uppercase;letter-spacing:1px;font-weight:600" data-i18n="lb_group_general"></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+    <button class="lb-cat-btn active" data-lbkey="xp" onclick="setLbTab('xp',this)">🏆 <span data-i18n="lb_tab_xp"></span></button>
+    <button class="lb-cat-btn" data-lbkey="time" onclick="setLbTab('time',this)">⏱ <span data-i18n="lb_tab_time"></span></button>
+    <button class="lb-cat-btn" data-lbkey="daily_streak" onclick="setLbTab('daily_streak',this)">🔥 <span data-i18n="lb_tab_streak"></span></button>
+  </div>
+  <!-- Lightning -->
+  <div style="margin-bottom:6px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text);text-transform:uppercase;letter-spacing:1px;font-weight:600">⚡ <span data-i18n="lb_group_lightning"></span></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+    <button class="lb-cat-btn" data-lbkey="lightning_easy" onclick="setLbTab('lightning_easy',this)" data-i18n="diff_easy"></button>
+    <button class="lb-cat-btn" data-lbkey="lightning_medium" onclick="setLbTab('lightning_medium',this)" data-i18n="diff_medium"></button>
+    <button class="lb-cat-btn" data-lbkey="lightning_hard" onclick="setLbTab('lightning_hard',this)" data-i18n="diff_hard"></button>
+  </div>
+  <!-- Speed -->
+  <div style="margin-bottom:6px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text);text-transform:uppercase;letter-spacing:1px;font-weight:600">🚀 <span data-i18n="lb_group_speed"></span></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+    <button class="lb-cat-btn" data-lbkey="speed_easy" onclick="setLbTab('speed_easy',this)" data-i18n="diff_easy"></button>
+    <button class="lb-cat-btn" data-lbkey="speed_medium" onclick="setLbTab('speed_medium',this)" data-i18n="diff_medium"></button>
+    <button class="lb-cat-btn" data-lbkey="speed_hard" onclick="setLbTab('speed_hard',this)" data-i18n="diff_hard"></button>
+  </div>
+  <div id="lb-content"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);padding:12px 0" data-i18n="lb_sign_in_msg"></div></div>
+</div>
+
+<!-- ══ CHALLENGE RESULT SCREEN ═══════════════════════════════════════ -->
+<div id="screen-challenge-result" class="screen">
+  <button class="back-link" onclick="showScreen('screen-menu')">← <span data-i18n="back"></span></button>
+  <div class="challenge-banner">
+    <div class="challenge-vs">⚔ <span data-i18n="challenge_title"></span></div>
+    <div class="challenge-scores">
+      <div class="challenge-score-box" id="cr-you-box">
+        <div class="challenge-score-num" id="cr-your-score">—</div>
+        <div class="challenge-score-name" id="cr-your-name">You</div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--muted)">VS</div>
+      <div class="challenge-score-box" id="cr-them-box">
+        <div class="challenge-score-num" id="cr-their-score">—</div>
+        <div class="challenge-score-name" id="cr-their-name">Friend</div>
+      </div>
+    </div>
+    <div id="cr-verdict" style="font-family:'Bebas Neue',sans-serif;font-size:20px;margin-top:14px;letter-spacing:2px;"></div>
+  </div>
+  <div id="cr-share-section" style="display:none">
+    <div class="challenge-link-box">
+      <div class="challenge-link-url" id="cr-link">—</div>
+      <button class="challenge-copy-btn" onclick="copyChallengeLink()" data-i18n="challenge_copy"></button>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px" data-i18n="challenge_link_sub"></div>
+  </div>
+  <button class="btn btn-primary" onclick="showScreen('screen-menu')" data-i18n="main_menu"></button>
+</div>
+
+<!-- ══ DAILY CHALLENGE GAME SCREEN ═══════════════════════════════════ -->
+<div id="screen-daily-game" class="screen">
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+    <button class="back-link" style="margin-bottom:0" onclick="abandonDaily()">✕ <span data-i18n="main_menu"></span></button>
+  </div>
+  <div class="daily-hud">
+    <div class="hud-item">
+      <div class="hud-label" data-i18n="daily_progress_label"></div>
+      <div class="hud-value accent"><span id="dc-current">1</span><span style="font-size:14px;color:var(--muted);font-family:'DM Mono',monospace">/10</span></div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label" data-i18n="mode_daily"></div>
+      <div class="hud-value" id="dc-date-display"></div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label" data-i18n="hud_time"></div>
+      <div class="hud-value daily-timer-live" id="dc-timer">0.0s</div>
+    </div>
+  </div>
+  <div class="q-card"><div class="q-type" id="dc-op-type"></div><div class="q-text" id="dc-question">—</div></div>
+  <div class="answer-row">
+    <input type="text" inputmode="numeric" pattern="[0-9-]*" id="dc-answer" data-i18n-placeholder="answer_placeholder" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+    <button class="submit-btn" onmousedown="event.preventDefault()" onclick="checkDailyAnswer()">→</button>
+  </div>
+  <div class="feedback" id="dc-feedback"></div>
+</div>
+
+<!-- ══ DAILY CHALLENGE RESULT SCREEN ═════════════════════════════════ -->
+<div id="screen-daily-result" class="screen">
+  <button class="back-link" onclick="showScreen('screen-menu')">← <span data-i18n="main_menu"></span></button>
+  <div style="background:linear-gradient(135deg,rgba(232,255,71,.12),rgba(71,179,255,.08));border:1px solid rgba(232,255,71,.35);border-radius:14px;padding:24px;text-align:center;margin-bottom:16px;">
+    <div style="font-size:40px;margin-bottom:8px">🏁</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:4px" data-i18n="daily_result_title"></div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:54px;color:var(--accent);line-height:1" id="dc-result-time">—</div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px" data-i18n="daily_result_sub"></div>
+    <div id="dc-result-streak" style="display:none;margin-top:12px;"></div>
+    <!-- Share buttons inside result card, icon-only for social, text for copy -->
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px;">
+      <button onclick="shareDailyWhatsApp()" title="WhatsApp" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#25D366;border:none;border-radius:50%;color:#fff;cursor:pointer;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </button>
+      <button onclick="shareDailyLinkedIn()" title="LinkedIn" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#0A66C2;border:none;border-radius:50%;color:#fff;cursor:pointer;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </button>
+      <button onclick="shareDailyX()" title="X" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#000;border:1px solid #333;border-radius:50%;color:#fff;cursor:pointer;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </button>
+      <button onclick="shareDailyFacebook()" title="Facebook" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#1877F2;border:none;border-radius:50%;color:#fff;cursor:pointer;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </button>
+      <button onclick="copyDailyLink()" id="dc-copy-btn" style="display:flex;align-items:center;gap:5px;height:34px;padding:0 10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:.5px;" data-i18n="challenge_copy"></button>
+    </div>
+  </div>
+  <div class="dc-tabs">
+    <button class="dc-tab active" onclick="setDcTab('friends',this)" data-i18n="dc_tab_friends"></button>
+    <button class="dc-tab" onclick="setDcTab('global',this)" data-i18n="dc_tab_global"></button>
+  </div>
+  <div id="dc-leaderboard"></div>
+  <div id="dc-guest-prompt" style="display:none;margin-top:14px;padding:10px 14px;background:rgba(232,255,71,.05);border:1px solid rgba(232,255,71,.18);border-radius:8px;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+    <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);line-height:1.4" data-i18n="daily_guest_prompt"></span>
+    <button onclick="openAuthModal('register')" style="background:var(--accent);border:none;border-radius:6px;color:#000;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;padding:6px 14px;cursor:pointer;white-space:nowrap;flex-shrink:0;" data-i18n="daily_guest_btn"></button>
+  </div>
+  <button class="btn btn-secondary" style="margin-top:12px" onclick="showScreen('screen-menu')" data-i18n="main_menu"></button>
+</div>
+
+<!-- ══ COMPETITION SCREEN ═════════════════════════════════════════════ -->
+<div id="screen-competition" class="screen">
+  <button class="back-link" onclick="_compBackTarget==='friends'?showScreen('screen-friends'):openGroupCompModal()">← <span id="comp-back-label"></span></button>
+  <div class="comp-banner">
+    <div class="comp-title">⚔ <span id="comp-screen-title"></span></div>
+    <div class="comp-sub" id="comp-screen-sub"></div>
+  </div>
+  <!-- Head-to-Head overall score -->
+  <div id="comp-h2h-section" style="display:none">
+    <div class="ach-section-title" data-i18n="h2h_total" style="margin-top:0;display:none"></div>
+    <div id="comp-h2h-box"></div>
+  </div>
+  <!-- Scoreboard -->
+  <div class="ach-section-title" id="comp-scoreboard-title" data-i18n="competition_scoreboard" style="display:none"></div>
+  <div id="comp-scoreboard"></div>
+  <!-- Challenge link (for sharing outside app) -->
+  <div id="comp-link-section" style="display:none;margin-top:12px">
+    <div class="challenge-link-box">
+      <div class="challenge-link-url" id="comp-link-url">—</div>
+      <button class="challenge-copy-btn" onclick="copyCompLink()" data-i18n="challenge_copy"></button>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px" data-i18n="challenge_link_sub"></div>
+  </div>
+  <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--orange),#e8a000);color:#000;margin-top:8px" onclick="acceptAndPlayCompetition()" id="comp-play-btn" data-i18n="challenge_play"></button>
+  <button class="btn btn-secondary" onclick="_compBackTarget==='friends'?showScreen('screen-friends'):openGroupCompModal()" id="comp-back-btn" data-i18n="back"></button>
+</div>
+
+<!-- ══ DARE A FRIEND MODAL (post-game) ══════════════════════════════ -->
+<div class="challenge-modal-overlay" id="modal-dare-friend">
+  <div class="challenge-modal-box">
+    <div class="challenge-modal-title">🎯 <span data-i18n="dare_title"></span></div>
+    <div class="challenge-modal-sub" data-i18n="dare_sub"></div>
+    <div style="position:relative;margin-bottom:10px;">
+      <input id="dare-search" type="text" data-i18n-placeholder="friends_search_ph" autocomplete="off" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:9px 12px;outline:none;box-sizing:border-box;" oninput="filterDareFriendList(this.value)">
+    </div>
+    <div id="dare-friend-list" style="margin-bottom:10px;max-height:200px;overflow-y:auto;"></div>
+    <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--orange),#e8a000);color:#000;margin-top:0" onclick="sendDareChallenge()">🎯 <span data-i18n="dare_send"></span></button>
+    <button class="btn btn-secondary" style="margin-top:8px" onclick="closeDareFriendModal()" data-i18n="cancel"></button>
+    <div id="dare-friend-status" style="font-family:'DM Mono',monospace;font-size:11px;margin-top:8px;text-align:center;color:var(--muted)"></div>
+  </div>
+</div>
+
+<!-- ══ 1-ON-1 CHALLENGE MODAL ════════════════════════════════════════ -->
+<div class="challenge-modal-overlay" id="modal-race-friend">
+  <div class="challenge-modal-box">
+    <div class="challenge-modal-title">⚔ <span data-i18n="race_title"></span> <span id="race-friend-name" style="color:var(--orange)"></span></div>
+    <div style="margin-bottom:14px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="diff_label"></div>
+      <div class="diff-row" id="race-diff-row">
+        <button class="diff-btn active" onclick="setRaceDiff('easy',this)" data-i18n="diff_easy"></button>
+        <button class="diff-btn" onclick="setRaceDiff('medium',this)" data-i18n="diff_medium"></button>
+        <button class="diff-btn" onclick="setRaceDiff('hard',this)" data-i18n="diff_hard"></button>
+      </div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="duration_label"></div>
+      <div class="diff-row" id="race-dur-row">
+        <button class="diff-btn" onclick="setRaceDuration(30,this)" data-i18n="dur_30"></button>
+        <button class="diff-btn" onclick="setRaceDuration(60,this)" data-i18n="dur_60"></button>
+        <button class="diff-btn active" onclick="setRaceDuration(120,this)" data-i18n="dur_120"></button>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--orange),#e8a000);color:#000;margin-top:0" onclick="sendRaceChallenge()">🏁 <span data-i18n="race_send"></span></button>
+    <button class="btn btn-secondary" style="margin-top:8px" onclick="closeRaceFriendModal()" data-i18n="cancel"></button>
+    <div id="race-friend-status" style="font-family:'DM Mono',monospace;font-size:11px;margin-top:8px;text-align:center;color:var(--muted)"></div>
+  </div>
+</div>
+
+<!-- ══ GROUP COMPETITION MODAL ═══════════════════════════════════════ -->
+<!-- ══ GROUP COMPETITION SCREEN ═════════════════════════════════════ -->
+<div id="screen-group-comp" class="screen">
+  <button class="back-link" onclick="showScreen('screen-friends')">← <span data-i18n="nav_friends"></span></button>
+  <div class="social-hero" style="background:linear-gradient(135deg,rgba(192,132,252,.1),rgba(168,85,247,.07));border-color:rgba(192,132,252,.3);">
+    <div class="social-hero-title" style="color:var(--purple)">🏆 <span data-i18n="comp_group_title"></span></div>
+    <div class="social-hero-sub" data-i18n="comp_group_sub"></div>
+  </div>
+  <!-- New competition button -->
+  <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--purple),#a855f7);color:#fff;width:100%;margin-bottom:20px" onclick="openNewCompForm()" id="new-comp-btn" data-i18n="comp_group_new"></button>
+  <!-- New competition form (hidden by default) -->
+  <div id="new-comp-form" style="display:none;background:var(--surface);border:1px solid rgba(192,132,252,.3);border-radius:12px;padding:16px;margin-bottom:20px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--purple);margin-bottom:12px" data-i18n="comp_group_send"></div>
+    <div style="position:relative;margin-bottom:10px;">
+      <input id="group-search" type="text" data-i18n-placeholder="friends_search_ph" autocomplete="off" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:9px 12px;outline:none;box-sizing:border-box;" oninput="clearTimeout(this._t);this._t=setTimeout(()=>filterGroupCompList(this.value),200)">
+    </div>
+    <div id="group-comp-list" style="margin-bottom:10px;max-height:180px;overflow-y:auto;"></div>
+    <div style="margin-bottom:12px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="comp_name_label"></div>
+      <input id="group-comp-name" type="text" maxlength="40" data-i18n-placeholder="comp_name_ph" autocomplete="off" autocapitalize="sentences" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:9px 12px;outline:none;box-sizing:border-box;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="diff_label"></div>
+      <div class="diff-row" id="group-diff-row">
+        <button class="diff-btn active" onclick="setGroupDiff('easy',this)" data-i18n="diff_easy"></button>
+        <button class="diff-btn" onclick="setGroupDiff('medium',this)" data-i18n="diff_medium"></button>
+        <button class="diff-btn" onclick="setGroupDiff('hard',this)" data-i18n="diff_hard"></button>
+      </div>
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="duration_label"></div>
+      <div class="diff-row" id="group-dur-row">
+        <button class="diff-btn" onclick="setGroupDuration(30,this)" data-i18n="dur_30"></button>
+        <button class="diff-btn" onclick="setGroupDuration(60,this)" data-i18n="dur_60"></button>
+        <button class="diff-btn active" onclick="setGroupDuration(120,this)" data-i18n="dur_120"></button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button style="flex:1;padding:8px 12px;background:linear-gradient(135deg,var(--purple),#a855f7);border:none;border-radius:8px;color:#fff;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px;cursor:pointer" onclick="sendGroupComp()">🏆 <span data-i18n="comp_group_send"></span></button>
+      <button style="padding:8px 12px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer" onclick="closeNewCompForm()" data-i18n="cancel"></button>
+    </div>
+    <div id="group-comp-status" style="font-family:'DM Mono',monospace;font-size:11px;margin-top:8px;text-align:center;color:var(--muted)"></div>
+  </div>
+  <!-- Active competitions list -->
+  <div class="ach-section-title" data-i18n="comp_group_my"></div>
+  <div id="group-comp-active-list"><span class="spinner"></span></div>
+</div>
+
+<!-- ══ PRIVACY POLICY SCREEN ════════════════════════════════════════ -->
+<div id="screen-privacy" class="screen">
+  <button class="back-link" onclick="showScreen('screen-menu')">← <span data-i18n="back"></span></button>
+  <div class="privacy-hero">
+    <div class="privacy-hero-title" id="priv-title">🔒 Privacy Policy</div>
+    <div class="privacy-hero-sub">Last updated: March 2026</div>
+  </div>
+  <div id="priv-content"></div>
+</div>
+
+<!-- ══ GDPR BANNER ════════════════════════════════════════════════════ -->
+<div class="gdpr-banner" id="gdpr-banner">
+  <div class="gdpr-body">
+    <div class="gdpr-title" data-i18n="gdpr_title"></div>
+    <div class="gdpr-text" id="gdpr-text"></div>
+  </div>
+  <div class="gdpr-btns">
+    <button class="gdpr-decline" onclick="gdprDecline()" data-i18n="gdpr_decline"></button>
+    <button class="gdpr-accept" onclick="gdprAccept()" data-i18n="gdpr_accept"></button>
+  </div>
+</div>
+
+</div><!-- .app -->
+<div id="login-overlay" style="display:none;position:fixed;inset:0;background:rgba(8,8,14,.88);z-index:900;align-items:center;justify-content:center;flex-direction:column;gap:14px;">
+  <span class="spinner" style="width:32px;height:32px;border-width:3px;"></span>
+  <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:1px">Signing in…</div>
+</div>
+<button id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">↑</button>
+
+<!-- XP Toast -->
+<div class="xp-toast" id="xp-toast">+0 XP</div>
+
+<!-- Error Toast -->
+<div class="err-toast" id="err-toast"></div>
+
+<!-- Achievement Toast -->
+<div class="ach-toast" id="ach-toast">
+  <div class="ach-toast-icon" id="ach-toast-icon">🏅</div>
+  <div>
+    <div class="ach-toast-text" data-i18n="ach_unlocked_label"></div>
+    <div class="ach-toast-name" id="ach-toast-name"></div>
+  </div>
+</div>
+
+<!-- Level Up Modal -->
+ <!-- Titles Modal -->
+<div class="modal-overlay titles-modal-overlay" id="modal-titles" onclick="if(event.target===this)closeTitlesModal()">
+  <div class="titles-modal-box">
+    <div class="titles-modal-header">
+      <div class="titles-modal-title">🏅 <span data-i18n="titles_modal_title"></span></div>
+      <button class="titles-modal-close" onclick="closeTitlesModal()">✕</button>
+    </div>
+    <div class="titles-modal-sub" id="titles-modal-sub"></div>
+    <div class="titles-list" id="titles-list"></div>
+  </div>
+</div>
+<div class="levelup-overlay" id="modal-levelup">
+  <div class="levelup-box">
+    <div class="levelup-fireworks">🎉</div>
+    <div class="levelup-label" data-i18n="levelup_label"></div>
+    <div class="levelup-num" id="lu-level">2</div>
+    <div class="levelup-title-name" id="lu-title-name"></div>
+    <div class="levelup-title-flavor" id="lu-title-flavor"></div>
+    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="closeLevelUp()" data-i18n="levelup_btn"></button>
+  </div>
+</div>

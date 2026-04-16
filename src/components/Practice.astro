@@ -1,0 +1,36 @@
+<!-- ══ PRACTICE SETUP ═════════════════════════════════════════════════ -->
+<div id="screen-practice-setup" class="screen">
+  <a href="/" class="back-link" style="text-decoration: none;">← <span data-i18n="back"></span></a>
+  <div class="panel-title">📚 <span data-i18n="mode_practice"></span></div>
+  <div class="panel-sub" data-i18n="practice_setup_sub"></div>
+  <div class="field">
+    <label data-i18n="diff_label"></label>
+    <div class="diff-row" id="practice-diff-row">
+      <button class="diff-btn active" onclick="selectDiff('practice','easy',this)" data-i18n="diff_easy"></button>
+      <button class="diff-btn" onclick="selectDiff('practice','medium',this)" data-i18n="diff_medium"></button>
+      <button class="diff-btn" onclick="selectDiff('practice','hard',this)" data-i18n="diff_hard"></button>
+    </div>
+  </div>
+  <div class="field">
+    <label data-i18n="ops_label"></label>
+    <div class="op-row" id="practice-op-row">
+      <button class="op-btn active" data-op="add" onclick="toggleOp(this)" data-i18n="op_add"></button>
+      <button class="op-btn active" data-op="sub" onclick="toggleOp(this)" data-i18n="op_sub"></button>
+      <button class="op-btn active" data-op="mul" onclick="toggleOp(this)" data-i18n="op_mul"></button>
+      <button class="op-btn active" data-op="div" onclick="toggleOp(this)" data-i18n="op_div"></button>
+      <button class="op-btn active" data-op="pct" onclick="toggleOp(this)" data-i18n="op_pct"></button>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="startPractice()"><span data-i18n="start"></span> 📚</button>
+</div>
+
+<!-- ══ PRACTICE GAME ══════════════════════════════════════════════════ -->
+<div id="screen-practice-game" class="screen">
+  <button class="back-link" onclick="showScreen('screen-menu')">← <span data-i18n="main_menu"></span></button>
+  <div class="q-card"><div class="q-type" id="p-op-type"></div><div class="q-text" id="p-question">—</div></div>
+  <div class="answer-row">
+    <input type="text" inputmode="numeric" pattern="[0-9-]*" id="p-answer" data-i18n-placeholder="answer_placeholder" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+    <button class="submit-btn" onmousedown="event.preventDefault()" onclick="checkPracticeAnswer()">→</button>
+  </div>
+  <div class="feedback" id="p-feedback"></div>
+</div>

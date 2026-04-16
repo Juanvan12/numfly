@@ -1,0 +1,27 @@
+{
+  "name": "Numfly - Mental Math Practice",
+  "short_name": "Numfly",
+  "description": "Free mental math game. Practice arithmetic, earn XP and beat your friends.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08080e",
+  "theme_color": "#08080e",
+  "icons": [
+    {
+      "src": "/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/numfly-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

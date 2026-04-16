@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/layout.astro';
+import TipsComponent from '../components/Tips.astro';
+---
+
+<Layout>
+  <TipsComponent />
+</Layout>
+
+<script is:inline>
+  function initTipsPage() {
+    if (typeof renderTipsFilterBtns === 'function' && typeof renderTipsList === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-tips').classList.add('active');
+      if (typeof applyTranslations === 'function') applyTranslations();
+      renderTipsFilterBtns();
+      renderTipsList();
+    } else {
+      setTimeout(initTipsPage, 50);
+    }
+  }
+  initTipsPage();
+</script>

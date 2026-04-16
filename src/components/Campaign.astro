@@ -1,0 +1,60 @@
+<!-- ══ CAMPAIGN MAP ══════════════════════════════════════════════════ -->
+<div id="screen-campaign" class="screen">
+  <a href="/" class="back-link" style="text-decoration: none;">← <span data-i18n="back"></span></a>
+  <div class="stats-hero">
+    <div class="stats-hero-title">🗺️ <span data-i18n="mode_campaign"></span></div>
+    <div class="stats-hero-sub" data-i18n="campaign_hero_sub"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:6px;" data-i18n="campaign_no_calc"></div>
+  </div>
+  <div class="campaign-level-grid" id="campaign-level-grid"></div>
+</div>
+
+<!-- ══ CAMPAIGN GAME ══════════════════════════════════════════════════ -->
+<div id="screen-campaign-game" class="screen">
+  <button class="back-link" onclick="clearGameTimers();showScreen('screen-campaign')">← <span data-i18n="campaign_back_to_map"></span></button>
+  <div class="cmp-hud">
+    <div class="cmp-hud-item">
+    <div class="cmp-hud-label" data-i18n="campaign_level"></div>
+    <div class="cmp-hud-val" id="cmp-level-label">—</div>
+  </div>
+  <div class="cmp-hud-item">
+    <div class="cmp-hud-label" data-i18n="campaign_mode_label"></div>
+    <div class="cmp-hud-val" id="cmp-mode-label">—</div>
+  </div>
+    <div class="cmp-hud-item">
+      <div class="cmp-hud-label" data-i18n="campaign_questions"></div>
+      <div class="cmp-hud-val"><span id="cmp-correct-display">0</span> / <span id="cmp-target-display">0</span></div>
+    </div>
+    <div class="cmp-hud-item" id="cmp-time-hud" style="display:none">
+      <div class="cmp-hud-label" data-i18n="campaign_time"></div>
+      <div class="cmp-hud-val cmp-timer" id="cmp-time-display">0</div>
+    </div>
+    <div class="cmp-hud-item" id="cmp-lives-hud" style="display:none">
+      <div class="cmp-hud-label" data-i18n="campaign_lives"></div>
+      <div id="cmp-lives-display" class="cmp-lives"></div>
+    </div>
+  </div>
+  <div id="cmp-game-content">
+  <div class="cmp-question-timer-track"><div id="cmp-question-timer-bar"></div></div>
+  <div class="q-card"><div class="q-type" id="cmp-op-type"></div><div class="q-text" id="cmp-question">—</div></div>
+  <div class="answer-row">
+    <input type="text" inputmode="numeric" pattern="[0-9-]*" id="cmp-answer" data-i18n-placeholder="answer_placeholder" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" onkeydown="if(event.key==='Enter')checkCampaignAnswer()">
+    <button class="submit-btn" onmousedown="event.preventDefault()" onclick="checkCampaignAnswer()">→</button>
+  </div>
+  <div class="feedback" id="cmp-feedback"></div>
+  </div>
+</div>
+
+<!-- ══ CAMPAIGN RESULT ════════════════════════════════════════════════ -->
+<div id="screen-campaign-result" class="screen">
+  <div class="dc-result-card" style="margin-top:40px;text-align:center;">
+    <div style="font-size:40px;margin-bottom:8px" id="cmp-result-icon">🎉</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px" id="cmp-result-title"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px" id="cmp-result-level"></div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--accent);margin:8px 0" id="cmp-result-correct"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)" id="cmp-result-sub"></div>
+  </div>
+  <button class="btn btn-primary" id="cmp-next-btn" style="margin-top:20px" onclick="campaignNextLevel()" data-i18n="campaign_next_level"></button>
+  <button class="btn btn-secondary" style="margin-top:8px" onclick="campaignRetry()" data-i18n="campaign_try_again"></button>
+  <button class="btn btn-secondary" style="margin-top:8px" onclick="openCampaignMap()" data-i18n="campaign_back_to_map"></button>
+</div>

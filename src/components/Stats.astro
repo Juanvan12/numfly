@@ -1,0 +1,17 @@
+<!-- ══ STATS PAGE ════════════════════════════════════════════════════ -->
+<div id="screen-stats" class="screen">
+  <a href="/" class="back-link" style="text-decoration: none;">← <span data-i18n="back"></span></a>
+  <div class="stats-hero">
+    <div class="stats-hero-title" data-i18n="nav_stats"></div>
+    <div class="stats-hero-sub" data-i18n="stats_hero_sub"></div>
+  </div>
+  <div class="stats-filter" id="stats-filter-row">
+    <button class="stats-filter-btn active" data-sfilter="all" onclick="setStatsFilter('all',this)" data-i18n="filter_all"></button>
+    <button class="stats-filter-btn" data-sfilter="lightning" onclick="setStatsFilter('lightning',this)" data-i18n-prefix="⚡ " data-i18n="mode_lightning"></button>
+    <button class="stats-filter-btn" data-sfilter="speed" onclick="setStatsFilter('speed',this)" data-i18n-prefix="🚀 " data-i18n="mode_speed"></button>
+    <button class="stats-filter-btn" data-sfilter="practice" onclick="setStatsFilter('practice',this)" data-i18n-prefix="📚 " data-i18n="mode_practice"></button>
+    <button class="stats-filter-btn" data-sfilter="daily" onclick="setStatsFilter('daily',this)" data-i18n-prefix="🏁 " data-i18n="mode_daily"></button>
+  </div>
+  <div id="stats-content"></div>
+  <button class="reset-danger-btn" onclick="confirmReset()">⚠ <span data-i18n="reset_btn"></span></button>
+</div>

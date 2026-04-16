@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/layout.astro';
+import StatsComponent from '../components/Stats.astro';
+---
+
+<Layout>
+  <StatsComponent />
+</Layout>
+
+<script is:inline>
+  function initStatsPage() {
+    if (typeof renderStatsContent === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-stats').classList.add('active');
+      renderStatsContent();
+      
+      if (typeof currentUser !== 'undefined' && currentUser && typeof _cloudDataLoaded !== 'undefined' && !_cloudDataLoaded) {
+        const dataWatcher = setInterval(() => {
+          if (_cloudDataLoaded) {
+            clearInterval(dataWatcher);
+            renderStatsContent(); 
+          }
+        }, 100);
+
+        setTimeout(() => clearInterval(dataWatcher), 10000);
+      }
+
+    } else {
+      setTimeout(initStatsPage, 50);
+    }
+  }
+
+  initStatsPage();
+</script>

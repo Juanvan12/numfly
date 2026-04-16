@@ -1,0 +1,76 @@
+<!-- ══ SIDEBAR ══════════════════════════════════════════════════════ -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+  <a href="/" class="sidebar-logo" onclick="closeSidebar();" style="text-decoration: none;" title="Home">
+    NUM<span>FLY</span>.
+  </a>
+  <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+</div>
+  <!-- Profile section -->
+  <div class="sidebar-profile" id="sidebar-profile-section">
+    <div id="sidebar-guest-view">
+      <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:10px" data-i18n="sidebar_guest_msg"></div>
+      <button class="btn btn-primary" style="padding:10px 18px;font-size:14px" onclick="closeSidebar();openAuthModal()"  data-i18n="sidebar_sign_in"></button>
+    </div>
+    <div id="sidebar-user-view" style="display:none">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <div class="sidebar-avatar" id="sb-avatar">N</div>
+        <div>
+          <div class="sidebar-username" id="sb-username">Player</div>
+          <div class="sidebar-usersub" id="sb-email">—</div>
+        </div>
+      </div>
+      <button class="sidebar-edit-btn" id="sb-edit-btn" onclick="openEditUsername()" data-i18n="sidebar_edit_username"></button>
+      <div id="sb-username-cooldown" style="display:none;font-family:'DM Mono',monospace;font-size:10px;color:var(--orange);margin-top:4px;"></div>
+      <button class="sidebar-edit-btn" id="sb-change-pw-btn" onclick="openChangePw()" style="margin-top:6px" data-i18n="sidebar_change_pw"></button>
+      <div id="sb-pw-cooldown" style="display:none;font-family:'DM Mono',monospace;font-size:10px;color:var(--orange);margin-top:4px;"></div>
+    </div>
+  </div>
+  <!-- Language -->
+  <div class="sidebar-lang">
+    <div class="sidebar-lang-label" data-i18n="sidebar_language"></div>
+    <div class="sidebar-lang-row">
+      <button class="lang-btn" id="sb-lang-en" onclick="setLang('en',this);updateSidebarLangBtns()">EN</button>
+      <button class="lang-btn" id="sb-lang-nl" onclick="setLang('nl',this);updateSidebarLangBtns()">NL</button>
+      <button class="lang-btn" id="sb-lang-es" onclick="setLang('es',this);updateSidebarLangBtns()">ES</button>
+    </div>
+  </div>
+  <div class="sidebar-divider"></div>
+  <!-- Nav items -->
+  <div class="sidebar-nav">
+  <a href="/stats" class="sidebar-item" onclick="closeSidebar()">
+    <span class="sidebar-item-icon">📊</span>
+    <div><div class="sidebar-item-label" data-i18n="nav_stats"></div></div>
+  </a>
+  <a href="/achievements" class="sidebar-item" onclick="closeSidebar()">
+    <span class="sidebar-item-icon">🏅</span>
+    <div><div class="sidebar-item-label" data-i18n="nav_achievements"></div></div>
+  </a>
+  <a href="/tips" class="sidebar-item" onclick="closeSidebar()">
+    <span class="sidebar-item-icon">💡</span>
+    <div><div class="sidebar-item-label" data-i18n="nav_tips"></div></div>
+  </a>
+  <a href="/friends" class="sidebar-item" id="sidebar-friends-btn" onclick="closeSidebar()">
+    <span class="sidebar-item-icon">👥</span>
+    <div><div class="sidebar-item-label" data-i18n="nav_friends"></div></div>
+  </a>
+  <a href="/leaderboard" class="sidebar-item" onclick="closeSidebar()">
+    <span class="sidebar-item-icon">🏆</span>
+    <div><div class="sidebar-item-label" data-i18n="nav_leaderboard"></div></div>
+  </a>
+</div>
+  <div class="sidebar-divider"></div>
+  <!-- Sign out -->
+  <div class="sidebar-nav" id="sidebar-signout-row" style="display:none">
+    <button class="sidebar-item" onclick="doSignOut()">
+      <span class="sidebar-item-icon">🚪</span>
+      <div><div class="sidebar-item-label" data-i18n="sidebar_sign_out"></div></div>
+    </button>
+  </div>
+  <!-- Footer links -->
+  <div style="padding:16px 22px 12px;display:flex;gap:16px;flex-wrap:wrap;">
+    <button onclick="resetCookieConsent()" style="background:none;border:none;color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;padding:0;transition:color .15s;" data-i18n="sidebar_cookie_settings"></button>
+    <button onclick="closeSidebar();showScreen('screen-privacy')" style="background:none;border:none;color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;padding:0;transition:color .15s;" data-i18n="sidebar_privacy"></button>
+  </div>
+</div>

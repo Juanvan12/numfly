@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/layout.astro';
+import PracticeComponent from '../components/Practice.astro';
+---
+
+<Layout>
+  <PracticeComponent />
+</Layout>
+
+<script is:inline>
+  function initPracticePage() {
+    if (typeof applyTranslations === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-practice-setup').classList.add('active');
+      applyTranslations();
+    } else {
+      setTimeout(initPracticePage, 50);
+    }
+  }
+  initPracticePage();
+</script>

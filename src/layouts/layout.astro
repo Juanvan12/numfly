@@ -1,0 +1,72 @@
+---
+import Sidebar from '../components/Sidebar.astro';
+import Modals from '../components/Modals.astro';
+import SocialScreens from '../components/SocialScreens.astro';
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Numfly - Free Math Games & Mental Math Practice</title>
+  
+  <link rel="icon" type="image/png" href="/favicon-32.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  
+  <script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  
+  <button id="burger-fixed" onclick="openSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  
+  <div class="app">
+    <Sidebar />
+    
+    <slot />
+    <div class="xp-toast" id="xp-toast">+0 XP</div>
+<div class="err-toast" id="err-toast"></div>
+<div class="ach-toast" id="ach-toast">
+  <div class="ach-toast-icon" id="ach-toast-icon">🏅</div>
+  <div>
+    <div class="ach-toast-text" data-i18n="ach_unlocked_label"></div>
+    <div class="ach-toast-name" id="ach-toast-name"></div>
+  </div>
+</div>
+
+<div class="modal-overlay titles-modal-overlay" id="modal-titles" onclick="if(event.target===this)closeTitlesModal()">
+  <div class="titles-modal-box">
+    <div class="titles-modal-header">
+      <div class="titles-modal-title">🏅 <span data-i18n="titles_modal_title"></span></div>
+      <button class="titles-modal-close" onclick="closeTitlesModal()">✕</button>
+    </div>
+    <div class="titles-modal-sub" id="titles-modal-sub"></div>
+    <div class="titles-list" id="titles-list"></div>
+  </div>
+</div>
+
+<div class="levelup-overlay" id="modal-levelup">
+  <div class="levelup-box">
+    <div class="levelup-fireworks">🎉</div>
+    <div class="levelup-label" data-i18n="levelup_label"></div>
+    <div class="levelup-num" id="lu-level">2</div>
+    <div class="levelup-title-name" id="lu-title-name"></div>
+    <div class="levelup-title-flavor" id="lu-title-flavor"></div>
+    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="closeLevelUp()" data-i18n="levelup_btn"></button>
+  </div>
+</div>
+
+<div id="login-overlay" style="display:none;position:fixed;inset:0;background:rgba(8,8,14,.88);z-index:900;align-items:center;justify-content:center;flex-direction:column;gap:14px;">
+  <span class="spinner" style="width:32px;height:32px;border-width:3px;"></span>
+  <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:1px">Signing in…</div>
+</div>
+    <SocialScreens />
+    <Modals />
+  </div>
+
+  <script is:inline src="/app.js"></script>
+</body>
+</html>

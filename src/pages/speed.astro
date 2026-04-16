@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/layout.astro';
+import SpeedComponent from '../components/Speed.astro';
+---
+
+<Layout>
+  <SpeedComponent />
+</Layout>
+
+<script is:inline>
+  function initSpeedPage() {
+    if (typeof applyTranslations === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-speed-setup').classList.add('active');
+      applyTranslations();
+    } else {
+      setTimeout(initSpeedPage, 50);
+    }
+  }
+  initSpeedPage();
+</script>

@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/layout.astro';
+import LightningComponent from '../components/Lightning.astro';
+---
+
+<Layout>
+  <LightningComponent />
+</Layout>
+
+<script is:inline>
+  function initLightningPage() {
+    if (typeof applyTranslations === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-lightning-setup').classList.add('active');
+      applyTranslations();
+    } else {
+      setTimeout(initLightningPage, 50);
+    }
+  }
+  initLightningPage();
+</script>

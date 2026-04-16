@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/layout.astro';
+import FriendsComponent from '../components/Friends.astro';
+---
+
+<Layout>
+  <FriendsComponent />
+</Layout>
+
+<script is:inline>
+  function initFriendsPage() {
+    if (typeof loadFriends === 'function' && typeof startFriendPoller === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-friends').classList.add('active');
+      if (typeof applyTranslations === 'function') applyTranslations();
+      loadFriends();
+      startFriendPoller();
+    } else {
+      setTimeout(initFriendsPage, 50);
+    }
+  }
+  initFriendsPage();
+</script>

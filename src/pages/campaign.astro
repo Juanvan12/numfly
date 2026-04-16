@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/layout.astro';
+import CampaignComponent from '../components/Campaign.astro';
+---
+
+<Layout>
+  <CampaignComponent />
+</Layout>
+
+<script is:inline>
+  function initCampaignPage() {
+    if (typeof applyTranslations === 'function' && typeof renderCampaignMap === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-campaign').classList.add('active');
+      applyTranslations();
+      renderCampaignMap(); 
+    } else {
+      setTimeout(initCampaignPage, 50);
+    }
+  }
+  initCampaignPage();
+</script>

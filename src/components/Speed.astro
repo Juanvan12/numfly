@@ -1,0 +1,44 @@
+<!-- ══ SPEED SETUP ═════════════════════════════════════════════════════ -->
+<div id="screen-speed-setup" class="screen">
+  <a href="/" class="back-link" style="text-decoration: none;">← <span data-i18n="back"></span></a>
+  <div class="panel-title">🚀 <span data-i18n="mode_speed"></span></div>
+  <div class="panel-sub" data-i18n="speed_setup_sub"></div>
+  <div class="diff-row" id="speed-diff-row">
+    <button class="diff-btn active" onclick="selectDiff('speed','easy',this)" data-i18n="diff_easy"></button>
+    <button class="diff-btn" onclick="selectDiff('speed','medium',this)" data-i18n="diff_medium"></button>
+    <button class="diff-btn" onclick="selectDiff('speed','hard',this)" data-i18n="diff_hard"></button>
+  </div>
+  <button class="btn btn-primary" onclick="startSpeed()" style="margin-top:28px"><span data-i18n="start"></span> 🚀</button>
+</div>
+
+<!-- ══ SPEED GAME ══════════════════════════════════════════════════════ -->
+<div id="screen-speed-game" class="screen">
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+    <button class="back-link" style="margin-bottom:0" onclick="speedBackBtn()">← <span id="speed-back-label"></span></button>
+  </div>
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label" data-i18n="hud_score"></div><div class="hud-value accent" id="s-score">0</div></div>
+    <div class="hud-item"><div class="hud-label" data-i18n="hud_time"></div><div class="hud-value" id="s-timer">2:00</div></div>
+    <div class="hud-item"><div class="hud-label" data-i18n="hud_highscore"></div><div class="hud-value" id="s-hs-display">0</div></div>
+  </div>
+  <div class="q-card"><div class="q-type" id="s-op-type"></div><div class="q-text" id="s-question">—</div></div>
+  <div class="answer-row">
+    <input type="text" inputmode="numeric" pattern="[0-9-]*" id="s-answer" data-i18n-placeholder="answer_placeholder" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+    <button class="submit-btn" onmousedown="event.preventDefault()" onclick="checkSpeedAnswer()">→</button>
+  </div>
+  <div class="feedback" id="s-feedback"></div>
+</div>
+
+<!-- ══ SPEED RESULT ════════════════════════════════════════════════════ -->
+<div id="screen-speed-result" class="screen">
+  <div class="result-box">
+    <div class="result-emoji">🏁</div>
+    <div class="result-title" data-i18n="times_up"></div>
+    <div class="result-score" id="sr-score">0</div>
+    <div class="result-detail" id="sr-detail"></div>
+  </div>
+  <button id="sr-challenge-btn" class="btn" style="background:linear-gradient(135deg,var(--orange),#e8a000);color:#000;display:none" onclick="openDareFriendModal()" data-i18n="challenge_dare_friend"></button>
+  <button class="btn btn-primary" onclick="startSpeed()"><span data-i18n="play_again"></span> 🚀</button>
+  <button class="btn btn-secondary" onclick="showScreen('screen-speed-setup')" data-i18n="change_difficulty"></button>
+  <button class="btn btn-secondary" onclick="showScreen('screen-menu')" data-i18n="main_menu"></button>
+</div>

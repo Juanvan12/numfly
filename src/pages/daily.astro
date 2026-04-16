@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/layout.astro';
+import DailyComponent from '../components/Daily.astro';
+---
+
+<Layout>
+  <DailyComponent />
+</Layout>
+
+<script is:inline>
+  function initDailyPage() {
+    if (typeof openDailyChallenge === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      if (typeof applyTranslations === 'function') applyTranslations();
+      openDailyChallenge();
+    } else {
+      setTimeout(initDailyPage, 50);
+    }
+  }
+  initDailyPage();
+</script>

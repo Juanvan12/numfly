@@ -1,0 +1,133 @@
+<div id="screen-challenge-result" class="screen">
+  <button class="back-link" onclick="showScreen('screen-menu')">← <span data-i18n="back"></span></button>
+  <div class="challenge-banner">
+    <div class="challenge-vs">⚔ <span data-i18n="challenge_title"></span></div>
+    <div class="challenge-scores">
+      <div class="challenge-score-box" id="cr-you-box">
+        <div class="challenge-score-num" id="cr-your-score">—</div>
+        <div class="challenge-score-name" id="cr-your-name">You</div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--muted)">VS</div>
+      <div class="challenge-score-box" id="cr-them-box">
+        <div class="challenge-score-num" id="cr-their-score">—</div>
+        <div class="challenge-score-name" id="cr-their-name">Friend</div>
+      </div>
+    </div>
+    <div id="cr-verdict" style="font-family:'Bebas Neue',sans-serif;font-size:20px;margin-top:14px;letter-spacing:2px;"></div>
+  </div>
+  <div id="cr-share-section" style="display:none">
+    <div class="challenge-link-box">
+      <div class="challenge-link-url" id="cr-link">—</div>
+      <button class="challenge-copy-btn" onclick="copyChallengeLink()" data-i18n="challenge_copy"></button>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px" data-i18n="challenge_link_sub"></div>
+  </div>
+  <button class="btn btn-primary" onclick="showScreen('screen-menu')" data-i18n="main_menu"></button>
+</div>
+
+<div id="screen-competition" class="screen">
+  <button class="back-link" onclick="_compBackTarget==='friends'?showScreen('screen-friends'):openGroupCompModal()">← <span id="comp-back-label"></span></button>
+  <div class="comp-banner">
+    <div class="comp-title">⚔ <span id="comp-screen-title"></span></div>
+    <div class="comp-sub" id="comp-screen-sub"></div>
+  </div>
+  <div id="comp-h2h-section" style="display:none">
+    <div class="ach-section-title" data-i18n="h2h_total" style="margin-top:0;display:none"></div>
+    <div id="comp-h2h-box"></div>
+  </div>
+  <div class="ach-section-title" id="comp-scoreboard-title" data-i18n="competition_scoreboard" style="display:none"></div>
+  <div id="comp-scoreboard"></div>
+  <div id="comp-link-section" style="display:none;margin-top:12px">
+    <div class="challenge-link-box">
+      <div class="challenge-link-url" id="comp-link-url">—</div>
+      <button class="challenge-copy-btn" onclick="copyCompLink()" data-i18n="challenge_copy"></button>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px" data-i18n="challenge_link_sub"></div>
+  </div>
+  <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--orange),#e8a000);color:#000;margin-top:8px" onclick="acceptAndPlayCompetition()" id="comp-play-btn" data-i18n="challenge_play"></button>
+  <button class="btn btn-secondary" onclick="_compBackTarget==='friends'?showScreen('screen-friends'):openGroupCompModal()" id="comp-back-btn" data-i18n="back"></button>
+</div>
+
+<div id="screen-group-comp" class="screen">
+  <button class="back-link" onclick="showScreen('screen-friends')">← <span data-i18n="nav_friends"></span></button>
+  <div class="social-hero" style="background:linear-gradient(135deg,rgba(192,132,252,.1),rgba(168,85,247,.07));border-color:rgba(192,132,252,.3);">
+    <div class="social-hero-title" style="color:var(--purple)">🏆 <span data-i18n="comp_group_title"></span></div>
+    <div class="social-hero-sub" data-i18n="comp_group_sub"></div>
+  </div>
+  <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--purple),#a855f7);color:#fff;width:100%;margin-bottom:20px" onclick="openNewCompForm()" id="new-comp-btn" data-i18n="comp_group_new"></button>
+  
+  <div id="new-comp-form" style="display:none;background:var(--surface);border:1px solid rgba(192,132,252,.3);border-radius:12px;padding:16px;margin-bottom:20px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--purple);margin-bottom:12px" data-i18n="comp_group_send"></div>
+    <div style="position:relative;margin-bottom:10px;">
+      <input id="group-search" type="text" data-i18n-placeholder="friends_search_ph" autocomplete="off" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:9px 12px;outline:none;box-sizing:border-box;" oninput="clearTimeout(this._t);this._t=setTimeout(()=>filterGroupCompList(this.value),200)">
+    </div>
+    <div id="group-comp-list" style="margin-bottom:10px;max-height:180px;overflow-y:auto;"></div>
+    <div style="margin-bottom:12px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="comp_name_label"></div>
+      <input id="group-comp-name" type="text" maxlength="40" data-i18n-placeholder="comp_name_ph" autocomplete="off" autocapitalize="sentences" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:9px 12px;outline:none;box-sizing:border-box;transition:border-color .2s;">
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="diff_label"></div>
+      <div class="diff-row" id="group-diff-row">
+        <button class="diff-btn active" onclick="setGroupDiff('easy',this)" data-i18n="diff_easy"></button>
+        <button class="diff-btn" onclick="setGroupDiff('medium',this)" data-i18n="diff_medium"></button>
+        <button class="diff-btn" onclick="setGroupDiff('hard',this)" data-i18n="diff_hard"></button>
+      </div>
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="duration_label"></div>
+      <div class="diff-row" id="group-dur-row">
+        <button class="diff-btn" onclick="setGroupDuration(30,this)" data-i18n="dur_30"></button>
+        <button class="diff-btn" onclick="setGroupDuration(60,this)" data-i18n="dur_60"></button>
+        <button class="diff-btn active" onclick="setGroupDuration(120,this)" data-i18n="dur_120"></button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button style="flex:1;padding:8px 12px;background:linear-gradient(135deg,var(--purple),#a855f7);border:none;border-radius:8px;color:#fff;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px;cursor:pointer" onclick="sendGroupComp()">🏆 <span data-i18n="comp_group_send"></span></button>
+      <button style="padding:8px 12px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer" onclick="closeNewCompForm()" data-i18n="cancel"></button>
+    </div>
+    <div id="group-comp-status" style="font-family:'DM Mono',monospace;font-size:11px;margin-top:8px;text-align:center;color:var(--muted)"></div>
+  </div>
+  
+  <div class="ach-section-title" data-i18n="comp_group_my"></div>
+  <div id="group-comp-active-list"><span class="spinner"></span></div>
+</div>
+
+<div class="challenge-modal-overlay" id="modal-dare-friend">
+  <div class="challenge-modal-box">
+    <div class="challenge-modal-title">🎯 <span data-i18n="dare_title"></span></div>
+    <div class="challenge-modal-sub" data-i18n="dare_sub"></div>
+    <div style="position:relative;margin-bottom:10px;">
+      <input id="dare-search" type="text" data-i18n-placeholder="friends_search_ph" autocomplete="off" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:9px 12px;outline:none;box-sizing:border-box;" oninput="filterDareFriendList(this.value)">
+    </div>
+    <div id="dare-friend-list" style="margin-bottom:10px;max-height:200px;overflow-y:auto;"></div>
+    <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--orange),#e8a000);color:#000;margin-top:0" onclick="sendDareChallenge()">🎯 <span data-i18n="dare_send"></span></button>
+    <button class="btn btn-secondary" style="margin-top:8px" onclick="closeDareFriendModal()" data-i18n="cancel"></button>
+    <div id="dare-friend-status" style="font-family:'DM Mono',monospace;font-size:11px;margin-top:8px;text-align:center;color:var(--muted)"></div>
+  </div>
+</div>
+
+<div class="challenge-modal-overlay" id="modal-race-friend">
+  <div class="challenge-modal-box">
+    <div class="challenge-modal-title">⚔ <span data-i18n="race_title"></span> <span id="race-friend-name" style="color:var(--orange)"></span></div>
+    <div style="margin-bottom:14px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="diff_label"></div>
+      <div class="diff-row" id="race-diff-row">
+        <button class="diff-btn active" onclick="setRaceDiff('easy',this)" data-i18n="diff_easy"></button>
+        <button class="diff-btn" onclick="setRaceDiff('medium',this)" data-i18n="diff_medium"></button>
+        <button class="diff-btn" onclick="setRaceDiff('hard',this)" data-i18n="diff_hard"></button>
+      </div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" data-i18n="duration_label"></div>
+      <div class="diff-row" id="race-dur-row">
+        <button class="diff-btn" onclick="setRaceDuration(30,this)" data-i18n="dur_30"></button>
+        <button class="diff-btn" onclick="setRaceDuration(60,this)" data-i18n="dur_60"></button>
+        <button class="diff-btn active" onclick="setRaceDuration(120,this)" data-i18n="dur_120"></button>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--orange),#e8a000);color:#000;margin-top:0" onclick="sendRaceChallenge()">🏁 <span data-i18n="race_send"></span></button>
+    <button class="btn btn-secondary" style="margin-top:8px" onclick="closeRaceFriendModal()" data-i18n="cancel"></button>
+    <div id="race-friend-status" style="font-family:'DM Mono',monospace;font-size:11px;margin-top:8px;text-align:center;color:var(--muted)"></div>
+  </div>
+</div>

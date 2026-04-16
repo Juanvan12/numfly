@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/layout.astro';
+import LeaderboardComponent from '../components/Leaderboard.astro';
+---
+
+<Layout>
+  <LeaderboardComponent />
+</Layout>
+
+<script is:inline>
+  function initLeaderboardPage() {
+    if (typeof setLbScope === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-leaderboard').classList.add('active');
+      if (typeof applyTranslations === 'function') applyTranslations();
+      setLbScope(typeof _lbScope !== 'undefined' ? _lbScope : 'global');
+    } else {
+      setTimeout(initLeaderboardPage, 50);
+    }
+  }
+  initLeaderboardPage();
+</script>

@@ -1,0 +1,36 @@
+<div id="screen-leaderboard" class="screen">
+  <a href="/" class="back-link" style="text-decoration: none;">← <span data-i18n="back"></span></a>
+  
+  <div class="social-hero">
+    <div class="social-hero-title">🏆 <span data-i18n="nav_leaderboard"></span></div>
+    <div class="social-hero-sub" data-i18n="leaderboard_sub"></div>
+  </div>
+  
+  <div style="display:flex;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;">
+    <button id="lb-scope-friends" onclick="setLbScope('friends',this)" style="flex:1;padding:9px 0;border:none;background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;" data-i18n="dc_tab_friends"></button>
+    <button id="lb-scope-global" onclick="setLbScope('global',this)" style="flex:1;padding:9px 0;border:none;background:transparent;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;" data-i18n="dc_tab_global"></button>
+  </div>
+  
+  <div style="margin-bottom:6px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text);text-transform:uppercase;letter-spacing:1px;font-weight:600" data-i18n="lb_group_general"></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+    <button class="lb-cat-btn active" data-lbkey="xp" onclick="setLbTab('xp',this)">🏆 <span data-i18n="lb_tab_xp"></span></button>
+    <button class="lb-cat-btn" data-lbkey="time" onclick="setLbTab('time',this)">⏱ <span data-i18n="lb_tab_time"></span></button>
+    <button class="lb-cat-btn" data-lbkey="daily_streak" onclick="setLbTab('daily_streak',this)">🔥 <span data-i18n="lb_tab_streak"></span></button>
+  </div>
+  
+  <div style="margin-bottom:6px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text);text-transform:uppercase;letter-spacing:1px;font-weight:600">⚡ <span data-i18n="lb_group_lightning"></span></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+    <button class="lb-cat-btn" data-lbkey="lightning_easy" onclick="setLbTab('lightning_easy',this)" data-i18n="diff_easy"></button>
+    <button class="lb-cat-btn" data-lbkey="lightning_medium" onclick="setLbTab('lightning_medium',this)" data-i18n="diff_medium"></button>
+    <button class="lb-cat-btn" data-lbkey="lightning_hard" onclick="setLbTab('lightning_hard',this)" data-i18n="diff_hard"></button>
+  </div>
+  
+  <div style="margin-bottom:6px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text);text-transform:uppercase;letter-spacing:1px;font-weight:600">🚀 <span data-i18n="lb_group_speed"></span></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+    <button class="lb-cat-btn" data-lbkey="speed_easy" onclick="setLbTab('speed_easy',this)" data-i18n="diff_easy"></button>
+    <button class="lb-cat-btn" data-lbkey="speed_medium" onclick="setLbTab('speed_medium',this)" data-i18n="diff_medium"></button>
+    <button class="lb-cat-btn" data-lbkey="speed_hard" onclick="setLbTab('speed_hard',this)" data-i18n="diff_hard"></button>
+  </div>
+  
+  <div id="lb-content"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);padding:12px 0" data-i18n="lb_sign_in_msg"></div></div>
+</div>
