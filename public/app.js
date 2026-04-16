@@ -7624,14 +7624,63 @@ setLang=function(l,btn){
   localStorage.setItem('numfly_lang',l);
   _origSetLang(l,btn);
   document.title=TITLE_BY_LANG[l]||TITLE_BY_LANG.en;
-  // Update URL to /nl, /en, /es without reloading
+  
   try{
-    const currentPath=window.location.pathname;
-    const langPaths=['/nl','/nl/','/en','/en/','/es','/es/'];
-    const isOnLangPath=langPaths.some(p=>currentPath===p||currentPath.startsWith(p));
-    const newPath=(l==='en'?'/':l==='nl'?'/nl/':l==='es'?'/es/':'/')+window.location.search;
-    // Preserve query string (e.g. ?challenge=CODE) so handleChallengeLink can still read it
-    history.replaceState({lang:l},document.title,newPath);
+    let currentPath=window.location.pathname;
+    
+    // 1. Strip any existing language prefix to find the "core" path
+    let corePath = currentPath;
+    if (corePath.startsWith('/nl/')) corePath = '/' + corePath.substring(4);
+    else if (corePath === '/nl') corePath = '/';
+    else if (corePath.startsWith('/es/')) corePath = '/' + corePath.substring(4);
+    else if (corePath === '/es') corePath = '/';
+    else if (corePath.startsWith('/en/')) corePath = '/' + corePath.substring(4);
+    else if (corePath === '/en') corePath = '/';
+
+    // 2. Reverse translate any existing foreign paths back to English base
+    const nlToEn = { 
+      '/vrienden':'/friends', '/statistieken':'/stats', '/klassement':'/leaderboard', 
+      '/prestaties':'/achievements', '/tips':'/tips', '/campagne':'/campaign', 
+      '/dagelijks':'/daily', '/bliksem':'/lightning', '/snelheid':'/speed', 
+      '/oefenen':'/practice', '/1v1':'/1v1', '/hoofdrekenen-oefenen':'/how-to-practice-mental-math'
+    };
+    const esToEn = { 
+      '/amigos':'/friends', '/estadisticas':'/stats', '/clasificacion':'/leaderboard', 
+      '/logros':'/achievements', '/consejos':'/tips', '/campana':'/campaign', 
+      '/diario':'/daily', '/rayo':'/lightning', '/velocidad':'/speed', 
+      '/practica':'/practice', '/1v1':'/1v1', '/como-practicar-calculo-mental':'/how-to-practice-mental-math' 
+    };
+    
+    if (nlToEn[corePath]) corePath = nlToEn[corePath];
+    if (esToEn[corePath]) corePath = esToEn[corePath];
+
+    // 3. Translate the core path into the newly selected language
+    const enToNl = { 
+      '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', 
+      '/achievements':'/prestaties', '/tips':'/tips', '/campaign':'/campagne', 
+      '/daily':'/dagelijks', '/lightning':'/bliksem', '/speed':'/snelheid', 
+      '/practice':'/oefenen', '/1v1':'/1v1', '/how-to-practice-mental-math':'/hoofdrekenen-oefenen' 
+    };
+    const enToEs = { 
+      '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', 
+      '/achievements':'/logros', '/tips':'/consejos', '/campaign':'/campana', 
+      '/daily':'/diario', '/lightning':'/rayo', '/speed':'/velocidad', 
+      '/practice':'/practica', '/1v1':'/1v1', '/how-to-practice-mental-math':'/como-practicar-calculo-mental' 
+    };
+    
+    let translatedPath = corePath;
+    if (l === 'nl' && enToNl[corePath]) translatedPath = enToNl[corePath];
+    if (l === 'es' && enToEs[corePath]) translatedPath = enToEs[corePath];
+
+    // 4. Build the final URL with the correct prefix
+    let finalPath = translatedPath;
+    if (l === 'nl') finalPath = '/nl' + (translatedPath === '/' ? '' : translatedPath);
+    else if (l === 'es') finalPath = '/es' + (translatedPath === '/' ? '' : translatedPath);
+    
+    if (finalPath === '') finalPath = '/';
+
+    // Preserve query string (e.g. ?challenge=CODE)
+    history.replaceState({lang:l}, document.title, finalPath + window.location.search);
   }catch(e){}
 };
 

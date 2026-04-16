@@ -1,6 +1,4 @@
 {
-  "buildCommand": "node build.js",
-  "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
@@ -8,10 +6,41 @@
     { "source": "/en/(.*)", "destination": "/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/nl", "destination": "/nl/index.html" },
-    { "source": "/es", "destination": "/es/index.html" },
-    { "source": "/es/como-practicar-calculo-mental", "destination": "/es/como-practicar-calculo-mental/index.html" },
-    { "source": "/nl/hoofdrekenen-oefenen", "destination": "/nl/hoofdrekenen-oefenen/index.html" }
+    { "source": "/nl/vrienden", "destination": "/friends" },
+    { "source": "/es/amigos", "destination": "/friends" },
+    
+    { "source": "/nl/statistieken", "destination": "/stats" },
+    { "source": "/es/estadisticas", "destination": "/stats" },
+    
+    { "source": "/nl/klassement", "destination": "/leaderboard" },
+    { "source": "/es/clasificacion", "destination": "/leaderboard" },
+
+    { "source": "/nl/prestaties", "destination": "/achievements" },
+    { "source": "/es/logros", "destination": "/achievements" },
+
+    { "source": "/nl/tips", "destination": "/tips" },
+    { "source": "/es/consejos", "destination": "/tips" },
+
+    { "source": "/nl/campagne", "destination": "/campaign" },
+    { "source": "/es/campana", "destination": "/campaign" },
+
+    { "source": "/nl/dagelijks", "destination": "/daily" },
+    { "source": "/es/diario", "destination": "/daily" },
+
+    { "source": "/nl/bliksem", "destination": "/lightning" },
+    { "source": "/es/rayo", "destination": "/lightning" },
+
+    { "source": "/nl/snelheid", "destination": "/speed" },
+    { "source": "/es/velocidad", "destination": "/speed" },
+
+    { "source": "/nl/oefenen", "destination": "/practice" },
+    { "source": "/es/practica", "destination": "/practice" },
+
+    { "source": "/nl/1v1", "destination": "/1v1" },
+    { "source": "/es/1v1", "destination": "/1v1" },
+
+    { "source": "/nl/hoofdrekenen-oefenen", "destination": "/how-to-practice-mental-math" },
+    { "source": "/es/como-practicar-calculo-mental", "destination": "/how-to-practice-mental-math" }
   ],
   "headers": [
     {
