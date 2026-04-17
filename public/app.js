@@ -1767,6 +1767,7 @@ function showScreen(id){
   else{stopFriendPoller();}
   if(id==='screen-tips'){renderTipsFilterBtns();renderTipsList();}
   if(id==='screen-achievements') renderAchievements();
+  if(id==='screen-leaderboard') { loadLeaderboard(_lbKey || 'xp'); }
   // Show scroll-to-top on long screens
   const scrollable=['screen-tips','screen-achievements'];
   if(scrollable.includes(id)){attachScrollTopListener();}
@@ -3587,13 +3588,12 @@ function initApp(){
   if (typeof checkPendingStart === 'function') checkPendingStart();
 }
 
+initApp();
+
 if(sb){
 sb.auth.onAuthStateChange((event,session)=>{
   console.log('[Numfly] Auth event:',event,'user:',session?.user?.email||'none');
   currentUser=session?.user||null;
-
-  // Render UI on first event (before this, nothing is shown)
-  initApp();
 
   // Clean OAuth tokens from URL
   if(event==='SIGNED_IN'){
@@ -4703,16 +4703,17 @@ async function pullFromSupabase(){
   }
   const{data:achs}=await withTimeout(sb.from('user_achievements').select('achievement_id').eq('user_id',currentUser.id));
   if(achs)achs.forEach(r=>earnedAchievements.add(r.achievement_id));
-  _cloudDataLoaded=true; 
+_cloudDataLoaded=true; 
   checkAchievements(true); 
-  if(document.getElementById('screen-achievements')?.classList.contains('active')) {
-    renderAchievements();
-
-  if(document.getElementById('screen-stats')) {
-    renderStatsContent();
-  }
-  }
+  
+  const activeScreen = document.querySelector('.screen.active')?.id;
+  if (activeScreen === 'screen-achievements') renderAchievements();
+  if (activeScreen === 'screen-stats') renderStatsContent();
+  if (activeScreen === 'screen-leaderboard') loadLeaderboard(_lbKey || 'xp');
+  if (activeScreen === 'screen-friends') loadFriends();
+  if (activeScreen === 'screen-menu') { renderHSPanel(); renderXPPanel(); }
 }
+
 let syncTimer=null;
 let _cloudDataLoaded=false; 
 function scheduleSync(){
