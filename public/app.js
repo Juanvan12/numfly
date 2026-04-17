@@ -7571,70 +7571,75 @@ function loadGuestState(){
 }
 
 // ── Language detection and persistence ───────────────────────────────────────
-function detectAndSetLang(){
-  // 1. Check URL path first
-  const path=window.location.pathname;
-  const urlLang=path.startsWith('/nl')?'nl':path.startsWith('/es')?'es':path.startsWith('/en')?'en':null;
+function detectAndSetLang() {
+  const path = window.location.pathname;
+  let targetLang = 'en';
   
-  if(urlLang&&STRINGS[urlLang]){
-    lang=urlLang;
-    localStorage.setItem('numfly_lang',urlLang);
-    // Sync buttons
-    document.querySelectorAll('.lang-btn').forEach(b=>{
-      const code={EN:'en',NL:'nl',ES:'es'}[b.textContent.trim().toUpperCase()];
-      if(code)b.classList.toggle('active',code===lang);
-    });
-    updateSidebarLangBtns();
-  } else {
-    // 2. We zijn op de root (/) geland. Wat is de voorkeurstaal?
-    const saved=localStorage.getItem('numfly_lang');
-    let detectedLang = 'en';
-    if(saved&&STRINGS[saved]){
-      detectedLang=saved;
+  if (path.startsWith('/nl/') || path === '/nl') targetLang = 'nl';
+  else if (path.startsWith('/es/') || path === '/es') targetLang = 'es';
+  else {
+    const saved = localStorage.getItem('numfly_lang');
+    if (saved && STRINGS[saved]) {
+      targetLang = saved;
     } else {
-      const full=(navigator.language||navigator.userLanguage||'en').toLowerCase();
-      const short=full.slice(0,2);
-      detectedLang=STRINGS[full]?full:STRINGS[short]?short:'en';
-    }
-    
-    if (detectedLang !== 'en') {
-
-      if (window.location.hash.includes('access_token')) {
-        lang = detectedLang;
-        document.documentElement.lang = detectedLang;
-        return;
-      }
-      setLang(detectedLang); 
-    } else {
-      // Het is een Engelse bezoeker, ze mogen netjes op de root (/) blijven
-      lang = 'en';
-      localStorage.setItem('numfly_lang', 'en');
-      document.querySelectorAll('.lang-btn').forEach(b=>{
-        const code={EN:'en',NL:'nl',ES:'es'}[b.textContent.trim().toUpperCase()];
-        if(code)b.classList.toggle('active',code===lang);
-      });
-      updateSidebarLangBtns();
+      const full = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+      targetLang = STRINGS[full] ? full : STRINGS[full.slice(0,2)] ? full.slice(0,2) : 'en';
     }
   }
+
+  // Google Login exception: keep token safe
+  if (window.location.hash.includes('access_token') || window.location.hash.includes('type=recovery')) {
+    lang = targetLang;
+    document.documentElement.lang = targetLang;
+    localStorage.setItem('numfly_lang', targetLang);
+    applyTranslations();
+    document.querySelectorAll('.lang-btn').forEach(b => {
+      const code = {EN:'en',NL:'nl',ES:'es'}[b.textContent.trim().toUpperCase()];
+      if(code) b.classList.toggle('active', code === lang);
+    });
+    updateSidebarLangBtns();
+    return;
+  }
+
+  setLang(targetLang);
 }
 
 // Patch setLang to also persist choice
+// Patch setLang to also persist choice and handle translated URLs
 const _origSetLang=setLang;
 const TITLE_BY_LANG={
   en:'Numfly - Free Math Games & Mental Math Practice',
   nl:'Numfly - Gratis Rekenspelletjes & Hoofdrekenen Oefenen',
   es:'Numfly - Juegos de Matemáticas y Práctica de Cálculo Mental',
 };
+
 setLang=function(l,btn){
   document.documentElement.lang=l;
   localStorage.setItem('numfly_lang',l);
   _origSetLang(l,btn);
   document.title=TITLE_BY_LANG[l]||TITLE_BY_LANG.en;
   
+  // Update sidebar links dynamically so they never show English
+  try {
+    const dictNl = { '/':'', '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', '/achievements':'/prestaties', '/tips':'/tips' };
+    const dictEs = { '/':'', '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', '/achievements':'/logros', '/tips':'/consejos' };
+    const updateLink = (id, base) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (l === 'nl') el.href = '/nl' + (dictNl[base] || base);
+      else if (l === 'es') el.href = '/es' + (dictEs[base] || base);
+      else el.href = base;
+    };
+    updateLink('nav-home', '/');
+    updateLink('nav-stats', '/stats');
+    updateLink('nav-ach', '/achievements');
+    updateLink('nav-tips', '/tips');
+    updateLink('nav-friends', '/friends');
+    updateLink('nav-lb', '/leaderboard');
+  } catch(e) {}
+
   try{
     let currentPath=window.location.pathname;
-    
-    // 1. Strip any existing language prefix to find the "core" path
     let corePath = currentPath;
     if (corePath.startsWith('/nl/')) corePath = '/' + corePath.substring(4);
     else if (corePath === '/nl') corePath = '/';
@@ -7643,48 +7648,26 @@ setLang=function(l,btn){
     else if (corePath.startsWith('/en/')) corePath = '/' + corePath.substring(4);
     else if (corePath === '/en') corePath = '/';
 
-    // 2. Reverse translate any existing foreign paths back to English base
-    const nlToEn = { 
-      '/vrienden':'/friends', '/statistieken':'/stats', '/klassement':'/leaderboard', 
-      '/prestaties':'/achievements', '/tips':'/tips', '/campagne':'/campaign', 
-      '/dagelijks':'/daily', '/bliksem':'/lightning', '/snelheid':'/speed', 
-      '/oefenen':'/practice', '/1v1':'/1v1', '/hoofdrekenen-oefenen':'/how-to-practice-mental-math'
-    };
-    const esToEn = { 
-      '/amigos':'/friends', '/estadisticas':'/stats', '/clasificacion':'/leaderboard', 
-      '/logros':'/achievements', '/consejos':'/tips', '/campana':'/campaign', 
-      '/diario':'/daily', '/rayo':'/lightning', '/velocidad':'/speed', 
-      '/practica':'/practice', '/1v1':'/1v1', '/como-practicar-calculo-mental':'/how-to-practice-mental-math' 
-    };
+    const nlToEn = { '/vrienden':'/friends', '/statistieken':'/stats', '/klassement':'/leaderboard', '/prestaties':'/achievements', '/tips':'/tips', '/campagne':'/campaign', '/dagelijks':'/daily', '/bliksem':'/lightning', '/snelheid':'/speed', '/oefenen':'/practice', '/1v1':'/1v1', '/hoofdrekenen-oefenen':'/how-to-practice-mental-math' };
+    const esToEn = { '/amigos':'/friends', '/estadisticas':'/stats', '/clasificacion':'/leaderboard', '/logros':'/achievements', '/consejos':'/tips', '/campana':'/campaign', '/diario':'/daily', '/rayo':'/lightning', '/velocidad':'/speed', '/practica':'/practice', '/1v1':'/1v1', '/como-practicar-calculo-mental':'/how-to-practice-mental-math' };
     
     if (nlToEn[corePath]) corePath = nlToEn[corePath];
     if (esToEn[corePath]) corePath = esToEn[corePath];
 
-    // 3. Translate the core path into the newly selected language
-    const enToNl = { 
-      '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', 
-      '/achievements':'/prestaties', '/tips':'/tips', '/campaign':'/campagne', 
-      '/daily':'/dagelijks', '/lightning':'/bliksem', '/speed':'/snelheid', 
-      '/practice':'/oefenen', '/1v1':'/1v1', '/how-to-practice-mental-math':'/hoofdrekenen-oefenen' 
-    };
-    const enToEs = { 
-      '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', 
-      '/achievements':'/logros', '/tips':'/consejos', '/campaign':'/campana', 
-      '/daily':'/diario', '/lightning':'/rayo', '/speed':'/velocidad', 
-      '/practice':'/practica', '/1v1':'/1v1', '/how-to-practice-mental-math':'/como-practicar-calculo-mental' 
-    };
+    const enToNl = { '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', '/achievements':'/prestaties', '/tips':'/tips', '/campaign':'/campagne', '/daily':'/dagelijks', '/lightning':'/bliksem', '/speed':'/snelheid', '/practice':'/oefenen', '/1v1':'/1v1', '/how-to-practice-mental-math':'/hoofdrekenen-oefenen' };
+    const enToEs = { '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', '/achievements':'/logros', '/tips':'/consejos', '/campaign':'/campana', '/daily':'/diario', '/lightning':'/rayo', '/speed':'/velocidad', '/practice':'/practica', '/1v1':'/1v1', '/how-to-practice-mental-math':'/como-practicar-calculo-mental' };
     
     let translatedPath = corePath;
     if (l === 'nl' && enToNl[corePath]) translatedPath = enToNl[corePath];
     if (l === 'es' && enToEs[corePath]) translatedPath = enToEs[corePath];
 
-    // 4. Build the final URL with the correct prefix
     let finalPath = translatedPath;
     if (l === 'nl') finalPath = '/nl' + (translatedPath === '/' ? '' : translatedPath);
     else if (l === 'es') finalPath = '/es' + (translatedPath === '/' ? '' : translatedPath);
     
     if (finalPath === '') finalPath = '/';
 
+    // Preserve query string AND auth hash (for Google Login)
     history.replaceState({lang:l}, document.title, finalPath + window.location.search + window.location.hash);
   }catch(e){}
 };

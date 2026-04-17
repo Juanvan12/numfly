@@ -1,21 +1,7 @@
----
-const currentPath = Astro.url.pathname;
-const currentLang = currentPath.startsWith('/nl') ? 'nl' : currentPath.startsWith('/es') ? 'es' : 'en';
-const prefix = currentLang === 'en' ? '' : `/${currentLang}`;
-
-const links = {
-  stats: currentLang === 'nl' ? '/statistieken' : currentLang === 'es' ? '/estadisticas' : '/stats',
-  achievements: currentLang === 'nl' ? '/prestaties' : currentLang === 'es' ? '/logros' : '/achievements',
-  tips: currentLang === 'nl' ? '/tips' : currentLang === 'es' ? '/consejos' : '/tips',
-  friends: currentLang === 'nl' ? '/vrienden' : currentLang === 'es' ? '/amigos' : '/friends',
-  leaderboard: currentLang === 'nl' ? '/klassement' : currentLang === 'es' ? '/clasificacion' : '/leaderboard'
-};
----
-
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <a href={`${prefix}/`} class="sidebar-logo" onclick="closeSidebar();" style="text-decoration: none;" title="Home">
+    <a href="/" id="nav-home" class="sidebar-logo" onclick="closeSidebar();" style="text-decoration: none;" title="Home">
       NUM<span>FLY</span>.
     </a>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -52,23 +38,23 @@ const links = {
   <div class="sidebar-divider"></div>
   
   <div class="sidebar-nav">
-    <a href={`${prefix}${links.stats}`} class="sidebar-item" onclick="closeSidebar()">
+    <a href="/stats" id="nav-stats" class="sidebar-item" onclick="closeSidebar()">
       <span class="sidebar-item-icon">📊</span>
       <div><div class="sidebar-item-label" data-i18n="nav_stats"></div></div>
     </a>
-    <a href={`${prefix}${links.achievements}`} class="sidebar-item" onclick="closeSidebar()">
+    <a href="/achievements" id="nav-ach" class="sidebar-item" onclick="closeSidebar()">
       <span class="sidebar-item-icon">🏅</span>
       <div><div class="sidebar-item-label" data-i18n="nav_achievements"></div></div>
     </a>
-    <a href={`${prefix}${links.tips}`} class="sidebar-item" onclick="closeSidebar()">
+    <a href="/tips" id="nav-tips" class="sidebar-item" onclick="closeSidebar()">
       <span class="sidebar-item-icon">💡</span>
       <div><div class="sidebar-item-label" data-i18n="nav_tips"></div></div>
     </a>
-    <a href={`${prefix}${links.friends}`} class="sidebar-item" id="sidebar-friends-btn" onclick="closeSidebar()">
+    <a href="/friends" id="nav-friends" class="sidebar-item" onclick="closeSidebar()">
       <span class="sidebar-item-icon">👥</span>
       <div><div class="sidebar-item-label" data-i18n="nav_friends"></div></div>
     </a>
-    <a href={`${prefix}${links.leaderboard}`} class="sidebar-item" onclick="closeSidebar()">
+    <a href="/leaderboard" id="nav-lb" class="sidebar-item" onclick="closeSidebar()">
       <span class="sidebar-item-icon">🏆</span>
       <div><div class="sidebar-item-label" data-i18n="nav_leaderboard"></div></div>
     </a>
@@ -87,3 +73,34 @@ const links = {
     <button onclick="closeSidebar();showScreen('screen-privacy')" style="background:none;border:none;color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;padding:0;transition:color .15s;" data-i18n="sidebar_privacy"></button>
   </div>
 </div>
+
+<script is:inline>
+  (function() {
+    const path = window.location.pathname;
+    let activeLang = 'en';
+    if (path.startsWith('/nl/') || path === '/nl') activeLang = 'nl';
+    else if (path.startsWith('/es/') || path === '/es') activeLang = 'es';
+    else {
+      const saved = localStorage.getItem('numfly_lang');
+      if (saved) activeLang = saved;
+    }
+
+    const dictNl = { '/':'', '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', '/achievements':'/prestaties', '/tips':'/tips' };
+    const dictEs = { '/':'', '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', '/achievements':'/logros', '/tips':'/consejos' };
+
+    function updateLink(id, base) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (activeLang === 'nl') el.href = '/nl' + (dictNl[base] || base);
+      else if (activeLang === 'es') el.href = '/es' + (dictEs[base] || base);
+      else el.href = base;
+    }
+
+    updateLink('nav-home', '/');
+    updateLink('nav-stats', '/stats');
+    updateLink('nav-ach', '/achievements');
+    updateLink('nav-tips', '/tips');
+    updateLink('nav-friends', '/friends');
+    updateLink('nav-lb', '/leaderboard');
+  })();
+</script>
