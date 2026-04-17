@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<!--
+  SEO NOTE: This page targets "mental math trainer" and related keywords.
+  For optimal multilingual SEO, consider migrating to SSR (Next.js, Astro, Eleventy, PHP)
+  so that /es/entrenador-calculo-mental and /nl/hoofdrekenen-trainer are served as
+  separate static HTML files.
+
+  CANONICAL / TRAILING SLASH: The canonical points to the no-slash URL:
+    https://numfly.pro/mental-math-trainer
+  Ensure your server 301-redirects the trailing-slash variant to this URL.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Math Trainer: Build Speed & Accuracy in 10 Min/Day | Numfly</title>
+<meta name="description" content="The best free mental math trainer online. Structured drills, speed rounds, and adaptive difficulty that track your progress session by session. No sign-up needed.">
+<meta name="keywords" content="mental math trainer, mental math training, mental arithmetic trainer, math trainer online, free mental math trainer, mental math speed trainer, arithmetic training app">
+<link rel="canonical" href="https://numfly.pro/mental-math-trainer">
+<link rel="alternate" hreflang="en" href="https://numfly.pro/mental-math-trainer">
+<link rel="alternate" hreflang="es" href="https://numfly.pro/es/entrenador-calculo-mental">
+<link rel="alternate" hreflang="nl" href="https://numfly.pro/nl/hoofdrekenen-trainer">
+<link rel="alternate" hreflang="x-default" href="https://numfly.pro/mental-math-trainer">
+<meta property="og:title" content="Mental Math Trainer: Build Speed & Accuracy in 10 Min/Day | Numfly">
+<meta property="og:description" content="Structured mental math training with speed rounds, daily challenges, and live leaderboards. Free — no account required.">
+<meta property="og:url" content="https://numfly.pro/mental-math-trainer">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://numfly.pro/og-image.png">
+<meta property="og:site_name" content="Numfly">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mental Math Trainer: Build Speed & Accuracy in 10 Min/Day">
+<meta name="twitter:description" content="Structured mental math training with speed rounds and live leaderboards. Free, no sign-up.">
+<meta property="article:published_time" content="2026-04-01">
+<meta property="article:modified_time" content="2026-04-17">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap&font-display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Mental Math Trainer: Build Speed & Accuracy in 10 Min/Day",
+  "description": "A complete guide to structured mental math training — how to choose a trainer, what a good training session looks like, and how to measure progress.",
+  "author": { "@type": "Organization", "name": "Numfly", "url": "https://numfly.pro" },
+  "publisher": { "@type": "Organization", "name": "Numfly", "url": "https://numfly.pro" },
+  "datePublished": "2026-04-01",
+  "dateModified": "2026-04-17",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://numfly.pro/mental-math-trainer" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Numfly",
+  "url": "https://numfly.pro",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "description": "Mental math trainer with speed rounds, adaptive difficulty, daily challenges, and live competitive multiplayer. Free to use, no account required.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Organization", "name": "Numfly", "url": "https://numfly.pro" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is a mental math trainer?", "acceptedAnswer": { "@type": "Answer", "text": "A mental math trainer is a structured practice tool that presents arithmetic problems under timed conditions, tracks your speed and accuracy, and adapts difficulty to your current level. Unlike random drills, a good trainer targets your weak operations and measures progress over time." } },
+    { "@type": "Question", "name": "How often should I use a mental math trainer?", "acceptedAnswer": { "@type": "Answer", "text": "10 minutes daily produces far better results than long occasional sessions. The brain consolidates arithmetic skills between sessions — daily repetition is the key variable." } },
+    { "@type": "Question", "name": "How long before I see results from mental math training?", "acceptedAnswer": { "@type": "Answer", "text": "Most people notice improvement within 2–4 weeks of daily 10-minute sessions. Measurable speed gains on timed tests typically appear after 6–8 weeks." } },
+    { "@type": "Question", "name": "What operations should I train first?", "acceptedAnswer": { "@type": "Answer", "text": "Start with addition and subtraction. Most adults underestimate how much their addition can still improve, and fast addition is the foundation that speeds up every other operation." } }
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #08080e;
+  --surface: #111118;
+  --surface2: #18181f;
+  --surface3: #1e1e28;
+  --border: #252535;
+  --border2: #32324a;
+  --accent: #e8ff47;
+  --text: #f0f0f5;
+  --muted: #6b6b8a;
+  --muted2: #42425a;
+  --success: #4dffb4;
+  --error: #ff4d6b;
+  --info: #47b3ff;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,.012) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,.012) 1px, transparent 1px);
+  background-size: 52px 52px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(232,255,71,.04) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 80%, rgba(71,179,255,.05) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  padding: 8px 14px;
+  border-radius: 4px;
+  text-decoration: none;
+  z-index: 9999;
+  transition: top .15s;
+}
+.skip-link:focus { top: 8px; }
+
+#reading-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--accent);
+  width: 0%;
+  z-index: 300;
+  transition: width .08s linear;
+}
+
+body > nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(8,8,14,.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 20px; }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .15s;
+}
+.nav-links a:hover { color: var(--text); }
+
+/* Language Switcher */
+.lang-switch {
+  display: flex;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px;
+}
+.lang-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color .15s, background .15s;
+}
+.lang-btn.active { background: var(--accent); color: #000; }
+.lang-btn:not(.active):hover { color: var(--text); }
+
+.nav-cta {
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: opacity .15s;
+}
+.nav-cta:hover { opacity: .85; }
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px 100px;
+}
+
+.hero {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.hero-tag::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--accent);
+}
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 9vw, 84px);
+  letter-spacing: 2px;
+  line-height: .94;
+  color: var(--text);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+h1 .ac { color: var(--accent); }
+.hero-sub {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted2);
+}
+.dot { color: var(--border2); }
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 14px;
+  text-align: center;
+}
+.stat-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px;
+  letter-spacing: 1px;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 48px;
+}
+.toc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted2);
+  margin-bottom: 14px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 16px;
+}
+.toc-grid a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .15s;
+  padding: 5px 0;
+}
+.toc-grid a:hover { color: var(--accent); }
+.toc-n {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--muted2);
+  min-width: 16px;
+}
+
+h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 4vw, 38px);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text);
+  margin: 56px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+h2::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 26px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text);
+  margin: 28px 0 8px;
+}
+
+p { color: var(--muted); margin-bottom: 16px; font-size: 15px; }
+p:last-child { margin-bottom: 0; }
+p strong { color: var(--text); font-weight: 500; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { opacity: .8; }
+
+.pull {
+  border-left: 2px solid var(--accent);
+  padding: 2px 0 2px 20px;
+  margin: 28px 0;
+}
+.pull p {
+  font-size: 17px;
+  color: var(--text);
+  font-weight: 300;
+  line-height: 1.55;
+  margin: 0;
+}
+.pull p em { color: var(--muted); font-style: italic; }
+
+/* Feature cards */
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 24px 0;
+}
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color .2s;
+}
+.feature-card:hover { border-color: var(--border2); }
+.feature-icon {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.feature-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.feature-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Training mode cards */
+.mode-list { display: flex; flex-direction: column; gap: 8px; margin: 20px 0; }
+.mode-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: border-color .2s;
+}
+.mode-card:hover { border-color: var(--border2); }
+.mode-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #000;
+  background: var(--accent);
+  padding: 4px 8px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.mode-badge.info { background: var(--info); }
+.mode-badge.success { background: var(--success); }
+.mode-badge.error { background: var(--error); }
+.mode-content h4 { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.mode-content p { font-size: 13px; color: var(--muted); margin: 0; }
+
+.callout {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin: 20px 0;
+}
+.callout-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.callout p { font-size: 14px; margin: 0; }
+
+.cta-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 36px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.cta-text h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.cta-text p { font-size: 13px; color: var(--muted); margin: 0; }
+.btn-acc {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 20px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity .15s, transform .15s;
+}
+.btn-acc:hover { opacity: .85; transform: translateY(-1px); }
+
+/* Progress chart mockup */
+.progress-mockup {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.mockup-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted2);
+}
+.mockup-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); }
+.mockup-dot.green { background: var(--success); }
+.mockup-inner { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.progress-row { display: flex; align-items: center; gap: 12px; }
+.progress-op {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted2);
+  min-width: 72px;
+}
+.progress-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--accent);
+}
+.progress-pct {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text);
+  min-width: 32px;
+  text-align: right;
+}
+.mockup-score-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+.mockup-score-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  flex: 1;
+  text-align: center;
+}
+.mockup-score-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.mockup-score-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted2);
+}
+
+/* Comparison table */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 13px;
+}
+.compare-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted2);
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.compare-table td {
+  padding: 12px 12px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table td:first-child { color: var(--text); font-weight: 500; }
+.check { color: var(--success); font-size: 14px; }
+.cross { color: var(--muted2); font-size: 14px; }
+
+/* Routine steps */
+.routine-row { display: flex; flex-direction: column; gap: 8px; margin: 20px 0; }
+.routine-step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.r-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  min-width: 44px;
+  flex-shrink: 0;
+}
+.r-content h4 { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.r-content p { font-size: 13px; color: var(--muted); margin: 0; }
+
+/* Timeline */
+.timeline { display: flex; flex-direction: column; gap: 0; margin: 20px 0; position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px; top: 12px; bottom: 12px;
+  width: 1px;
+  background: var(--border2);
+}
+.tl-item { display: flex; gap: 16px; align-items: flex-start; padding: 12px 0; position: relative; }
+.tl-dot {
+  width: 23px; height: 23px;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+  position: relative;
+  z-index: 1;
+}
+.tl-when {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.tl-what { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* FAQ */
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+.faq-item:first-child { border-top: 1px solid var(--border); }
+.faq-q {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: inherit;
+  padding: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+}
+.fq-t { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4; }
+.fq-icon {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  color: var(--muted2);
+  flex-shrink: 0;
+  transition: transform .25s, color .15s;
+}
+.faq-item.open .fq-icon { transform: rotate(45deg); color: var(--accent); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.faq-item.open .faq-a { max-height: 400px; }
+.faq-a p { font-size: 14px; padding-bottom: 16px; margin: 0; }
+
+/* Compete CTA section */
+.compete-cta-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.compete-cta {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+.compete-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.compete-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(24px, 3.5vw, 32px);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+.compete-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; max-width: 380px; }
+.compete-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 11px 20px;
+  background: none;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  border: 1px solid var(--border2);
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: border-color .15s, color .15s;
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); opacity: 1; }
+.compete-right { flex-shrink: 0; }
+.vs-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 200px;
+}
+.vs-player { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+.vs-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted2);
+}
+.vs-score {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.vs-player.you .vs-score { color: var(--accent); }
+.vs-player.opp .vs-score { color: var(--muted); }
+.vs-bar { width: 100%; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.vs-fill { height: 100%; border-radius: 2px; }
+.you-fill { background: var(--accent); animation: youbar 1.8s ease-in-out infinite alternate; }
+.opp-fill { background: var(--muted2); animation: oppbar 1.8s ease-in-out infinite alternate; }
+@keyframes youbar { from { width: 56%; } to { width: 72%; } }
+@keyframes oppbar { from { width: 44%; } to { width: 52%; } }
+.vs-sep {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--border2);
+}
+
+footer {
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.f-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: var(--muted2);
+  text-decoration: none;
+}
+.f-logo span { color: var(--muted); }
+.f-links { display: flex; gap: 20px; }
+.f-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted2);
+  text-decoration: none;
+  transition: color .15s;
+}
+.f-links a:hover { color: var(--muted); }
+.f-copy { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted2); }
+
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+[data-lang] { display: none; }
+[data-lang].lang-active { display: block; }
+[data-lang-inline] { display: none; }
+[data-lang-inline].lang-active { display: inline; }
+h1[data-lang].lang-active { display: block; }
+p[data-lang].lang-active { display: block; }
+
+@media (max-width: 600px) {
+  body > nav { padding: 0 16px; }
+  .nav-links { display: none; }
+  .page { padding: 0 16px 72px; }
+  h1 { font-size: 46px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .cta-card { flex-direction: column; }
+  .compete-cta { flex-direction: column; padding: 24px; }
+  .compete-right { width: 100%; }
+  .vs-card { justify-content: center; }
+  .compete-cta-wrap { padding: 0 16px 60px; }
+  footer { padding: 24px 16px; flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div id="reading-bar"></div>
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<nav>
+  <a href="https://numfly.pro" class="nav-logo">NUM<span>FLY</span>.</a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#what-makes"><span data-lang-key="nav_features">Features</span></a>
+      <a href="#modes"><span data-lang-key="nav_modes">Modes</span></a>
+      <a href="#routine"><span data-lang-key="nav_routine">Routine</span></a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('nl')">NL</button>
+      <button class="lang-btn" onclick="setLang('es')">ES</button>
+    </div>
+    <a href="https://numfly.pro/?mode=speed" class="nav-cta" data-lang-key="nav_cta">Train Free →</a>
+  </div>
+</nav>
+
+<main>
+<div class="page" id="main-content">
+
+  <header class="hero">
+    <div class="hero-tag" data-lang-key="hero_tag">Free Online Trainer</div>
+
+    <!-- English -->
+    <h1 data-lang="en" class="lang-active">The <span class="ac">mental math</span><br>trainer that<br>tracks progress</h1>
+    <p class="hero-sub lang-active" data-lang="en">Most mental math practice is random and unmeasured. Numfly is a structured trainer — timed drills, operation-level accuracy tracking, and adaptive difficulty that adjusts as you improve. 10 minutes a day is all it takes.</p>
+
+    <!-- Spanish -->
+    <h1 data-lang="es">El <span class="ac">entrenador</span><br>de cálculo mental<br>que mide tu progreso</h1>
+    <p class="hero-sub" data-lang="es">La mayoría de la práctica de cálculo mental es aleatoria y sin seguimiento. Numfly es un entrenador estructurado — ejercicios cronometrados, seguimiento de precisión por operación y dificultad adaptativa. Solo 10 minutos al día.</p>
+
+    <!-- Dutch -->
+    <h1 data-lang="nl">De <span class="ac">hoofdrekenen</span><br>trainer die<br>vooruitgang bijhoudt</h1>
+    <p class="hero-sub" data-lang="nl">De meeste hoofdrekenpraktijk is willekeurig en ongemeten. Numfly is een gestructureerde trainer — getimede oefeningen, nauwkeurigheidsregistratie per bewerking en adaptieve moeilijkheidsgraad. Slechts 10 minuten per dag.</p>
+
+    <div class="hero-meta">
+      <span data-lang-key="hero_meta_free">100% free</span>
+      <span class="dot">·</span>
+      <span data-lang-key="hero_meta_account">No account required</span>
+      <span class="dot">·</span>
+      <span data-lang-key="hero_updated">Updated April 2026</span>
+    </div>
+  </header>
+
+  <div class="stats-row reveal">
+    <div class="stat-card">
+      <div class="stat-val">10</div>
+      <div class="stat-lbl" data-lang-key="stat1">min/day to improve</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">2–4</div>
+      <div class="stat-lbl" data-lang-key="stat2">weeks to real gains</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">4</div>
+      <div class="stat-lbl" data-lang-key="stat3">training modes</div>
+    </div>
+  </div>
+
+  <div class="toc reveal" aria-label="Table of contents">
+    <div class="toc-label" data-lang-key="toc_label">In this guide</div>
+    <div class="toc-grid">
+      <a href="#what-is"><span class="toc-n">01</span><span data-lang-key="toc_what">What is a trainer?</span></a>
+      <a href="#what-makes"><span class="toc-n">02</span><span data-lang-key="toc_features">What makes it work</span></a>
+      <a href="#modes"><span class="toc-n">03</span><span data-lang-key="toc_modes">Training modes</span></a>
+      <a href="#progress"><span class="toc-n">04</span><span data-lang-key="toc_progress">Tracking progress</span></a>
+      <a href="#routine"><span class="toc-n">05</span><span data-lang-key="toc_routine">Daily routine</span></a>
+      <a href="#results"><span class="toc-n">06</span><span data-lang-key="toc_results">Expected results</span></a>
+      <a href="#vs"><span class="toc-n">07</span><span data-lang-key="toc_vs">Trainer vs. worksheets</span></a>
+      <a href="#faq"><span class="toc-n">08</span><span>FAQ</span></a>
+    </div>
+  </div>
+
+  <!-- SECTION 1: What is a mental math trainer -->
+  <section id="what-is">
+    <h2 class="reveal" data-lang-key="what_h2">What is a mental math trainer?</h2>
+
+    <div data-lang="en" class="lang-active">
+      <p class="reveal">A mental math trainer is more than a quiz generator. It's a structured system that presents problems under <strong>time pressure</strong>, records your performance at the operation level, and adjusts difficulty so you're always working at the edge of your ability — not too easy, not too hard.</p>
+      <p class="reveal">The difference matters. Doing random worksheets builds familiarity. A trainer builds <strong>automaticity</strong> — the point where answers surface without deliberate effort. That's the threshold where mental math becomes genuinely useful in daily life.</p>
+      <div class="pull reveal">
+        <p>Automaticity isn't a talent. It's <em>the result of repeated retrieval under time pressure</em> — exactly what a trainer is designed to produce.</p>
+      </div>
+      <p class="reveal">Numfly is built around this principle. Every session is timed, every answer is logged, and the statistics page shows you where you're fast, where you're slow, and where you're making errors. Your training is targeted, not random.</p>
+    </div>
+
+    <div data-lang="es">
+      <p class="reveal">Un entrenador de cálculo mental es más que un generador de preguntas. Es un sistema estructurado que presenta problemas <strong>bajo presión de tiempo</strong>, registra tu rendimiento por operación y ajusta la dificultad para que siempre trabajes al límite de tu capacidad.</p>
+      <p class="reveal">La diferencia importa. Hacer fichas aleatorias construye familiaridad. Un entrenador construye <strong>automaticidad</strong> — el punto donde las respuestas aparecen sin esfuerzo deliberado. Ese es el umbral donde el cálculo mental se vuelve genuinamente útil en la vida cotidiana.</p>
+      <div class="pull reveal">
+        <p>La automaticidad no es un talento. Es <em>el resultado de la recuperación repetida bajo presión de tiempo</em> — exactamente lo que un entrenador está diseñado para producir.</p>
+      </div>
+    </div>
+
+    <div data-lang="nl">
+      <p class="reveal">Een hoofdrekenentrainer is meer dan een quizgenerator. Het is een gestructureerd systeem dat problemen presenteert <strong>onder tijdsdruk</strong>, je prestaties per bewerking bijhoudt en de moeilijkheidsgraad aanpast zodat je altijd op de grens van je kunnen werkt.</p>
+      <p class="reveal">Het verschil is belangrijk. Willekeurige werkbladen bouwen bekendheid op. Een trainer bouwt <strong>automaticiteit</strong> — het punt waarop antwoorden opkomen zonder bewuste moeite. Dat is de drempel waar hoofdrekenen echt nuttig wordt in het dagelijks leven.</p>
+      <div class="pull reveal">
+        <p>Automaticiteit is geen talent. Het is <em>het resultaat van herhaalde ophaling onder tijdsdruk</em> — precies wat een trainer is ontworpen om te produceren.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-card reveal">
+    <div class="cta-text">
+      <h3 data-lang-key="cta1_title">Start training now</h3>
+      <p data-lang-key="cta1_sub">Free speed rounds and daily challenges — no sign-up needed.</p>
+    </div>
+    <a href="https://numfly.pro/?mode=speed" class="btn-acc" data-lang-key="cta1_btn">Open Trainer →</a>
+  </div>
+
+  <!-- SECTION 2: What makes a good trainer -->
+  <section id="what-makes">
+    <h2 class="reveal" data-lang-key="features_h2">What makes a trainer effective</h2>
+
+    <div data-lang="en" class="lang-active">
+      <p class="reveal">Not all math trainers are equal. The ones that produce fast results share four characteristics. Numfly is built around all of them.</p>
+    </div>
+    <div data-lang="es">
+      <p class="reveal">No todos los entrenadores de matemáticas son iguales. Los que producen resultados rápidos comparten cuatro características. Numfly está construido en torno a todas ellas.</p>
+    </div>
+    <div data-lang="nl">
+      <p class="reveal">Niet alle wiskundetrainers zijn gelijk. De trainers die snel resultaat opleveren delen vier kenmerken. Numfly is rond al deze kenmerken gebouwd.</p>
+    </div>
+
+    <div class="feature-grid reveal">
+      <div class="feature-card">
+        <div class="feature-icon" data-lang-key="f1_tag">Time Pressure</div>
+        <div class="feature-title" data-lang-key="f1_title">Every problem is timed</div>
+        <p class="feature-desc" data-lang-key="f1_desc">Timed practice forces retrieval speed, not just accuracy. Without a clock, the brain takes shortcuts. With a clock, it builds real automaticity.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" data-lang-key="f2_tag">Targeted Drilling</div>
+        <div class="feature-title" data-lang-key="f2_title">Operation-level tracking</div>
+        <p class="feature-desc" data-lang-key="f2_desc">Your accuracy for addition, subtraction, multiplication, and division is tracked separately. You train what's actually slow, not what feels comfortable.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" data-lang-key="f3_tag">Immediate Feedback</div>
+        <div class="feature-title" data-lang-key="f3_title">Instant right/wrong signal</div>
+        <p class="feature-desc" data-lang-key="f3_desc">The brain consolidates corrections best immediately after an error. Delayed feedback — like reviewing a worksheet later — produces much slower improvement.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" data-lang-key="f4_tag">Streak Tracking</div>
+        <div class="feature-title" data-lang-key="f4_title">Daily consistency rewards</div>
+        <p class="feature-desc" data-lang-key="f4_desc">Consistency is the key variable in building automaticity. Numfly tracks your daily streak and XP to make showing up each day rewarding, not just productive.</p>
+      </div>
+    </div>
+
+    <div class="callout reveal">
+      <div class="callout-tag" data-lang-key="callout_key">Key insight</div>
+      <p data-lang-key="callout_key_body"><strong>The session length matters less than the frequency.</strong> 10 minutes of daily timed training beats 60 minutes on Saturday. The brain needs sleep between sessions to consolidate skills — you can't rush it with a long session.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 3: Training modes -->
+  <section id="modes">
+    <h2 class="reveal" data-lang-key="modes_h2">Training modes</h2>
+
+    <div data-lang="en" class="lang-active">
+      <p class="reveal">Numfly offers four distinct training modes. Each targets a different aspect of mental math fluency. A complete training week uses all four.</p>
+    </div>
+    <div data-lang="es">
+      <p class="reveal">Numfly ofrece cuatro modos de entrenamiento distintos. Cada uno trabaja un aspecto diferente de la fluidez en cálculo mental. Una semana de entrenamiento completa usa los cuatro.</p>
+    </div>
+    <div data-lang="nl">
+      <p class="reveal">Numfly biedt vier verschillende trainingsmodi. Elke modus richt zich op een ander aspect van rekenvaardigheid. Een complete trainingsweek gebruikt alle vier.</p>
+    </div>
+
+    <div class="mode-list reveal">
+      <div class="mode-card">
+        <div class="mode-badge" data-lang-key="mode1_badge">Speed</div>
+        <div class="mode-content">
+          <h4 data-lang-key="mode1_title">Speed Round — 2 minutes, mixed operations</h4>
+          <p data-lang-key="mode1_desc">The core training mode. Mixed operations, 2-minute clock, score tracked session to session. This is the primary driver of speed improvement. Do this every day.</p>
+        </div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-badge info" data-lang-key="mode2_badge">Practice</div>
+        <div class="mode-content">
+          <h4 data-lang-key="mode2_title">Practice Mode — Focused operation drills</h4>
+          <p data-lang-key="mode2_desc">Choose a single operation and difficulty. Use this to drill your weak spot identified in speed round statistics. Untimed — focus is on correct technique, not speed.</p>
+        </div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-badge success" data-lang-key="mode3_badge">Lightning</div>
+        <div class="mode-content">
+          <h4 data-lang-key="mode3_title">Lightning Mode — Multi-step working memory</h4>
+          <p data-lang-key="mode3_desc">Problems that require holding an intermediate result while solving the next step. Trains working memory — the cognitive ceiling for advanced mental math.</p>
+        </div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-badge error" data-lang-key="mode4_badge">Compete</div>
+        <div class="mode-content">
+          <h4 data-lang-key="mode4_title">Challenge Mode — Live vs. other players</h4>
+          <p data-lang-key="mode4_desc">Race a friend or random opponent in real time. Competitive pressure produces a different kind of performance than solo practice — and it's far more motivating.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: Tracking progress -->
+  <section id="progress">
+    <h2 class="reveal" data-lang-key="progress_h2">Tracking your progress</h2>
+
+    <div data-lang="en" class="lang-active">
+      <p class="reveal">One of the biggest advantages of using a dedicated trainer over random practice is <strong>measurability</strong>. Numfly's statistics page shows you exactly where you stand — and where to focus next.</p>
+    </div>
+    <div data-lang="es">
+      <p class="reveal">Una de las mayores ventajas de usar un entrenador dedicado sobre la práctica aleatoria es la <strong>medibilidad</strong>. La página de estadísticas de Numfly te muestra exactamente dónde estás — y dónde enfocarte a continuación.</p>
+    </div>
+    <div data-lang="nl">
+      <p class="reveal">Een van de grootste voordelen van een dedicated trainer boven willekeurige oefening is <strong>meetbaarheid</strong>. De statistiekenpagina van Numfly laat je precies zien waar je staat — en waar je je vervolgens op moet richten.</p>
+    </div>
+
+    <div class="progress-mockup reveal">
+      <div class="mockup-bar">
+        <div class="mockup-dot green"></div>
+        <span data-lang-key="mockup_label">Numfly — Your Stats</span>
+      </div>
+      <div class="mockup-inner">
+        <div class="progress-row">
+          <div class="progress-op" data-lang-key="op_add">Addition</div>
+          <div class="progress-bar-wrap"><div class="progress-fill" style="width:88%"></div></div>
+          <div class="progress-pct">88%</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-op" data-lang-key="op_sub">Subtraction</div>
+          <div class="progress-bar-wrap"><div class="progress-fill" style="width:74%"></div></div>
+          <div class="progress-pct">74%</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-op" data-lang-key="op_mul">Multiply</div>
+          <div class="progress-bar-wrap"><div class="progress-fill" style="width:61%; background: var(--error);"></div></div>
+          <div class="progress-pct" style="color: var(--error)">61%</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-op" data-lang-key="op_div">Division</div>
+          <div class="progress-bar-wrap"><div class="progress-fill" style="width:79%"></div></div>
+          <div class="progress-pct">79%</div>
+        </div>
+        <div class="mockup-score-row">
+          <div class="mockup-score-box">
+            <div class="mockup-score-val">24</div>
+            <div class="mockup-score-lbl" data-lang-key="stat_best">Best score</div>
+          </div>
+          <div class="mockup-score-box">
+            <div class="mockup-score-val" style="color: var(--success)">🔥 7</div>
+            <div class="mockup-score-lbl" data-lang-key="stat_streak">Day streak</div>
+          </div>
+          <div class="mockup-score-box">
+            <div class="mockup-score-val" style="color: var(--info)">340</div>
+            <div class="mockup-score-lbl" data-lang-key="stat_xp">Total XP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-lang="en" class="lang-active">
+      <p class="reveal">In the example above, <strong>multiplication is the weak spot</strong> at 61% accuracy. A good training week would include 2–3 focused multiplication drills in Practice Mode, while maintaining speed round performance in the other operations. Without tracking, most people keep training their strongest operation — which feels good but doesn't raise the ceiling.</p>
+    </div>
+    <div data-lang="es">
+      <p class="reveal">En el ejemplo anterior, <strong>la multiplicación es el punto débil</strong> con 61% de precisión. Una buena semana de entrenamiento incluiría 2–3 ejercicios de multiplicación enfocados en Modo Práctica, mientras se mantiene el rendimiento en otras operaciones. Sin seguimiento, la mayoría sigue entrenando su operación más fuerte — lo que se siente bien pero no eleva el techo.</p>
+    </div>
+    <div data-lang="nl">
+      <p class="reveal">In het bovenstaande voorbeeld is <strong>vermenigvuldiging het zwakke punt</strong> met 61% nauwkeurigheid. Een goede trainingsweek zou 2–3 gerichte vermenigvuldigingsoefeningen in Oefenmodus bevatten, terwijl de snelheidsrondes voor andere bewerkingen op peil worden gehouden. Zonder bijhouden blijven de meeste mensen hun sterkste bewerking trainen — wat goed voelt maar het plafond niet verhoogt.</p>
+    </div>
+  </section>
+
+  <div class="cta-card reveal">
+    <div class="cta-text">
+      <h3 data-lang-key="cta2_title">See your weak spots</h3>
+      <p data-lang-key="cta2_sub">Numfly's stats track accuracy by operation across every session — automatically.</p>
+    </div>
+    <a href="https://numfly.pro/stats" class="btn-acc" data-lang-key="cta2_btn">View Your Stats →</a>
+  </div>
+
+  <!-- SECTION 5: Daily routine -->
+  <section id="routine">
+    <h2 class="reveal" data-lang-key="routine_h2">The 10-minute daily routine</h2>
+
+    <div data-lang="en" class="lang-active">
+      <p class="reveal">Knowing the modes is not enough. Speed comes from <strong>automaticity</strong> — when the method no longer requires conscious effort. This routine is designed to build that in the shortest time possible.</p>
+    </div>
+    <div data-lang="es">
+      <p class="reveal">Conocer los modos no es suficiente. La velocidad viene de la <strong>automaticidad</strong> — cuando el método ya no requiere esfuerzo consciente. Esta rutina está diseñada para construir eso en el menor tiempo posible.</p>
+    </div>
+    <div data-lang="nl">
+      <p class="reveal">De modi kennen is niet genoeg. Snelheid komt van <strong>automaticiteit</strong> — wanneer de methode geen bewuste inspanning meer vereist. Deze routine is ontworpen om dat in de kortst mogelijke tijd op te bouwen.</p>
+    </div>
+
+    <div class="routine-row reveal">
+      <div class="routine-step">
+        <div class="r-badge">2 min</div>
+        <div class="r-content">
+          <h4 data-lang-key="routine1_title">Warm-up — Easy addition</h4>
+          <p data-lang-key="routine1_body">Start with simple two-digit addition in Practice Mode. This primes your brain for arithmetic before the hard work begins.</p>
+        </div>
+      </div>
+      <div class="routine-step">
+        <div class="r-badge">5 min</div>
+        <div class="r-content">
+          <h4 data-lang-key="routine2_title">Speed Round — Mixed operations</h4>
+          <p data-lang-key="routine2_body">The core session. 2-minute timed round, mixed difficulty. Record your score. Your goal is to beat your previous best by 1–2 problems each week.</p>
+        </div>
+      </div>
+      <div class="routine-step">
+        <div class="r-badge">3 min</div>
+        <div class="r-content">
+          <h4 data-lang-key="routine3_title">Weak-spot drill — Targeted operation</h4>
+          <p data-lang-key="routine3_body">Take your lowest-accuracy operation from the stats page and do a focused Practice Mode session on it. This is where real gains come from.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout reveal">
+      <div class="callout-tag" data-lang-key="callout_routine">Core Principle</div>
+      <p data-lang-key="callout_routine_body"><strong>Consistency beats intensity.</strong> 10 minutes daily produces far better results than 90 minutes on Saturday. Mental math improvement depends almost entirely on spaced repetition — the brain consolidates skills between sessions, not during them.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 6: Expected results -->
+  <section id="results">
+    <h2 class="reveal" data-lang-key="results_h2">What to expect</h2>
+
+    <div data-lang="en" class="lang-active">
+      <p class="reveal">Mental math improvement follows a predictable arc. Most people hit a plateau around weeks 2–3 and assume they've reached their ceiling. They haven't — that plateau is followed by a breakthrough as techniques become automatic.</p>
+    </div>
+    <div data-lang="es">
+      <p class="reveal">La mejora en cálculo mental sigue un arco predecible. La mayoría de las personas alcanzan una meseta alrededor de las semanas 2–3 y asumen que han llegado a su techo. No es así — esa meseta es seguida por un avance a medida que las técnicas se vuelven automáticas.</p>
+    </div>
+    <div data-lang="nl">
+      <p class="reveal">Verbetering in hoofdrekenen volgt een voorspelbaar patroon. De meeste mensen bereiken een plateau rond week 2–3 en nemen aan dat ze hun plafond hebben bereikt. Dat is niet zo — dat plateau wordt gevolgd door een doorbraak naarmate technieken automatisch worden.</p>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-when" data-lang-key="tl1_when">Weeks 1–2</div>
+          <div class="tl-what" data-lang-key="tl1_what">The trainer feels slow. You're consciously applying techniques. Scores vary. This is normal — you're building the neural pathways, not using them yet.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-when" data-lang-key="tl2_when">Weeks 2–4</div>
+          <div class="tl-what" data-lang-key="tl2_what">Certain problem types feel noticeably easier. You hit your first plateau. Keep going — this is where most people quit and where breakthroughs happen.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-when" data-lang-key="tl3_when">Weeks 6–8</div>
+          <div class="tl-what" data-lang-key="tl3_what">Measurable speed gains on timed tests. Your speed round score climbs consistently. Techniques are becoming automatic rather than deliberate.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-when" data-lang-key="tl4_when">Months 3–6</div>
+          <div class="tl-what" data-lang-key="tl4_what">Everyday calculations feel effortless. You start noticing real-world moments — tips, discounts, mental estimates — where the training pays off automatically.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: Trainer vs worksheets -->
+  <section id="vs">
+    <h2 class="reveal" data-lang-key="vs_h2">Trainer vs. worksheets</h2>
+
+    <div data-lang="en" class="lang-active">
+      <p class="reveal">Worksheets have been the default mental math practice tool for decades. They work — but a dedicated trainer produces faster results for a specific reason.</p>
+    </div>
+    <div data-lang="es">
+      <p class="reveal">Las fichas han sido la herramienta de práctica predeterminada durante décadas. Funcionan — pero un entrenador dedicado produce resultados más rápidos por una razón específica.</p>
+    </div>
+    <div data-lang="nl">
+      <p class="reveal">Werkbladen zijn al decennialang het standaard oefenmiddel. Ze werken — maar een dedicated trainer produceert sneller resultaten om een specifieke reden.</p>
+    </div>
+
+    <table class="compare-table reveal" aria-label="Trainer vs worksheets comparison">
+      <thead>
+        <tr>
+          <th data-lang-key="vs_feature">Feature</th>
+          <th data-lang-key="vs_trainer">Numfly Trainer</th>
+          <th data-lang-key="vs_worksheets">Worksheets</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-lang-key="vs_r1">Time pressure per problem</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td data-lang-key="vs_r2">Immediate feedback</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td data-lang-key="vs_r3">Per-operation accuracy tracking</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td data-lang-key="vs_r4">Adaptive difficulty</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td data-lang-key="vs_r5">Progress over time</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td data-lang-key="vs_r6">Competitive multiplayer</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td data-lang-key="vs_r7">Free to use</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div data-lang="en" class="lang-active">
+      <p class="reveal">The critical missing ingredient in worksheets is <strong>time pressure per problem</strong>. Without it, the brain approaches each problem carefully rather than quickly — building accuracy, but not the retrieval speed that makes mental math useful in practice.</p>
+    </div>
+    <div data-lang="es">
+      <p class="reveal">El ingrediente crítico que falta en las fichas es la <strong>presión de tiempo por problema</strong>. Sin ella, el cerebro aborda cada problema con cuidado en lugar de con rapidez — construyendo precisión, pero no la velocidad de recuperación que hace que el cálculo mental sea útil en la práctica.</p>
+    </div>
+    <div data-lang="nl">
+      <p class="reveal">Het cruciale ontbrekende ingrediënt in werkbladen is <strong>tijdsdruk per probleem</strong>. Zonder dit benadert het brein elk probleem zorgvuldig in plaats van snel — wat nauwkeurigheid opbouwt, maar niet de ophaalsnelheid die hoofdrekenen in de praktijk nuttig maakt.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <h2 class="reveal">FAQ</h2>
+    <div class="reveal">
+      <div class="faq-item">
+        <button class="faq-q" onclick="faq(this)">
+          <span class="fq-t" data-lang-key="faq1_q">What is a mental math trainer exactly?</span>
+          <span class="fq-icon">+</span>
+        </button>
+        <div class="faq-a"><p data-lang-key="faq1_a">A mental math trainer is a tool that presents arithmetic problems under timed conditions, tracks your accuracy per operation, and measures improvement over time. Unlike random practice, a trainer is structured — you always know where you stand and what to work on next.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="faq(this)">
+          <span class="fq-t" data-lang-key="faq2_q">How often should I use the trainer?</span>
+          <span class="fq-icon">+</span>
+        </button>
+        <div class="faq-a"><p data-lang-key="faq2_a"><strong>Daily, for 10 minutes.</strong> This produces far better results than longer occasional sessions. The brain consolidates arithmetic skills between sessions — daily repetition is the key variable, not session length.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="faq(this)">
+          <span class="fq-t" data-lang-key="faq3_q">How long until I see results?</span>
+          <span class="fq-icon">+</span>
+        </button>
+        <div class="faq-a"><p data-lang-key="faq3_a">Most people notice certain problem types feeling easier within <strong>2–4 weeks of daily practice</strong>. Measurable speed gains on timed tests appear around 6–8 weeks. Expect a plateau around weeks 2–3 — keep going and the breakthrough follows.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="faq(this)">
+          <span class="fq-t" data-lang-key="faq4_q">Do I need to create an account?</span>
+          <span class="fq-icon">+</span>
+        </button>
+        <div class="faq-a"><p data-lang-key="faq4_a">No. Numfly works entirely without an account. Your streak, XP, and statistics are stored locally on your device. Creating an account is optional and unlocks cross-device sync and leaderboard access.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="faq(this)">
+          <span class="fq-t" data-lang-key="faq5_q">Which training mode should I start with?</span>
+          <span class="fq-icon">+</span>
+        </button>
+        <div class="faq-a"><p data-lang-key="faq5_a">Start with <strong>Speed Round</strong> — it's the core mode and gives you baseline statistics immediately. After 3–5 sessions you'll see which operation has the lowest accuracy. Switch to Practice Mode to target that operation directly.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="faq(this)">
+          <span class="fq-t" data-lang-key="faq6_q">Is Numfly really free?</span>
+          <span class="fq-icon">+</span>
+        </button>
+        <div class="faq-a"><p data-lang-key="faq6_a">Yes. All four training modes, statistics, streaks, and competitive multiplayer are completely free. There is no premium tier, no ads, and no paywall on any training feature.</p></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<div class="compete-cta-wrap">
+  <div class="compete-cta">
+    <div class="compete-left">
+      <div class="compete-tag" data-lang-key="compete_tag">Challenge Mode</div>
+      <div class="compete-title" data-lang-key="compete_title">Train alone — or race someone.</div>
+      <p class="compete-sub" data-lang-key="compete_sub">Numfly lets you challenge friends, join live speed rounds, and climb the global leaderboard. Free, no account required to start.</p>
+      <div class="compete-btns">
+        <a href="https://numfly.pro/?mode=speed" class="btn-acc" data-lang-key="compete_btn1">Start Training →</a>
+        <a href="https://numfly.pro/?mode=compete" class="btn-ghost" data-lang-key="compete_btn2">Find a Match</a>
+      </div>
+    </div>
+    <div class="compete-right" aria-hidden="true">
+      <div class="vs-card">
+        <div class="vs-player you">
+          <div class="vs-name" data-lang-key="compete_you">You</div>
+          <div class="vs-score">14</div>
+          <div class="vs-bar"><div class="vs-fill you-fill"></div></div>
+        </div>
+        <div class="vs-sep">VS</div>
+        <div class="vs-player opp">
+          <div class="vs-name">numfan92</div>
+          <div class="vs-score">11</div>
+          <div class="vs-bar"><div class="vs-fill opp-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="https://numfly.pro" class="f-logo">NUM<span>FLY</span>.</a>
+  <div class="f-links">
+    <a href="https://numfly.pro" data-lang-key="footer_practice">Practice</a>
+    <a href="https://numfly.pro/how-to-practice-mental-math" data-lang-key="footer_guide">Guide</a>
+    <a href="/?mode=privacy" data-lang-key="footer_privacy">Privacy</a>
+  </div>
+  <div class="f-copy">© 2026 Numfly</div>
+</footer>
+
+<script>
+// ─── Reading bar ───────────────────────────────────────────────
+const bar = document.getElementById('reading-bar') as HTMLElement | null;
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  if (bar) bar.style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+}, { passive: true });
+
+// ─── Scroll reveal ─────────────────────────────────────────────
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ─── FAQ accordion ─────────────────────────────────────────────
+function faq(btn: HTMLElement): void {
+  const item = btn.closest('.faq-item');
+  const was = item?.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!was) item?.classList.add('open');
+}
+
+// ─── Translations ──────────────────────────────────────────────
+const translations = {
+  en: {
+    nav_features: 'Features', nav_modes: 'Modes', nav_routine: 'Routine', nav_cta: 'Train Free →',
+    hero_tag: 'Free Online Trainer',
+    hero_meta_free: '100% free', hero_meta_account: 'No account required', hero_updated: 'Updated April 2026',
+    stat1: 'min/day to improve', stat2: 'weeks to real gains', stat3: 'training modes',
+    toc_label: 'In this guide', toc_what: 'What is a trainer?', toc_features: 'What makes it work',
+    toc_modes: 'Training modes', toc_progress: 'Tracking progress', toc_routine: 'Daily routine',
+    toc_results: 'Expected results', toc_vs: 'Trainer vs. worksheets',
+    what_h2: 'What is a mental math trainer?',
+    cta1_title: 'Start training now', cta1_sub: 'Free speed rounds and daily challenges — no sign-up needed.', cta1_btn: 'Open Trainer →',
+    features_h2: 'What makes a trainer effective',
+    f1_tag: 'Time Pressure', f1_title: 'Every problem is timed', f1_desc: 'Timed practice forces retrieval speed, not just accuracy. Without a clock, the brain takes shortcuts. With a clock, it builds real automaticity.',
+    f2_tag: 'Targeted Drilling', f2_title: 'Operation-level tracking', f2_desc: 'Your accuracy for addition, subtraction, multiplication, and division is tracked separately. You train what\'s actually slow, not what feels comfortable.',
+    f3_tag: 'Immediate Feedback', f3_title: 'Instant right/wrong signal', f3_desc: 'The brain consolidates corrections best immediately after an error. Delayed feedback — like reviewing a worksheet later — produces much slower improvement.',
+    f4_tag: 'Streak Tracking', f4_title: 'Daily consistency rewards', f4_desc: 'Consistency is the key variable in building automaticity. Numfly tracks your daily streak and XP to make showing up each day rewarding, not just productive.',
+    callout_key: 'Key insight', callout_key_body: '<strong>The session length matters less than the frequency.</strong> 10 minutes of daily timed training beats 60 minutes on Saturday. The brain needs sleep between sessions to consolidate skills — you can\'t rush it with a long session.',
+    modes_h2: 'Training modes',
+    mode1_badge: 'Speed', mode1_title: 'Speed Round — 2 minutes, mixed operations', mode1_desc: 'The core training mode. Mixed operations, 2-minute clock, score tracked session to session. This is the primary driver of speed improvement. Do this every day.',
+    mode2_badge: 'Practice', mode2_title: 'Practice Mode — Focused operation drills', mode2_desc: 'Choose a single operation and difficulty. Use this to drill your weak spot identified in speed round statistics. Untimed — focus is on correct technique, not speed.',
+    mode3_badge: 'Lightning', mode3_title: 'Lightning Mode — Multi-step working memory', mode3_desc: 'Problems that require holding an intermediate result while solving the next step. Trains working memory — the cognitive ceiling for advanced mental math.',
+    mode4_badge: 'Compete', mode4_title: 'Challenge Mode — Live vs. other players', mode4_desc: 'Race a friend or random opponent in real time. Competitive pressure produces a different kind of performance than solo practice — and it\'s far more motivating.',
+    progress_h2: 'Tracking your progress',
+    mockup_label: 'Numfly — Your Stats',
+    op_add: 'Addition', op_sub: 'Subtraction', op_mul: 'Multiply', op_div: 'Division',
+    stat_best: 'Best score', stat_streak: 'Day streak', stat_xp: 'Total XP',
+    cta2_title: 'See your weak spots', cta2_sub: 'Numfly\'s stats track accuracy by operation across every session — automatically.', cta2_btn: 'View Your Stats →',
+    routine_h2: 'The 10-minute daily routine',
+    routine1_title: 'Warm-up — Easy addition', routine1_body: 'Start with simple two-digit addition in Practice Mode. This primes your brain for arithmetic before the hard work begins.',
+    routine2_title: 'Speed Round — Mixed operations', routine2_body: 'The core session. 2-minute timed round, mixed difficulty. Record your score. Your goal is to beat your previous best by 1–2 problems each week.',
+    routine3_title: 'Weak-spot drill — Targeted operation', routine3_body: 'Take your lowest-accuracy operation from the stats page and do a focused Practice Mode session on it. This is where real gains come from.',
+    callout_routine: 'Core Principle', callout_routine_body: '<strong>Consistency beats intensity.</strong> 10 minutes daily produces far better results than 90 minutes on Saturday. Mental math improvement depends almost entirely on spaced repetition — the brain consolidates skills between sessions, not during them.',
+    results_h2: 'What to expect',
+    tl1_when: 'Weeks 1–2', tl1_what: 'The trainer feels slow. You\'re consciously applying techniques. Scores vary. This is normal — you\'re building the neural pathways, not using them yet.',
+    tl2_when: 'Weeks 2–4', tl2_what: 'Certain problem types feel noticeably easier. You hit your first plateau. Keep going — this is where most people quit and where breakthroughs happen.',
+    tl3_when: 'Weeks 6–8', tl3_what: 'Measurable speed gains on timed tests. Your speed round score climbs consistently. Techniques are becoming automatic rather than deliberate.',
+    tl4_when: 'Months 3–6', tl4_what: 'Everyday calculations feel effortless. You start noticing real-world moments — tips, discounts, mental estimates — where the training pays off automatically.',
+    vs_h2: 'Trainer vs. worksheets',
+    vs_feature: 'Feature', vs_trainer: 'Numfly Trainer', vs_worksheets: 'Worksheets',
+    vs_r1: 'Time pressure per problem', vs_r2: 'Immediate feedback', vs_r3: 'Per-operation accuracy tracking',
+    vs_r4: 'Adaptive difficulty', vs_r5: 'Progress over time', vs_r6: 'Competitive multiplayer', vs_r7: 'Free to use',
+    faq1_q: 'What is a mental math trainer exactly?', faq1_a: 'A mental math trainer is a tool that presents arithmetic problems under timed conditions, tracks your accuracy per operation, and measures improvement over time. Unlike random practice, a trainer is structured — you always know where you stand and what to work on next.',
+    faq2_q: 'How often should I use the trainer?', faq2_a: '<strong>Daily, for 10 minutes.</strong> This produces far better results than longer occasional sessions. The brain consolidates arithmetic skills between sessions — daily repetition is the key variable, not session length.',
+    faq3_q: 'How long until I see results?', faq3_a: 'Most people notice certain problem types feeling easier within <strong>2–4 weeks of daily practice</strong>. Measurable speed gains on timed tests appear around 6–8 weeks. Expect a plateau around weeks 2–3 — keep going and the breakthrough follows.',
+    faq4_q: 'Do I need to create an account?', faq4_a: 'No. Numfly works entirely without an account. Your streak, XP, and statistics are stored locally on your device. Creating an account is optional and unlocks cross-device sync and leaderboard access.',
+    faq5_q: 'Which training mode should I start with?', faq5_a: 'Start with <strong>Speed Round</strong> — it\'s the core mode and gives you baseline statistics immediately. After 3–5 sessions you\'ll see which operation has the lowest accuracy. Switch to Practice Mode to target that operation directly.',
+    faq6_q: 'Is Numfly really free?', faq6_a: 'Yes. All four training modes, statistics, streaks, and competitive multiplayer are completely free. There is no premium tier, no ads, and no paywall on any training feature.',
+    compete_tag: 'Challenge Mode', compete_title: 'Train alone — or race someone.', compete_sub: 'Numfly lets you challenge friends, join live speed rounds, and climb the global leaderboard. Free, no account required to start.',
+    compete_btn1: 'Start Training →', compete_btn2: 'Find a Match', compete_you: 'You',
+    footer_practice: 'Practice', footer_guide: 'Guide', footer_privacy: 'Privacy',
+  },
+
+  es: {
+    nav_features: 'Funciones', nav_modes: 'Modos', nav_routine: 'Rutina', nav_cta: 'Entrenar gratis →',
+    hero_tag: 'Entrenador gratuito',
+    hero_meta_free: '100% gratis', hero_meta_account: 'Sin cuenta', hero_updated: 'Actualizado abril 2026',
+    stat1: 'min/día para mejorar', stat2: 'semanas de mejora real', stat3: 'modos de entrenamiento',
+    toc_label: 'En esta guía', toc_what: '¿Qué es un entrenador?', toc_features: 'Qué lo hace efectivo',
+    toc_modes: 'Modos de entrenamiento', toc_progress: 'Seguimiento del progreso', toc_routine: 'Rutina diaria',
+    toc_results: 'Resultados esperados', toc_vs: 'Entrenador vs. fichas',
+    what_h2: '¿Qué es un entrenador de cálculo mental?',
+    cta1_title: 'Empieza a entrenar ahora', cta1_sub: 'Rondas de velocidad y desafíos diarios — sin registro.', cta1_btn: 'Abrir entrenador →',
+    features_h2: 'Qué hace efectivo a un entrenador',
+    f1_tag: 'Presión de tiempo', f1_title: 'Cada problema está cronometrado', f1_desc: 'La práctica cronometrada fuerza la velocidad de recuperación, no solo la precisión. Sin reloj, el cerebro toma atajos.',
+    f2_tag: 'Ejercicios específicos', f2_title: 'Seguimiento por operación', f2_desc: 'Tu precisión en suma, resta, multiplicación y división se registra por separado. Entrenas lo que realmente es lento.',
+    f3_tag: 'Retroalimentación inmediata', f3_title: 'Señal instantánea de correcto/incorrecto', f3_desc: 'El cerebro consolida las correcciones mejor inmediatamente después de un error. La retroalimentación diferida produce una mejora mucho más lenta.',
+    f4_tag: 'Racha diaria', f4_title: 'Recompensas por consistencia', f4_desc: 'La consistencia es la variable clave para construir automaticidad. Numfly registra tu racha diaria y XP.',
+    callout_key: 'Idea clave', callout_key_body: '<strong>La duración de la sesión importa menos que la frecuencia.</strong> 10 minutos diarios supera a 60 minutos el sábado. El cerebro necesita dormir entre sesiones para consolidar habilidades.',
+    modes_h2: 'Modos de entrenamiento',
+    mode1_badge: 'Velocidad', mode1_title: 'Ronda de velocidad — 2 minutos, operaciones mixtas', mode1_desc: 'El modo de entrenamiento principal. Operaciones mixtas, reloj de 2 minutos, puntuación por sesión. Es el principal motor de mejora de velocidad.',
+    mode2_badge: 'Práctica', mode2_title: 'Modo práctica — Ejercicios por operación', mode2_desc: 'Elige una sola operación y dificultad. Úsalo para ejercitar tu punto débil. Sin tiempo — el enfoque es en la técnica correcta.',
+    mode3_badge: 'Relámpago', mode3_title: 'Modo relámpago — Memoria de trabajo en pasos múltiples', mode3_desc: 'Problemas que requieren mantener un resultado intermedio mientras se resuelve el siguiente paso. Entrena la memoria de trabajo.',
+    mode4_badge: 'Competir', mode4_title: 'Modo desafío — En vivo contra otros jugadores', mode4_desc: 'Compite contra un amigo u oponente aleatorio en tiempo real. La presión competitiva produce un tipo diferente de rendimiento.',
+    progress_h2: 'Seguimiento de tu progreso',
+    mockup_label: 'Numfly — Tus estadísticas',
+    op_add: 'Suma', op_sub: 'Resta', op_mul: 'Multiplicar', op_div: 'División',
+    stat_best: 'Mejor puntuación', stat_streak: 'Días seguidos', stat_xp: 'XP total',
+    cta2_title: 'Ve tus puntos débiles', cta2_sub: 'Las estadísticas de Numfly registran la precisión por operación en cada sesión.', cta2_btn: 'Ver estadísticas →',
+    routine_h2: 'La rutina diaria de 10 minutos',
+    routine1_title: 'Calentamiento — Suma fácil', routine1_body: 'Comienza con suma de dos dígitos en Modo práctica. Esto prepara tu cerebro para la aritmética.',
+    routine2_title: 'Ronda de velocidad — Operaciones mixtas', routine2_body: 'La sesión principal. Ronda de 2 minutos cronometrada. Registra tu puntuación. Tu objetivo es superar tu mejor marca anterior.',
+    routine3_title: 'Ejercicio de punto débil — Operación objetivo', routine3_body: 'Toma tu operación de menor precisión de las estadísticas y haz una sesión enfocada en ella. Aquí es donde vienen las ganancias reales.',
+    callout_routine: 'Principio fundamental', callout_routine_body: '<strong>La consistencia supera a la intensidad.</strong> 10 minutos diarios produce mejores resultados que 90 minutos el sábado. La mejora del cálculo mental depende casi totalmente de la repetición espaciada.',
+    results_h2: 'Qué esperar',
+    tl1_when: 'Semanas 1–2', tl1_what: 'El entrenador se siente lento. Estás aplicando técnicas conscientemente. Las puntuaciones varían. Esto es normal.',
+    tl2_when: 'Semanas 2–4', tl2_what: 'Ciertos tipos de problemas se sienten notablemente más fáciles. Llegas a tu primera meseta. Sigue — aquí es donde la mayoría abandona.',
+    tl3_when: 'Semanas 6–8', tl3_what: 'Ganancias de velocidad medibles en pruebas cronometradas. Tu puntuación de ronda de velocidad sube consistentemente.',
+    tl4_when: 'Meses 3–6', tl4_what: 'Los cálculos cotidianos se sienten sin esfuerzo. Empiezas a notar momentos en el mundo real donde el entrenamiento se paga automáticamente.',
+    vs_h2: 'Entrenador vs. fichas',
+    vs_feature: 'Función', vs_trainer: 'Numfly', vs_worksheets: 'Fichas',
+    vs_r1: 'Presión de tiempo por problema', vs_r2: 'Retroalimentación inmediata', vs_r3: 'Seguimiento por operación',
+    vs_r4: 'Dificultad adaptativa', vs_r5: 'Progreso a lo largo del tiempo', vs_r6: 'Multijugador competitivo', vs_r7: 'Uso gratuito',
+    faq1_q: '¿Qué es exactamente un entrenador de cálculo mental?', faq1_a: 'Un entrenador de cálculo mental es una herramienta que presenta problemas aritméticos bajo condiciones cronometradas, registra tu precisión por operación y mide la mejora con el tiempo.',
+    faq2_q: '¿Con qué frecuencia debo usar el entrenador?', faq2_a: '<strong>Diariamente, durante 10 minutos.</strong> Esto produce resultados mucho mejores que sesiones largas ocasionales.',
+    faq3_q: '¿Cuánto tiempo hasta ver resultados?', faq3_a: 'La mayoría nota que ciertos tipos de problemas se sienten más fáciles dentro de <strong>2–4 semanas de práctica diaria</strong>. Las ganancias de velocidad aparecen alrededor de las 6–8 semanas.',
+    faq4_q: '¿Necesito crear una cuenta?', faq4_a: 'No. Numfly funciona completamente sin cuenta. Tu racha, XP y estadísticas se almacenan localmente en tu dispositivo.',
+    faq5_q: '¿Con qué modo de entrenamiento debo empezar?', faq5_a: 'Empieza con <strong>Ronda de velocidad</strong> — es el modo principal y te da estadísticas de referencia de inmediato.',
+    faq6_q: '¿Es Numfly realmente gratis?', faq6_a: 'Sí. Los cuatro modos de entrenamiento, estadísticas, rachas y multijugador competitivo son completamente gratuitos.',
+    compete_tag: 'Modo desafío', compete_title: 'Entrena solo — o compite con alguien.', compete_sub: 'Numfly te permite desafiar a amigos, unirte a rondas de velocidad en vivo y escalar en la clasificación global. Gratis, sin cuenta.',
+    compete_btn1: 'Empezar a entrenar →', compete_btn2: 'Buscar rival', compete_you: 'Tú',
+    footer_practice: 'Practicar', footer_guide: 'Guía', footer_privacy: 'Privacidad',
+  },
+
+  nl: {
+    nav_features: 'Functies', nav_modes: 'Modi', nav_routine: 'Routine', nav_cta: 'Gratis trainen →',
+    hero_tag: 'Gratis online trainer',
+    hero_meta_free: '100% gratis', hero_meta_account: 'Geen account nodig', hero_updated: 'Bijgewerkt april 2026',
+    stat1: 'min/dag om te verbeteren', stat2: 'weken tot echte winst', stat3: 'trainingsmodi',
+    toc_label: 'In deze gids', toc_what: 'Wat is een trainer?', toc_features: 'Wat maakt het effectief',
+    toc_modes: 'Trainingsmodi', toc_progress: 'Voortgang bijhouden', toc_routine: 'Dagelijkse routine',
+    toc_results: 'Verwachte resultaten', toc_vs: 'Trainer vs. werkbladen',
+    what_h2: 'Wat is een hoofdrekenentrainer?',
+    cta1_title: 'Begin nu met trainen', cta1_sub: 'Gratis snelheidsrondes en dagelijkse uitdagingen — geen aanmelding nodig.', cta1_btn: 'Open trainer →',
+    features_h2: 'Wat maakt een trainer effectief',
+    f1_tag: 'Tijdsdruk', f1_title: 'Elk probleem is getimed', f1_desc: 'Getimede oefening dwingt ophaalsnelheid af, niet alleen nauwkeurigheid. Zonder klok neemt het brein shortcuts.',
+    f2_tag: 'Gerichte oefeningen', f2_title: 'Bijhouden per bewerking', f2_desc: 'Je nauwkeurigheid voor optellen, aftrekken, vermenigvuldigen en delen wordt afzonderlijk bijgehouden. Je traint wat echt langzaam is.',
+    f3_tag: 'Directe feedback', f3_title: 'Onmiddellijk juist/onjuist signaal', f3_desc: 'Het brein consolideert correcties het best onmiddellijk na een fout. Vertraagde feedback produceert veel langzamere verbetering.',
+    f4_tag: 'Reeks bijhouden', f4_title: 'Dagelijkse consistentieprijzen', f4_desc: 'Consistentie is de sleutelvariabele voor het opbouwen van automaticiteit. Numfly houdt je dagelijkse reeks en XP bij.',
+    callout_key: 'Kernprincipe', callout_key_body: '<strong>De sessieduur maakt minder uit dan de frequentie.</strong> 10 minuten dagelijks overtreft 60 minuten op zaterdag. Het brein heeft slaap tussen sessies nodig om vaardigheden te consolideren.',
+    modes_h2: 'Trainingsmodi',
+    mode1_badge: 'Snelheid', mode1_title: 'Snelheidsronde — 2 minuten, gemengde bewerkingen', mode1_desc: 'De kern trainingsmodus. Gemengde bewerkingen, 2-minutenklok, score bijgehouden per sessie. Dit is de primaire aanjager van snelheidsverbetering.',
+    mode2_badge: 'Oefenen', mode2_title: 'Oefenmodus — Gerichte bewerkingsoefeningen', mode2_desc: 'Kies een bewerking en moeilijkheidsgraad. Gebruik dit om je zwakke punt te trainen. Ongetimed — focus op correcte techniek.',
+    mode3_badge: 'Bliksem', mode3_title: 'Bliksemmodus — Meerstaps werkgeheugen', mode3_desc: 'Problemen waarbij je een tussenresultaat moet onthouden terwijl je de volgende stap oplost. Traint werkgeheugen.',
+    mode4_badge: 'Wedstrijd', mode4_title: 'Uitdagingsmodus — Live tegen andere spelers', mode4_desc: 'Race tegen een vriend of willekeurige tegenstander in real time. Competitiedruk produceert een ander soort prestatie dan solo oefenen.',
+    progress_h2: 'Je voortgang bijhouden',
+    mockup_label: 'Numfly — Jouw statistieken',
+    op_add: 'Optellen', op_sub: 'Aftrekken', op_mul: 'Vermenigvuldigen', op_div: 'Delen',
+    stat_best: 'Beste score', stat_streak: 'Dagen reeks', stat_xp: 'Totaal XP',
+    cta2_title: 'Bekijk je zwakke punten', cta2_sub: 'Numfly\'s statistieken bijhouden nauwkeurigheid per bewerking voor elke sessie.', cta2_btn: 'Bekijk statistieken →',
+    routine_h2: 'De dagelijkse 10-minutenroutine',
+    routine1_title: 'Warming-up — Makkelijk optellen', routine1_body: 'Begin met eenvoudig tweecijferig optellen in Oefenmodus. Dit zet je brein in de rekenstand.',
+    routine2_title: 'Snelheidsronde — Gemengde bewerkingen', routine2_body: 'De kernsessie. 2 minuten getimede ronde, gemengde moeilijkheidsgraad. Noteer je score. Je doel is je vorige beste te verbeteren.',
+    routine3_title: 'Zwakke-plek-oefening — Gerichte bewerking', routine3_body: 'Neem je bewerking met de laagste nauwkeurigheid en doe een gerichte Oefenmodus-sessie. Hier haal je de echte winst vandaan.',
+    callout_routine: 'Kernprincipe', callout_routine_body: '<strong>Regelmaat wint van intensiteit.</strong> 10 minuten per dag geeft veel betere resultaten dan 90 minuten op zaterdag. Verbetering in hoofdrekenen hangt bijna volledig af van gespreide oefening.',
+    results_h2: 'Wat te verwachten',
+    tl1_when: 'Weken 1–2', tl1_what: 'De trainer voelt traag. Je past technieken bewust toe. Scores variëren. Dit is normaal — je bouwt de neurale paden, niet gebruikt ze nog.',
+    tl2_when: 'Weken 2–4', tl2_what: 'Bepaalde soorten problemen voelen merkbaar makkelijker. Je bereikt je eerste plateau. Ga door — hier stopt de meeste mensen en hier komen doorbraken.',
+    tl3_when: 'Weken 6–8', tl3_what: 'Meetbare snelheidswinst op getimede tests. Je snelheidsrondescore stijgt consistent. Technieken worden automatisch in plaats van bewust.',
+    tl4_when: 'Maanden 3–6', tl4_what: 'Dagelijkse berekeningen voelen moeiteloos. Je begint alledaagse momenten te zien — fooien, kortingen, schattingen — waar de training automatisch loont.',
+    vs_h2: 'Trainer vs. werkbladen',
+    vs_feature: 'Functie', vs_trainer: 'Numfly', vs_worksheets: 'Werkbladen',
+    vs_r1: 'Tijdsdruk per probleem', vs_r2: 'Directe feedback', vs_r3: 'Bijhouden per bewerking',
+    vs_r4: 'Adaptieve moeilijkheidsgraad', vs_r5: 'Voortgang in de tijd', vs_r6: 'Competitief multiplayer', vs_r7: 'Gratis te gebruiken',
+    faq1_q: 'Wat is precies een hoofdrekenentrainer?', faq1_a: 'Een hoofdrekenentrainer is een hulpmiddel dat rekenkundige problemen presenteert onder getimede omstandigheden, je nauwkeurigheid per bewerking bijhoudt en verbetering over tijd meet.',
+    faq2_q: 'Hoe vaak moet ik de trainer gebruiken?', faq2_a: '<strong>Dagelijks, 10 minuten.</strong> Dit levert veel betere resultaten op dan langere occasionele sessies. Het brein consolideert rekenvaardigheid tussen sessies.',
+    faq3_q: 'Hoe lang duurt het voor ik resultaat zie?', faq3_a: 'De meeste mensen merken dat bepaalde soorten problemen makkelijker aanvoelen binnen <strong>2–4 weken dagelijks oefenen</strong>. Meetbare snelheidswinst verschijnt rond 6–8 weken.',
+    faq4_q: 'Heb ik een account nodig?', faq4_a: 'Nee. Numfly werkt volledig zonder account. Je reeks, XP en statistieken worden lokaal opgeslagen op je apparaat.',
+    faq5_q: 'Met welke trainingsmodus moet ik beginnen?', faq5_a: 'Begin met <strong>Snelheidsronde</strong> — het is de kernmodus en geeft je meteen basisstatistieken.',
+    faq6_q: 'Is Numfly echt gratis?', faq6_a: 'Ja. Alle vier trainingsmodi, statistieken, reeksen en competitief multiplayer zijn volledig gratis. Geen premiumlaag, geen advertenties.',
+    compete_tag: 'Uitdagingsmodus', compete_title: 'Train alleen — of strijd tegen iemand.', compete_sub: 'Met Numfly kun je vrienden uitdagen, meedoen aan live snelheidsrondes en de wereldranglijst beklimmen. Gratis, geen account nodig.',
+    compete_btn1: 'Begin met trainen →', compete_btn2: 'Zoek een tegenstander', compete_you: 'Jij',
+    footer_practice: 'Oefenen', footer_guide: 'Gids', footer_privacy: 'Privacy',
+  }
+};
+
+type LangCode = keyof typeof translations;
+let currentLang: LangCode = 'en';
+
+function setLang(lang: LangCode): void {
+  currentLang = lang;
+  try { localStorage.setItem('numfly_lang', lang); } catch(e) {}
+
+  const buttons = document.querySelectorAll('.lang-btn');
+  buttons.forEach(b => b.classList.remove('active'));
+  const activeBtn = document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  document.querySelectorAll('[data-lang]').forEach(el => {
+    const htmlEl = el as HTMLElement;
+    htmlEl.classList.toggle('lang-active', htmlEl.dataset.lang === lang);
+  });
+
+  const t = translations[lang] as Record<string, string>;
+  document.querySelectorAll('[data-lang-key]').forEach(el => {
+    const htmlEl = el as HTMLElement;
+    const key = htmlEl.dataset.langKey ?? '';
+    if (t[key] !== undefined) htmlEl.innerHTML = t[key];
+  });
+
+  if (t.page_title) document.title = t.page_title;
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc && t.page_description) metaDesc.setAttribute('content', t.page_description);
+  document.documentElement.lang = lang;
+}
+
+// Detect saved language preference
+try {
+  const saved = localStorage.getItem('numfly_lang') as LangCode | null;
+  if (saved && translations[saved]) setLang(saved);
+  else setLang('en');
+} catch(e) { setLang('en'); }
+</script>
+</body>
+</html>
