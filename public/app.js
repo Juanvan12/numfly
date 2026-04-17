@@ -7596,8 +7596,13 @@ function detectAndSetLang(){
       detectedLang=STRINGS[full]?full:STRINGS[short]?short:'en';
     }
     
-    // 3. Als de bezoeker Spaans of NL is, forceer dan een switch naar hun eigen URL (/es/ of /nl/)
     if (detectedLang !== 'en') {
+
+      if (window.location.hash.includes('access_token')) {
+        lang = detectedLang;
+        document.documentElement.lang = detectedLang;
+        return;
+      }
       setLang(detectedLang); 
     } else {
       // Het is een Engelse bezoeker, ze mogen netjes op de root (/) blijven
@@ -7679,8 +7684,7 @@ setLang=function(l,btn){
     
     if (finalPath === '') finalPath = '/';
 
-    // Preserve query string (e.g. ?challenge=CODE)
-    history.replaceState({lang:l}, document.title, finalPath + window.location.search);
+    history.replaceState({lang:l}, document.title, finalPath + window.location.search + window.location.hash);
   }catch(e){}
 };
 
