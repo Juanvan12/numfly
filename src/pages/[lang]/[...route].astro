@@ -53,9 +53,19 @@ const { page } = Astro.props;
 
 <Layout>
   {page === 'home' && <MainMenu />}
-  {page === 'friends' && <FriendsComponent />}
+  {page === 'friends' && (
+    <>
+      <FriendsComponent />
+      <SpeedComponent />
+    </>
+  )}
   {page === 'stats' && <StatsComponent />}
-  {page === 'leaderboard' && <LeaderboardComponent />}
+  {page === 'leaderboard' && (
+    <>
+      <LeaderboardComponent />
+      <SpeedComponent />
+    </>
+  )}
   {page === 'achievements' && <AchievementsComponent />}
   {page === 'tips' && <TipsComponent />}
   {page === 'campaign' && <CampaignComponent />}

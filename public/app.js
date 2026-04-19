@@ -7106,8 +7106,8 @@ function _commitChallengeLink(code,seed,difficulty,duration){
   activeChallengeMode='challenge';
   startSpeedWithCountdown()
 }
-function startSpeedWithCountdown(){
-  // 1. Resume mid-game session if found
+function startSpeedWithCountdown() {
+  // 1. Resume check (bijv. als de browser crashte tijdens een potje)
   try{
     if(activeChallengeId&&localStorage.getItem('numfly_comp_resume_'+activeChallengeId)){
       const saved=localStorage.getItem('numfly_comp_resume_'+activeChallengeId);
@@ -7127,72 +7127,63 @@ function startSpeedWithCountdown(){
       localStorage.removeItem('numfly_comp_resume_'+activeChallengeId);
       return;
     }
-  }catch(e){ console.warn("Resume failed:", e); }
+  }catch(e){}
 
-  // 2. MULTI-PAGE HANDOFF GUARD
-  if (!document.getElementById('screen-speed-game')) {
-    localStorage.setItem('numfly_pending_start', JSON.stringify({
-       id: activeChallengeId,
-       mode: activeChallengeMode,
-       diff: diff.speed,
-       dur: speed.remaining,
-       origDur: speed.originalDur,
-       seed: challengeSeed,
-       compId: _activeCompId
-    }));
-    // Fixed: Use localized URL for the redirect
-    window.location.href = window.getLocalizedUrl('/1v1');
-    return; 
-  }
-
-  // 3. Create the 3-2-1 Overlay
+  // 2. Bouw de 3-2-1 Overlay
   const overlay=document.createElement('div');
   overlay.id='race-countdown-overlay';
   overlay.style.cssText='position:fixed;inset:0;background:var(--bg,#0d0d0d);z-index:9999;display:flex;align-items:center;justify-content:center;';
   overlay.innerHTML=`<div style="text-align:center">
-    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">⚔ ${t('race_title')||'Challenge'}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">⚔ ${typeof t==='function'?t('race_title'):'Challenge'}</div>
     <div id="race-countdown-num" style="font-family:'Bebas Neue',sans-serif;font-size:140px;color:var(--accent);line-height:1;letter-spacing:2px">3</div>
   </div>`;
   document.body.appendChild(overlay);
   
-  showScreen('screen-speed-game');
+  // Hier tonen we de game! Geen pagina herlaad meer nodig.
+  if (typeof showScreen === 'function') showScreen('screen-speed-game');
   
-  // 4. Initialize Game State safely
-  if(speed.timer)clearInterval(speed.timer);
-  const _cdDur=speed.remaining||120;
-  speed.score=0;speed.remaining=_cdDur;speed.wrongStreak=0;stats.currentSpeedStreak=0;speed.waiting=false;
-  speed.opBag=[];speed.originalDur=_cdDur; 
-  recentQs.speed=new Set();
+  // 3. Reset variabelen veilig
+  if(speed.timer) clearInterval(speed.timer);
+  const _cdDur = speed.remaining || 120;
+  speed.score=0; speed.remaining=_cdDur; speed.wrongStreak=0; speed.waiting=false;
+  speed.opBag=[]; speed.originalDur=_cdDur; 
+  if (typeof stats !== 'undefined') stats.currentSpeedStreak=0;
+  if (typeof recentQs !== 'undefined') recentQs.speed=new Set();
   
   const scoreEl = document.getElementById('s-score');
   if (scoreEl) scoreEl.textContent=0;
   
-  const hsEl = document.getElementById('s-hs-display');
-  if (hsEl) hsEl.textContent=getSpeedDurHS(diff.speed,_cdDur);
+  try {
+    const hsEl = document.getElementById('s-hs-display');
+    if (hsEl && typeof getSpeedDurHS === 'function') {
+        hsEl.textContent = getSpeedDurHS((typeof diff !== 'undefined' ? diff.speed : 'easy'), _cdDur);
+    }
+  } catch(e) { console.warn(e); }
   
   const fbEl = document.getElementById('s-feedback');
   if (fbEl) fbEl.textContent='';
   
   const _timerElCD=document.getElementById('s-timer');
   if(_timerElCD){
-    const _cm=Math.floor(_cdDur/60),_cs=String(_cdDur%60).padStart(2,'0');
+    const _cm=Math.floor(_cdDur/60), _cs=String(_cdDur%60).padStart(2,'0');
     _timerElCD.textContent=`${_cm}:${_cs}`;
     _timerElCD.className='hud-value';
   }
   
-  // Fixed: Correctly set the Back button text
+  // Forceer de Back button tekst
   const _lbl=document.getElementById('speed-back-label');
   if(_lbl){
-    _lbl.textContent = (activeChallengeMode==='challenge' && _activeCompId) 
-      ? (t('comp_group_title')||'Competition') 
-      : (activeChallengeMode==='challenge' ? (t('back')||'Back') : (t('main_menu')||'Main Menu'));
+    let backText = 'Back';
+    if (typeof t === 'function') {
+        backText = (activeChallengeMode==='challenge' && _activeCompId) ? (t('comp_group_title')||'Competition') : (t('back')||'Back');
+    }
+    _lbl.textContent = backText;
   }
   
+  // Genereer de eerste som
   try {
-    nextSpeedQ(); 
-  } catch(e) {
-    console.error("nextSpeedQ crashed during countdown setup!", e);
-  }
+    if (typeof nextSpeedQ === 'function') nextSpeedQ(); 
+  } catch(e) { console.error("nextSpeedQ crash", e); }
 
   const ansEl=document.getElementById('s-answer');
   if(ansEl){ansEl.disabled=true;ansEl.blur();}
@@ -7200,7 +7191,7 @@ function startSpeedWithCountdown(){
   let count=3;
   const numEl=document.getElementById('race-countdown-num');
   
-  // 5. Start the Countdown Timer
+  // 4. Start de Countdown Timer
   speed.countdownTimer=setInterval(()=>{
     count--;
     if(count<=0){
@@ -7210,14 +7201,27 @@ function startSpeedWithCountdown(){
       if (ov) ov.remove();
       
       speed.startedAt=Date.now();
+      
+      // DE ECHTE TIMER
       speed.timer=setInterval(()=>{
         speed.remaining--;
-        stats.totalPlayTime++;
-        stats.modePlayTime.speed=(stats.modePlayTime.speed||0)+1;
-        const m=Math.floor(speed.remaining/60),s=String(speed.remaining%60).padStart(2,'0');
+        
+        try {
+            if (typeof stats !== 'undefined') {
+                stats.totalPlayTime = (stats.totalPlayTime || 0) + 1;
+                if (!stats.modePlayTime) stats.modePlayTime = {};
+                stats.modePlayTime.speed = (stats.modePlayTime.speed || 0) + 1;
+            }
+        } catch(e) {}
+
+        const m=Math.floor(speed.remaining/60), s=String(speed.remaining%60).padStart(2,'0');
         const el=document.getElementById('s-timer');
         if(el){el.textContent=`${m}:${s}`;el.className='hud-value'+(speed.remaining<=20?' danger':'');}
-        if(speed.remaining<=0){endSpeed(false);}
+        
+        if(speed.remaining<=0){
+            if (typeof endSpeed === 'function') endSpeed(false);
+            else clearInterval(speed.timer);
+        }
       },1000);
       
       if(ansEl){ansEl.disabled=false;ansEl.style.opacity='1';ansEl.focus();}
