@@ -926,13 +926,391 @@ body.theme-light {
   --muted2: #6b7280;
 }
 
-/* Pas het achtergrondraster aan voor het lichte thema */
-body.theme-light::before {
-  background-image: linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
+/* ── Warm Editorial Theme ─────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@400;500&display=swap');
+
+body.theme-warm {
+  --bg:          #f2ece3;
+  --surface:     #faf6f0;
+  --surface2:    #ede5d8;
+  --border:      #e0d5c5;
+  --border2:     #cfc3ae;
+  --text:        #1a1208;
+  --muted:       #9c8265;
+  --muted2:      #c4ae90;
+  --accent:      #2c1f0e;
+  --accent-text: #faf6f0;
+  --success:     #3a6b3a;
+  --error:       #8b2e2e;
+  --orange:      #a0520a;
+  --info:        #2a5a7a;
+  --purple:      #5a3a7a;
 }
 
-/* Verberg de felle glow-effecten op de achtergrond in de light mode */
-body.theme-light::after {
-  background: none;
+/* Base */
+body.theme-warm {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, sans-serif;
 }
+
+/* Serif for all display text */
+body.theme-warm h1,
+body.theme-warm h2,
+body.theme-warm h3,
+body.theme-warm .hero-title,
+body.theme-warm .screen-title,
+body.theme-warm .mode-title,
+body.theme-warm .stat-val,
+body.theme-warm .hud-value,
+body.theme-warm #s-question,
+body.theme-warm #p-question,
+body.theme-warm #cmp-question,
+body.theme-warm #dc-question,
+body.theme-warm #tp-question,
+body.theme-warm #l-display .lightning-number,
+body.theme-warm .sr-score-num,
+body.theme-warm .lr-score,
+body.theme-warm .dc-lb-val,
+body.theme-warm .lb-val {
+  font-family: 'Lora', Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  text-transform: none;
+  color: #1a1208;
+}
+
+/* Kill ALL Bebas Neue — replace with Lora */
+body.theme-warm * {
+  font-family: inherit;
+}
+
+body.theme-warm [style*="Bebas"],
+body.theme-warm [class*="bebas"] {
+  font-family: 'Lora', Georgia, serif !important;
+  text-transform: none !important;
+  letter-spacing: -0.3px !important;
+}
+
+/* Monospace labels stay mono */
+body.theme-warm .hud-label,
+body.theme-warm .op-bar-label,
+body.theme-warm .ach-section-title,
+body.theme-warm .stats-section-title,
+body.theme-warm .tip-tag,
+body.theme-warm .stat-label,
+body.theme-warm .stat-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+}
+
+/* ── Cards ── */
+body.theme-warm .q-card,
+body.theme-warm .stat-card,
+body.theme-warm .tip-card,
+body.theme-warm .ach-card,
+body.theme-warm .friend-card,
+body.theme-warm .mode-card,
+body.theme-warm .lb-row {
+  background: #faf6f0;
+  border: 1px solid #e0d5c5;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(44,31,14,0.06);
+}
+
+body.theme-warm .q-card {
+  border-radius: 10px;
+  padding: 24px;
+}
+
+body.theme-warm .stat-card {
+  border-radius: 8px;
+}
+
+body.theme-warm .ach-card.locked {
+  background: #f2ece3;
+  border-color: #e0d5c5;
+}
+
+/* ── Buttons ── */
+body.theme-warm .btn-primary {
+  background: #2c1f0e;
+  color: #faf6f0;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+  box-shadow: 0 1px 2px rgba(44,31,14,0.2);
+}
+
+body.theme-warm .btn-primary:hover {
+  background: #1a1208;
+}
+
+body.theme-warm .btn-secondary {
+  background: #faf6f0;
+  color: #6b5540;
+  border: 1px solid #e0d5c5;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+body.theme-warm .btn-secondary:hover {
+  background: #ede5d8;
+}
+
+/* Danger/remove buttons */
+body.theme-warm .btn-danger {
+  background: #faf6f0;
+  color: #8b2e2e;
+  border: 1px solid #e8c8c8;
+}
+
+/* ── Inputs ── */
+body.theme-warm input[type="text"],
+body.theme-warm input[type="email"],
+body.theme-warm input[type="password"],
+body.theme-warm input[type="number"] {
+  background: #fff;
+  border: 1px solid #e0d5c5;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #1a1208;
+  box-shadow: inset 0 1px 2px rgba(44,31,14,0.04);
+}
+
+body.theme-warm input:focus {
+  border-color: #9c8265;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(156,130,101,0.15);
+}
+
+body.theme-warm input::placeholder {
+  color: #c4ae90;
+}
+
+/* ── Sidebar ── */
+body.theme-warm .sidebar {
+  background: #faf6f0;
+  border-right: 1px solid #e0d5c5;
+}
+
+body.theme-warm #sidebar-overlay {
+  background: rgba(26,18,8,0.4);
+}
+
+/* ── HUD ── */
+body.theme-warm .hud-bar {
+  background: #faf6f0;
+  border-bottom: 1px solid #e0d5c5;
+}
+
+/* ── Modals ── */
+body.theme-warm .modal-overlay {
+  background: rgba(26,18,8,0.45);
+}
+
+body.theme-warm .modal-box,
+body.theme-warm .auth-overlay {
+  background: #faf6f0;
+  border: 1px solid #e0d5c5;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(44,31,14,0.14);
+}
+
+/* ── Nav bar ── */
+body.theme-warm .nav-bar {
+  background: #faf6f0;
+  border-top: 1px solid #e0d5c5;
+}
+
+body.theme-warm .nav-btn {
+  color: #c4ae90;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+body.theme-warm .nav-btn.active {
+  color: #2c1f0e;
+}
+
+/* ── Toggle buttons (diff, ops, filters) ── */
+body.theme-warm .diff-btn,
+body.theme-warm .op-btn,
+body.theme-warm .stats-filter-btn,
+body.theme-warm .tips-filter-btn,
+body.theme-warm .diff-filter-btn,
+body.theme-warm .dc-tab,
+body.theme-warm .lb-cat-btn {
+  background: #faf6f0;
+  border: 1px solid #e0d5c5;
+  border-radius: 6px;
+  color: #9c8265;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+body.theme-warm .diff-btn.active,
+body.theme-warm .op-btn.active,
+body.theme-warm .stats-filter-btn.active,
+body.theme-warm .tips-filter-btn.active,
+body.theme-warm .diff-filter-btn.active,
+body.theme-warm .dc-tab.active,
+body.theme-warm .lb-cat-btn.active {
+  background: #2c1f0e;
+  border-color: #2c1f0e;
+  color: #faf6f0;
+}
+
+/* ── XP / progress bars ── */
+body.theme-warm .xp-bar-track,
+body.theme-warm .op-bar-track,
+body.theme-warm .ach-mini-bar,
+body.theme-warm .cmp-question-timer-bar-track {
+  background: #e0d5c5;
+  border-radius: 3px;
+}
+
+body.theme-warm .xp-bar-fill,
+body.theme-warm .op-bar-fill,
+body.theme-warm .ach-mini-bar-fill {
+  background: #2c1f0e;
+  border-radius: 3px;
+}
+
+/* ── Feedback ── */
+body.theme-warm .feedback.ok  { color: #3a6b3a; }
+body.theme-warm .feedback.bad { color: #8b2e2e; }
+
+/* ── Tags / badges ── */
+body.theme-warm .tip-tag {
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+body.theme-warm .tip-tag.mul { background: #f5ece0; color: #7a4f1a; border-color: #e8d5bc; }
+body.theme-warm .tip-tag.add { background: #e8f0e8; color: #2d5a2d; border-color: #c8dcc8; }
+body.theme-warm .tip-tag.sub { background: #f0e8e8; color: #6b2a2a; border-color: #dcc8c8; }
+body.theme-warm .tip-tag.div { background: #e8ecf5; color: #2a3d6b; border-color: #c8d0e8; }
+body.theme-warm .tip-tag.pct { background: #ede8f5; color: #4a2a7a; border-color: #d0c8e8; }
+body.theme-warm .tip-tag.gen { background: #ede5d8; color: #6b5530; border-color: #d5c8b0; }
+
+/* ── Achievement tiers ── */
+body.theme-warm .ach-tier.bronze   { color: #8b5e2a; background: #f5ead8; }
+body.theme-warm .ach-tier.silver   { color: #5a5a6a; background: #eeeeee; }
+body.theme-warm .ach-tier.gold     { color: #7a5500; background: #fff0cc; }
+body.theme-warm .ach-tier.platinum { color: #2a5a7a; background: #ddeef8; }
+body.theme-warm .ach-tier.diamond  { color: #3a2a7a; background: #e8e0f8; }
+
+/* ── Campaign map ── */
+body.theme-warm .campaign-world-header {
+  background: #ede5d8;
+  border-radius: 6px;
+}
+
+body.theme-warm .campaign-level-btn {
+  background: #faf6f0;
+  border: 1px solid #e0d5c5;
+  border-radius: 6px;
+  color: #2c1f0e;
+  font-family: 'Lora', serif;
+  font-weight: 700;
+}
+
+body.theme-warm .campaign-level-btn.completed {
+  background: #e8f0e0;
+  border-color: #a8c898;
+  color: #2d5a1a;
+}
+
+body.theme-warm .campaign-level-btn.locked {
+  background: #f2ece3;
+  color: #c4ae90;
+  border-color: #e0d5c5;
+}
+
+body.theme-warm .campaign-level-btn.boss {
+  border-color: #c4944a;
+  color: #7a4f1a;
+}
+
+/* ── Leaderboard ── */
+body.theme-warm .lb-row { border-radius: 6px; margin-bottom: 4px; }
+body.theme-warm .lb-row.me { background: #f0e8dc; border-color: #d4c0a0; }
+
+body.theme-warm .comp-rank.gold   { color: #8b6914; }
+body.theme-warm .comp-rank.silver { color: #6b7280; }
+body.theme-warm .comp-rank.bronze { color: #8b5e2a; }
+
+/* ── Daily challenge card (home screen) ── */
+body.theme-warm #daily-card {
+  background: #faf6f0;
+  border-color: #e0d5c5;
+}
+
+body.theme-warm #daily-card.daily-card-done {
+  background: #f0ede5;
+}
+
+/* ── Streak badge ── */
+body.theme-warm .streak-badge {
+  background: rgba(160,82,10,0.1);
+  border-color: rgba(160,82,10,0.25);
+}
+
+/* ── XP toast ── */
+body.theme-warm #xp-toast {
+  background: #2c1f0e;
+  color: #faf6f0;
+  border: none;
+}
+
+/* ── Error toast ── */
+body.theme-warm #err-toast {
+  background: #faf6f0;
+  color: #8b2e2e;
+  border: 1px solid #e8c8c8;
+}
+
+/* ── Achievement toast ── */
+body.theme-warm #ach-toast {
+  background: #faf6f0;
+  border: 1px solid #e0d5c5;
+  color: #1a1208;
+  box-shadow: 0 4px 16px rgba(44,31,14,0.12);
+}
+
+/* ── GDPR banner ── */
+body.theme-warm .gdpr-banner {
+  background: #2c1f0e;
+  color: #f2ece3;
+  border-top: none;
+}
+
+/* ── Scrollbar ── */
+body.theme-warm ::-webkit-scrollbar { width: 6px; }
+body.theme-warm ::-webkit-scrollbar-track { background: #ede5d8; }
+body.theme-warm ::-webkit-scrollbar-thumb { background: #c4ae90; border-radius: 3px; }
+body.theme-warm ::-webkit-scrollbar-thumb:hover { background: #9c8265; }
