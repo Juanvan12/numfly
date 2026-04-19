@@ -741,6 +741,16 @@ es:{
 },
 };
 let lang='en';
+
+// ── Globale Challenge Variabelen (Voorkomt crashes tijdens inladen) ──
+let activeChallengeId = null;
+let activeChallengeMode = 'normal';
+let challengeSeed = 0;
+let challengeRng = null;
+let _myJustPlayedScore = null;
+let _activeCompId = null;
+let _challengeDiff = 'easy';
+
 function t(k){return(STRINGS[lang]||{})[k]||STRINGS.en[k]||k;}
 function setLang(l,btn){
   lang=l;
@@ -5283,7 +5293,7 @@ async function confirmRemoveFriend(block=false){
 
 // ── Shared friend loading helper ─────────────────────────────────────────────
 let _cachedFriends=[];
-let _challengeDiff='easy'; // used by race modal
+_challengeDiff='easy'; // used by race modal
 async function _loadFriendsIntoList(listEl,filterQ,noneMsg){
   if(!listEl)return;
   if(!_cachedFriends.length){
@@ -5771,7 +5781,7 @@ function getRealScore(s){
 function isScoreLeft(s){
   return s!==null&&s!==undefined&&(s===-1||s<=-1000);
 }
-let _activeCompId=null;
+_activeCompId=null;
 let _compBackTarget='friends'; // 'friends' or 'group-comp' — set by the caller that opens screen-competition
 async function loadCompetitionScreen(code,seed,creatorScore,isCreator,explicitDiff,explicitDurSecs,backTarget){
   _activeCompId=code;
@@ -6961,7 +6971,7 @@ async function loadDailyLeaderboard(tab){
 
 
 // ── Challenge mode ────────────────────────────────────────────────────────────
-let activeChallengeId=null,activeChallengeMode='normal',challengeSeed=0,challengeRng=null,_myJustPlayedScore=null;
+activeChallengeId=null,activeChallengeMode='normal',challengeSeed=0,challengeRng=null,_myJustPlayedScore=null;
 
 async function createChallenge(){
   if(!currentUser){openAuthModal();return;}
