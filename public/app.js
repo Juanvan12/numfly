@@ -895,25 +895,6 @@ function _doPlayTone(ctx,freq,duration,type,gainVal,freqEnd){
   }catch(e){}
 }
 
-document.addEventListener('touchstart',_unlockAudio,{once:false,passive:true});
-document.addEventListener('touchend',_unlockAudio,{once:false,passive:true});
-document.addEventListener('click',_unlockAudio,{once:false,passive:true});
-
-function playTone(freq,duration,type='sine',gainVal=0.12,freqEnd=null){
-  try{
-    const ctx=getAudioCtx();
-    const osc=ctx.createOscillator();
-    const gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.type=type;
-    osc.frequency.setValueAtTime(freq,ctx.currentTime);
-    if(freqEnd)osc.frequency.linearRampToValueAtTime(freqEnd,ctx.currentTime+duration);
-    gain.gain.setValueAtTime(gainVal,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+duration);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime+duration);
-  }catch(e){}
-}
 function sfxCorrect(){
   playTone(1046,0.04,'sine',0.13,1318);
   setTimeout(()=>playTone(1318,0.07,'sine',0.11,1568),40);
