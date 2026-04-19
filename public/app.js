@@ -784,14 +784,21 @@ window.getLocalizedUrl = function(basePath) {
 
 // ── Thema Logica (A/B Test) ──
 function toggleTheme() {
-  const body = document.body;
-  body.classList.toggle('theme-light');
-  
-  const isLight = body.classList.contains('theme-light');
+  document.body.classList.toggle('theme-warm');
   try {
-    localStorage.setItem('numfly_theme', isLight ? 'light' : 'dark');
+    localStorage.setItem('numfly_theme', document.body.classList.contains('theme-warm') ? 'warm' : 'dark');
   } catch(e) {}
 }
+
+function initTheme() {
+  try {
+    if (localStorage.getItem('numfly_theme') === 'warm') {
+      document.body.classList.add('theme-warm');
+    }
+  } catch(e) {}
+}
+
+initTheme();
 
 function initTheme() {
   try {
