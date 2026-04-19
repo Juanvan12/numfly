@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://numfly.pro/sitemap.xml
+Sitemap: https://numfly.pro/sitemap-index.xml
