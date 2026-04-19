@@ -1,6 +1,4 @@
-<!-- ══ MAIN MENU ══════════════════════════════════════════════════════ -->
 <div id="screen-menu" class="screen active">
-  <!-- Mobile-only header: logo fixed at top, same height as burger -->
   <div class="mobile-header" style="align-items:center;justify-content:center;gap:10px;">
     <svg width="32" height="32" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <circle cx="26" cy="26" r="25" fill="rgba(232,255,71,0.06)" stroke="rgba(232,255,71,0.18)" stroke-width="1"/>
@@ -12,7 +10,6 @@
     </svg>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:4px;line-height:1;color:var(--text);">NUM<span style="color:var(--accent)">FLY</span><span style="color:var(--accent)">.</span></div>
   </div>
-  <!-- Desktop lang bar (hidden on mobile via CSS) -->
   <div class="lang-bar" style="padding-left:58px;">
     <button class="lang-btn" onclick="setLang('en',this);updateSidebarLangBtns()">EN</button>
     <button class="lang-btn" onclick="setLang('nl',this);updateSidebarLangBtns()">NL</button>
@@ -21,13 +18,9 @@
   <div class="numfly-logo">
     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <circle cx="26" cy="26" r="25" fill="rgba(232,255,71,0.06)" stroke="rgba(232,255,71,0.18)" stroke-width="1"/>
-      <!-- plane body -->
       <path d="M8 11 L44 25 L19 31 Z" fill="#e8ff47"/>
-      <!-- plane tail -->
       <path d="M19 31 L13 44 L25 34 Z" fill="#e8ff47" opacity="0.55"/>
-      <!-- fold crease -->
       <path d="M19 31 L44 25" stroke="rgba(8,8,14,0.35)" stroke-width="1"/>
-      <!-- speed lines -->
       <path d="M5 19 L12 21" stroke="#e8ff47" stroke-width="1.8" stroke-linecap="round" opacity="0.45"/>
       <path d="M4 26 L10 26" stroke="#e8ff47" stroke-width="1.4" stroke-linecap="round" opacity="0.28"/>
     </svg>
@@ -46,7 +39,6 @@
       <span class="nav-icon">🏆</span><span data-i18n="nav_leaderboard"></span>
     </button>
   </div>
-  <!-- XP Level Panel -->
   <div class="xp-panel" id="xp-panel" onclick="openTitlesModal()" style="cursor:pointer;" title="View Titles">
     <div class="xp-top">
       <div class="xp-left">
@@ -65,8 +57,7 @@
     <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div></div>
     <div class="xp-bar-label"><span id="xp-bar-cur">0</span><span id="xp-bar-next">100 XP</span></div>
   </div>
-  <!-- Daily Challenge card — above game modes -->
-<div id="daily-card" class="daily-card" onclick="window.location.href='/daily'" style="opacity:0;transition:opacity .2s;">
+  <div id="daily-card" class="daily-card" onclick="window.location.href=window.getLocalizedUrl('/daily')" style="opacity:0;transition:opacity .2s;">
   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
     <div class="daily-badge" style="margin-bottom:0;"><span class="daily-badge-dot"></span><span data-i18n="daily_badge"></span></div>
     
@@ -83,7 +74,7 @@
   <div id="daily-next-reset" style="display:none;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:4px;"></div>
 </div>
 <div class="mode-grid">
-  <div class="mode-card" onclick="window.location.href='/lightning'">
+  <div class="mode-card" onclick="window.location.href=window.getLocalizedUrl('/lightning')">
     <div class="mode-icon">⚡</div>
     <div>
       <div class="mode-title" data-i18n="mode_lightning"></div>
@@ -91,7 +82,7 @@
     </div>
   </div>
 
-  <div class="mode-card" onclick="window.location.href='/speed'">
+  <div class="mode-card" onclick="window.location.href=window.getLocalizedUrl('/speed')">
     <div class="mode-icon">🚀</div>
     <div>
       <div class="mode-title" data-i18n="mode_speed"></div>
@@ -99,7 +90,7 @@
     </div>
   </div>
 
-  <div class="mode-card" onclick="window.location.href='/campaign'">
+  <div class="mode-card" onclick="window.location.href=window.getLocalizedUrl('/campaign')">
     <div class="mode-icon">🗺️</div>
     <div>
       <div class="mode-title" data-i18n="mode_campaign"></div>
@@ -107,7 +98,7 @@
     </div>
   </div>
 
-  <div class="mode-card" onclick="window.location.href='/practice'">
+  <div class="mode-card" onclick="window.location.href=window.getLocalizedUrl('/practice')">
     <div class="mode-icon">📚</div>
     <div>
       <div class="mode-title" data-i18n="mode_practice"></div>

@@ -736,6 +736,19 @@ function setLang(l,btn){
   if(activeId==='screen-achievements') renderAchievements();
   if(document.getElementById('modal-levelup').classList.contains('open')) showLevelUpModal(xp.level);
 }
+
+window.getLocalizedUrl = function(basePath) {
+  if (lang === 'nl') {
+    const dictNl = { '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', '/achievements':'/prestaties', '/tips':'/tips', '/campaign':'/campagne', '/daily':'/dagelijks', '/lightning':'/bliksem', '/speed':'/snelheid', '/practice':'/oefenen', '/1v1':'/1v1' };
+    return '/nl' + (dictNl[basePath] || basePath);
+  }
+  if (lang === 'es') {
+    const dictEs = { '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', '/achievements':'/logros', '/tips':'/consejos', '/campaign':'/campana', '/daily':'/diario', '/lightning':'/rayo', '/speed':'/velocidad', '/practice':'/practica', '/1v1':'/1v1' };
+    return '/es' + (dictEs[basePath] || basePath);
+  }
+  return basePath;
+};
+
 function applyTranslations(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const prefix=el.dataset.i18nPrefix||'';
@@ -3938,18 +3951,20 @@ function setAuthTab(tab){
   const forgotFields=document.getElementById('auth-forgot-fields');
   if(forgotFields&&tab!=='login')forgotFields.style.display='none';
 }
+
 function openSocial(type){
   if(!currentUser){openAuthModal();return;}
   
   if(type==='friends'){
     closeSidebar();
-    window.location.href = '/friends'; // Force actual page load
+    window.location.href = window.getLocalizedUrl('/friends'); // Fixed
   }
   else if(type==='leaderboard'){
     closeSidebar();
-    window.location.href = '/leaderboard'; // Force actual page load
+    window.location.href = window.getLocalizedUrl('/leaderboard'); // Fixed
   }
 }
+
 async function doRegister(){
   if(!sb){document.getElementById('auth-error').textContent='Service unavailable. Please refresh.';return;}
   const username=document.getElementById('auth-username').value.trim();
@@ -7085,7 +7100,8 @@ function startSpeedWithCountdown(){
        seed: challengeSeed,
        compId: _activeCompId
     }));
-    window.location.href = '/1v1';
+    // Fixed: Use localized URL for the redirect
+    window.location.href = window.getLocalizedUrl('/1v1');
     return; 
   }
 
@@ -7124,8 +7140,13 @@ function startSpeedWithCountdown(){
     _timerElCD.className='hud-value';
   }
   
+  // Fixed: Correctly set the Back button text
   const _lbl=document.getElementById('speed-back-label');
-  if(_lbl)_lbl.textContent=(activeChallengeMode==='challenge'&&_activeCompId)?(t('comp_group_title')||'Competition'):(t('main_menu')||'Main Menu');
+  if(_lbl){
+    _lbl.textContent = (activeChallengeMode==='challenge' && _activeCompId) 
+      ? (t('comp_group_title')||'Competition') 
+      : (activeChallengeMode==='challenge' ? (t('back')||'Back') : (t('main_menu')||'Main Menu'));
+  }
   
   try {
     nextSpeedQ(); 
@@ -7147,7 +7168,6 @@ function startSpeedWithCountdown(){
       speed.countdownTimer=null;
       const ov = document.getElementById('race-countdown-overlay');
       if (ov) ov.remove();
-      
       
       speed.startedAt=Date.now();
       speed.timer=setInterval(()=>{
@@ -7187,19 +7207,27 @@ const _nextSpeedQBase=function(){
 const _origNextSpeedQ=nextSpeedQ;
 nextSpeedQ=function(){
   if(activeChallengeMode==='challenge'&&challengeRng){
-    // Mirror exactly: 1 RNG call for op, then genOneProblemSeeded for the problem.
-    // This must match the resume fast-forward pattern in startCompetition.
-    const _ops=['add','sub','mul','div','pct'];
-    const op=_ops[Math.floor(challengeRng()*_ops.length)];
-    const p=genOneProblemSeeded(challengeRng,diff.speed,op);
-    speed.ans=p.ans;speed.wrongStreak=0;speed.currentOp=p.op;
-    document.getElementById('s-question').textContent=p.q;
-    document.getElementById('s-op-type').textContent=t('op_type_'+p.op);
-    document.getElementById('s-answer').value='';document.getElementById('s-answer').focus();
-    document.getElementById('s-feedback').textContent='';document.getElementById('s-feedback').className='feedback';
-    speed.answered=false;speed.waiting=false; // ready for next answer
+    try {
+      const _ops=['add','sub','mul','div','pct'];
+      const op=_ops[Math.floor(challengeRng()*_ops.length)];
+      const p=genOneProblemSeeded(challengeRng,diff.speed,op);
+      if (p) {
+        speed.ans=p.ans;speed.wrongStreak=0;speed.currentOp=p.op;
+        document.getElementById('s-question').textContent=p.q;
+        document.getElementById('s-op-type').textContent=t('op_type_'+p.op);
+        document.getElementById('s-answer').value='';document.getElementById('s-answer').focus();
+        document.getElementById('s-feedback').textContent='';document.getElementById('s-feedback').className='feedback';
+        speed.answered=false;speed.waiting=false; // ready for next answer
+      } else {
+        _origNextSpeedQ();
+      }
+    } catch(e) {
+      console.error("Patched nextSpeedQ error:", e);
+      _origNextSpeedQ();
+    }
   } else _origNextSpeedQ();
 };
+
 const _origEndSpeed=endSpeed;
 endSpeed=function(goMenu){
   if(activeChallengeMode==='challenge'&&!goMenu&&currentUser&&activeChallengeId){
@@ -7731,24 +7759,31 @@ window.addEventListener('popstate',(e)=>{
 });
 
 function checkPendingStart() {
-  const pending = localStorage.getItem('numfly_pending_start');
-  if (pending && document.getElementById('screen-speed-game')) {
-     const p = JSON.parse(pending);
-     localStorage.removeItem('numfly_pending_start'); // unpack the suitcase
-     
-     // Restore all the challenge variables
-     activeChallengeId = p.id;
-     activeChallengeMode = p.mode;
-     diff.speed = p.diff;
-     _challengeDiff = p.diff;
-     speed.remaining = p.dur;
-     speed.originalDur = p.origDur || p.dur;
-     challengeSeed = p.seed;
-     _activeCompId = p.compId;
-     if (p.seed) challengeRng = seededRand(p.seed);
-     
-     // Start the game automatically!
-     setTimeout(() => startSpeedWithCountdown(), 150);
+  try {
+    const pending = localStorage.getItem('numfly_pending_start');
+    if (pending && document.getElementById('screen-speed-game')) {
+       const p = JSON.parse(pending);
+       localStorage.removeItem('numfly_pending_start'); // unpack the suitcase
+       
+       // Restore all the challenge variables safely
+       activeChallengeId = p.id;
+       activeChallengeMode = p.mode;
+       diff.speed = p.diff || 'easy'; // Safe fallback
+       _challengeDiff = p.diff || 'easy';
+       speed.remaining = p.dur || 120;
+       speed.originalDur = p.origDur || p.dur || 120;
+       challengeSeed = p.seed;
+       _activeCompId = p.compId;
+       
+       if (p.seed !== undefined && p.seed !== null) {
+         challengeRng = seededRand(p.seed);
+       }
+       
+       // Start the game automatically!
+       setTimeout(() => startSpeedWithCountdown(), 150);
+    }
+  } catch (e) {
+    console.error("checkPendingStart failed", e);
   }
 }
 
