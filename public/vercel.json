@@ -3,9 +3,9 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/en", "destination": "/", "permanent": true },
-    { "source": "/en/(.*)", "destination": "/", "permanent": true }
+    { "source": "/en/:path*", "destination": "/:path*", "permanent": true }
   ],
-  "rewrites": [
+"rewrites": [
     { "source": "/nl/vrienden", "destination": "/friends" },
     { "source": "/es/amigos", "destination": "/friends" },
     
@@ -40,7 +40,10 @@
     { "source": "/es/1v1", "destination": "/1v1" },
 
     { "source": "/nl/hoofdrekenen-oefenen", "destination": "/how-to-practice-mental-math" },
-    { "source": "/es/como-practicar-calculo-mental", "destination": "/how-to-practice-mental-math" }
+    { "source": "/es/como-practicar-calculo-mental", "destination": "/how-to-practice-mental-math" },
+
+    { "source": "/nl", "destination": "/" },
+    { "source": "/es", "destination": "/" }
   ],
   "headers": [
     {

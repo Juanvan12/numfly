@@ -8,6 +8,18 @@ import SpeedComponent from '../components/Speed.astro';
 </Layout>
 
 <script is:inline>
-  const setupScreen = document.getElementById('screen-speed-setup');
-  if (setupScreen) setupScreen.classList.remove('active');
+  function init1v1Page() {
+    if (typeof checkPendingStart === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      // Hide the setup screen — the game will be shown by checkPendingStart
+      const setupScreen = document.getElementById('screen-speed-setup');
+      if (setupScreen) setupScreen.classList.remove('active');
+      // Show the game screen so startSpeedWithCountdown has a visible target
+      const gameScreen = document.getElementById('screen-speed-game');
+      if (gameScreen) gameScreen.classList.add('active');
+      checkPendingStart();
+    } else {
+      setTimeout(init1v1Page, 50);
+    }
+  }
+  init1v1Page();
 </script>
