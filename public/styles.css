@@ -907,3 +907,32 @@ body.sidebar-open #burger-fixed{display:none;}
   width: 100%;
   cursor: pointer;
 }
+
+/* ══ THEMA 2: LIGHT & CLEAN (A/B TEST) ══ */
+body.theme-light {
+  --bg: #f4f5f8;
+  --surface: #ffffff;
+  --surface2: #eaecef;
+  --surface3: #dfe2e6;
+  --border: #d1d5db;
+  --border2: #9ca3af;
+  
+  /* Een paars/blauwe accentkleur in plaats van neon-geel voor beter contrast op wit */
+  --accent: #6366f1; 
+  --accent2: #4f46e5;
+  
+  --text: #111827;
+  --muted: #4b5563;
+  --muted2: #6b7280;
+}
+
+/* Pas het achtergrondraster aan voor het lichte thema */
+body.theme-light::before {
+  background-image: linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
+}
+
+/* Verberg de felle glow-effecten op de achtergrond in de light mode */
+body.theme-light::after {
+  background: none;
+}

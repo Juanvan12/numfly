@@ -782,6 +782,30 @@ window.getLocalizedUrl = function(basePath) {
   return basePath;
 };
 
+// ── Thema Logica (A/B Test) ──
+function toggleTheme() {
+  const body = document.body;
+  body.classList.toggle('theme-light');
+  
+  const isLight = body.classList.contains('theme-light');
+  try {
+    localStorage.setItem('numfly_theme', isLight ? 'light' : 'dark');
+  } catch(e) {}
+}
+
+function initTheme() {
+  try {
+    const savedTheme = localStorage.getItem('numfly_theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('theme-light');
+    }
+  } catch(e) {}
+}
+
+// Roep deze direct aan als de pagina laadt, 
+// zodat hij niet eerst donker is en dan pas licht flitst.
+initTheme();
+
 function applyTranslations(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const prefix=el.dataset.i18nPrefix||'';
@@ -1534,7 +1558,7 @@ function checkCampaignAnswer() {
   const val = document.getElementById('cmp-answer').value.trim();
   if (val === '') return;
   // Stop per-question timer immediately on any answer
-  if (campaignState.questionTimer) { clearInterval(campaignState.questionTimer); campaignState.questionTimer = null; }
+  if (campaignState.questionTimer) { cancelAnimationFrame(campaignState.questionTimer); campaignState.questionTimer = null; }
   const q = campaignState.questions[campaignState.current];
   const correct = checkAns(val, q.ans);
   const fb = document.getElementById('cmp-feedback');
@@ -1573,7 +1597,7 @@ function finishCampaignLevel(success, failReason) {
   if (campaignState.done) return;
   campaignState.done = true;
   if (campaignState.timer) { clearInterval(campaignState.timer); campaignState.timer = null; }
-  if (campaignState.questionTimer) { clearInterval(campaignState.questionTimer); campaignState.questionTimer = null; }
+  if (campaignState.questionTimer) { cancelAnimationFrame(campaignState.questionTimer); campaignState.questionTimer = null; }
   if (campaignState.playTimeTimer) { clearInterval(campaignState.playTimeTimer); campaignState.playTimeTimer = null; }
   setTimeout(() => { checkAchievements(); flushPendingLevelUps(); }, 600);
   const lvl = campaignState.currentLevel;
@@ -4268,16 +4292,15 @@ async function doGoogleLogin(){
       </div>
     </div>`;
   document.body.appendChild(notice);
-  document.getElementById('google-confirm-btn').onclick = async () => {
+document.getElementById('google-confirm-btn').onclick = async () => {
     notice.remove();
 
-    const redirectTo = window.location.origin; 
-    
+    const redirectTo = window.location.origin;
+
     const { error } = await sb.auth.signInWithOAuth({
         provider: 'google',
         options: {
             redirectTo: redirectTo,
-            // redirectTo must be added to your Supabase Redirect Whitelist!
             queryParams: { access_type: 'offline', prompt: 'consent' }
         }
     });
@@ -4286,11 +4309,7 @@ async function doGoogleLogin(){
         if (errEl) errEl.textContent = error.message;
     }
 };
-    if(error){
-      const errEl=document.getElementById('auth-error');
-      if(errEl)errEl.textContent=error.message;
-    }
-  };
+}
 
 async function doSignOut(){
   currentUser=null;
@@ -6051,7 +6070,7 @@ function friendWinsLabel(name){
   if(lang==='es')return t('h2h_their_wins_s').replace('{name}',safe);
   if(lang==='nl')return t('h2h_their_wins_s').replace('{name}',safe);
   // EN: possessive — if name ends with 's', use name' wins, else name's wins
-  const key=name.endsWith('s')?'h2h_their_wins_en':'h2h_their_wins_s';
+  const key=name.endsWith('s')?'h2h_their_wins_s':'h2h_their_wins_en';
   return t(key).replace('{name}',safe);
 }
 async function openH2H(friendId,friendName){
@@ -7542,7 +7561,6 @@ function saveOpStats(){
     longestPracticeStreak:stats.longestPracticeStreak||0,
     speedScoreHistory:stats.speedScoreHistory||[],
     lightningStreakHistory:stats.lightningStreakHistory||[],
-    totalWrong:stats.totalWrong||0,
     tipSessions:stats.tipSessions||0,
     dailyCompleted:stats.dailyCompleted||0,
     dailyBestStreak:stats.dailyBestStreak||0,
