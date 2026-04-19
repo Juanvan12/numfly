@@ -662,7 +662,7 @@ body.sidebar-open #burger-fixed{display:none;}
 .titles-modal-overlay { z-index: 200; }
 .titles-modal-box {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; padding: 24px 20px; max-width: 420px;
+  border-radius: 16px; padding: 24px 20px; max-width: 540px;
   width: 92%;
 }
 .titles-modal-header {
@@ -683,7 +683,7 @@ body.sidebar-open #burger-fixed{display:none;}
   margin-bottom: 16px; line-height: 1.5;
 }
 .titles-list {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
 }
 .titles-item {
   display: flex; flex-direction: column; align-items: center;
