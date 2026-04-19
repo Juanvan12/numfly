@@ -1,0 +1,44 @@
+---
+// src/pages/[lang]/[route].astro
+
+import Layout from '../../layouts/layout.astro';
+
+// Import all your page components
+import FriendsComponent from '../../components/Friends.astro';
+import StatsComponent from '../../components/Stats.astro';
+import LeaderboardComponent from '../../components/Leaderboard.astro';
+// ... import the rest of your components
+
+export function getStaticPaths() {
+  return [
+    // 🇳🇱 Dutch Routes
+    { params: { lang: 'nl', route: 'vrienden' }, props: { page: 'friends' } },
+    { params: { lang: 'nl', route: 'statistieken' }, props: { page: 'stats' } },
+    { params: { lang: 'nl', route: 'klassement' }, props: { page: 'leaderboard' } },
+    
+    // 🇪🇸 Spanish Routes
+    { params: { lang: 'es', route: 'amigos' }, props: { page: 'friends' } },
+    { params: { lang: 'es', route: 'estadisticas' }, props: { page: 'stats' } },
+    { params: { lang: 'es', route: 'clasificacion' }, props: { page: 'leaderboard' } },
+    
+    // You can list all your translated mappings here!
+  ];
+}
+
+// Astro extracts the props we defined above
+const { page } = Astro.props;
+---
+
+<Layout>
+  {/* Render the correct component based on the URL */}
+  {page === 'friends' && <FriendsComponent />}
+  {page === 'stats' && <StatsComponent />}
+  {page === 'leaderboard' && <LeaderboardComponent />}
+</Layout>
+
+<script is:inline define:vars={{ page }}>
+  // Kick off your initialization scripts just like you did in the individual files
+  if (page === 'friends') {
+     // ... your initFriendsPage logic ...
+  }
+</script>
