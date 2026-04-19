@@ -1,44 +1,124 @@
 ---
-// src/pages/[lang]/[route].astro
+export const prerender = true;
 
 import Layout from '../../layouts/layout.astro';
 
-// Import all your page components
+// Import ALL your components
+import MainMenu from '../../components/Mainmenu.astro';
 import FriendsComponent from '../../components/Friends.astro';
 import StatsComponent from '../../components/Stats.astro';
 import LeaderboardComponent from '../../components/Leaderboard.astro';
-// ... import the rest of your components
+import AchievementsComponent from '../../components/Achievements.astro';
+import TipsComponent from '../../components/Tips.astro';
+import CampaignComponent from '../../components/Campaign.astro';
+import DailyComponent from '../../components/Daily.astro';
+import LightningComponent from '../../components/Lightning.astro';
+import SpeedComponent from '../../components/Speed.astro';
+import PracticeComponent from '../../components/Practice.astro';
 
 export function getStaticPaths() {
   return [
     // 🇳🇱 Dutch Routes
-    { params: { lang: 'nl', route: 'vrienden' }, props: { page: 'friends' } },
+    { params: { lang: 'nl', route: undefined }, props: { page: 'home' } }, // Catches /nl
+    { params: { lang: 'nl', route: 'vrienden' }, props: { page: 'friends' } }, // Catches /nl/vrienden
     { params: { lang: 'nl', route: 'statistieken' }, props: { page: 'stats' } },
     { params: { lang: 'nl', route: 'klassement' }, props: { page: 'leaderboard' } },
-    
+    { params: { lang: 'nl', route: 'prestaties' }, props: { page: 'achievements' } },
+    { params: { lang: 'nl', route: 'tips' }, props: { page: 'tips' } },
+    { params: { lang: 'nl', route: 'campagne' }, props: { page: 'campaign' } },
+    { params: { lang: 'nl', route: 'dagelijks' }, props: { page: 'daily' } },
+    { params: { lang: 'nl', route: 'bliksem' }, props: { page: 'lightning' } },
+    { params: { lang: 'nl', route: 'snelheid' }, props: { page: 'speed' } },
+    { params: { lang: 'nl', route: 'oefenen' }, props: { page: 'practice' } },
+    { params: { lang: 'nl', route: '1v1' }, props: { page: '1v1' } },
+
     // 🇪🇸 Spanish Routes
+    { params: { lang: 'es', route: undefined }, props: { page: 'home' } }, // Catches /es
     { params: { lang: 'es', route: 'amigos' }, props: { page: 'friends' } },
     { params: { lang: 'es', route: 'estadisticas' }, props: { page: 'stats' } },
     { params: { lang: 'es', route: 'clasificacion' }, props: { page: 'leaderboard' } },
-    
-    // You can list all your translated mappings here!
+    { params: { lang: 'es', route: 'logros' }, props: { page: 'achievements' } },
+    { params: { lang: 'es', route: 'consejos' }, props: { page: 'tips' } },
+    { params: { lang: 'es', route: 'campana' }, props: { page: 'campaign' } },
+    { params: { lang: 'es', route: 'diario' }, props: { page: 'daily' } },
+    { params: { lang: 'es', route: 'rayo' }, props: { page: 'lightning' } },
+    { params: { lang: 'es', route: 'velocidad' }, props: { page: 'speed' } },
+    { params: { lang: 'es', route: 'practica' }, props: { page: 'practice' } },
+    { params: { lang: 'es', route: '1v1' }, props: { page: '1v1' } },
   ];
 }
 
-// Astro extracts the props we defined above
 const { page } = Astro.props;
 ---
 
 <Layout>
-  {/* Render the correct component based on the URL */}
+  {page === 'home' && <MainMenu />}
   {page === 'friends' && <FriendsComponent />}
   {page === 'stats' && <StatsComponent />}
   {page === 'leaderboard' && <LeaderboardComponent />}
+  {page === 'achievements' && <AchievementsComponent />}
+  {page === 'tips' && <TipsComponent />}
+  {page === 'campaign' && <CampaignComponent />}
+  {page === 'daily' && <DailyComponent />}
+  {page === 'lightning' && <LightningComponent />}
+  {page === 'speed' && <SpeedComponent />}
+  {page === 'practice' && <PracticeComponent />}
+  {page === '1v1' && <SpeedComponent />}
 </Layout>
 
 <script is:inline define:vars={{ page }}>
-  // Kick off your initialization scripts just like you did in the individual files
-  if (page === 'friends') {
-     // ... your initFriendsPage logic ...
+  function initDynamicPage() {
+    if (typeof _appInitialised !== 'undefined' && _appInitialised) {
+      if (typeof applyTranslations === 'function') applyTranslations();
+
+      if (page === 'friends') {
+        document.getElementById('screen-friends').classList.add('active');
+        if (typeof loadFriends === 'function') loadFriends();
+        if (typeof startFriendPoller === 'function') startFriendPoller();
+      }
+      else if (page === 'stats') {
+        document.getElementById('screen-stats').classList.add('active');
+        if (typeof renderStatsContent === 'function') renderStatsContent();
+      }
+      else if (page === 'leaderboard') {
+        document.getElementById('screen-leaderboard').classList.add('active');
+        if (typeof setLbScope === 'function') setLbScope(typeof _lbScope !== 'undefined' ? _lbScope : 'global');
+      }
+      else if (page === 'achievements') {
+        document.getElementById('screen-achievements').classList.add('active');
+        if (typeof renderAchievements === 'function') renderAchievements();
+      }
+      else if (page === 'tips') {
+        document.getElementById('screen-tips').classList.add('active');
+        if (typeof renderTipsFilterBtns === 'function') renderTipsFilterBtns();
+        if (typeof renderTipsList === 'function') renderTipsList();
+      }
+      else if (page === 'campaign') {
+        document.getElementById('screen-campaign').classList.add('active');
+        if (typeof renderCampaignMap === 'function') renderCampaignMap();
+      }
+      else if (page === 'daily') {
+        if (typeof openDailyChallenge === 'function') openDailyChallenge();
+      }
+      else if (page === 'lightning') {
+        document.getElementById('screen-lightning-setup').classList.add('active');
+      }
+      else if (page === 'speed') {
+        document.getElementById('screen-speed-setup').classList.add('active');
+      }
+      else if (page === 'practice') {
+        document.getElementById('screen-practice-setup').classList.add('active');
+      }
+      else if (page === '1v1') {
+        const setupScreen = document.getElementById('screen-speed-setup');
+        if (setupScreen) setupScreen.classList.remove('active');
+        const gameScreen = document.getElementById('screen-speed-game');
+        if (gameScreen) gameScreen.classList.add('active');
+        if (typeof checkPendingStart === 'function') checkPendingStart();
+      }
+    } else {
+      setTimeout(initDynamicPage, 50);
+    }
   }
+  initDynamicPage();
 </script>
