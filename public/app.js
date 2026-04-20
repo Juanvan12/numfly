@@ -4358,13 +4358,18 @@ async function doSignOut(){
   // Clear friends notification badge immediately on sign-out
   updateFriendsBadge(0);
   stopFriendPoller();
-  // Load guest localStorage state (if any was saved before login)
+ // Load guest localStorage state (if any was saved before login)
   loadGuestState();
   clearDailyLocalState();
   try{localStorage.removeItem('numfly_campaign');}catch(e){}
-  // Clear streak from localStorage too
-  try{localStorage.removeItem('numfly_daily_streak');}catch(e){}
-  try{localStorage.removeItem('numfly_op_stats');}catch(e){}
+  
+  // FIX: Forceer de streak naar 0 voordat we hem verwijderen, 
+  // zodat openstaande functies in app.js direct de lege status uitlezen.
+  try {
+      localStorage.setItem('numfly_daily_streak', JSON.stringify({count: 0, lastDate: ''}));
+      localStorage.removeItem('numfly_daily_streak');
+  } catch(e) {}
+
   // Hide streak badge immediately and clear all badge state
   const _sBadge=document.getElementById('daily-streak-badge');
   const _sCard=document.getElementById('daily-card');
@@ -7791,6 +7796,12 @@ showScreen = function(id) {
 
   // Call original function
   _origShowScreen_withHistory(id);
+  
+  // FIX: Verberg de burger menu knop hardhandig op alle pagina's behalve het hoofdmenu
+  const burgerBtn = document.getElementById('burger-fixed');
+  if (burgerBtn) {
+      burgerBtn.style.display = (id === 'screen-menu') ? '' : 'none';
+  }
   
   // Bepaal welke URL we in de adresbalk willen laten zien
   let displayUrl = location.pathname;
