@@ -67,11 +67,10 @@ const esPath = enToEs[basePage] || basePage;
 <body>
   <div class="grid-bg"></div>
   
-  {!isBackButtonPage && (
+  
     <button id="burger-fixed" onclick="openSidebar()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
-  )}
   
   <div class="app">
     <Sidebar />

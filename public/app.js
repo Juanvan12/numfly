@@ -7726,12 +7726,6 @@ setLang=function(l,btn){
   }catch(e){}
 };
 
-// ── Back button (Android/iOS hardware back) ───────────────────────────────────
-// Strategy: push a history entry each time we show a non-menu screen,
-// so pressing back pops it and we intercept with popstate.
-
-
-// history API throws SecurityError inside srcdoc/sandboxed iframes — guard every call
 function safeHistoryReplace(state,title,url){try{history.replaceState(state,title,url);}catch(e){}}
 function safeHistoryPush(state,title,url){try{history.pushState(state,title,url);}catch(e){}}
 
@@ -7740,47 +7734,26 @@ const _origShowScreen_withHistory = showScreen;
 
 showScreen = function(id) {
   const currentId = document.querySelector('.screen.active')?.id;
-  
-  // Auto-save Daily Challenge if leaving abruptly (e.g. phone back button)
+
   if (currentId === 'screen-daily-game' && id !== 'screen-daily-game' && typeof dailyState !== 'undefined' && !dailyState.done && dailyState.current > 0) {
-    const elapsed = dailyState.startTime > 0 ? Date.now() - dailyState.startTime : 0;
-    try {
-      localStorage.setItem('numfly_daily_progress', JSON.stringify({
-        dateStr: getDailyDateStr(),
-        current: dailyState.current,
-        elapsedMs: elapsed
-      }));
-    } catch(e) {}
+    if (typeof saveDailyLocalState === 'function') saveDailyLocalState();
   }
   
-  // Auto-save Competition/Challenge if leaving abruptly (e.g. phone back button)
   if (currentId === 'screen-speed-game' && id !== 'screen-speed-game' && activeChallengeMode === 'challenge' && activeChallengeId) {
-    try {
-      localStorage.setItem('numfly_comp_resume_' + activeChallengeId, JSON.stringify({
-        score: speed.score,
-        remaining: speed.remaining,
-        questionsAnswered: speed.score + (speed.wrongStreak || 0)
-      }));
-    } catch(e) {}
-    activeChallengeMode = 'normal';
+    if (typeof saveCompResumeState === 'function') saveCompResumeState();
   }
 
-  // Call original function
   _origShowScreen_withHistory(id);
-  
-  // FIX: Verberg de burger menu knop hardhandig op alle pagina's behalve het hoofdmenu
-  const burgerBtn = document.getElementById('burger-fixed');
-  if (burgerBtn) {
-      burgerBtn.style.display = (id === 'screen-menu') ? '' : 'none';
-  }
-  
-  // Bepaal welke URL we in de adresbalk willen laten zien
+
+  const gameScreens = ['screen-speed-game','screen-practice-game','screen-lightning-game','screen-daily-game','screen-campaign-game'];
+  document.body.classList.toggle('in-game', gameScreens.includes(id));
+  document.body.classList.toggle('on-menu', id === 'screen-menu');
+
   let displayUrl = location.pathname;
   if (id === 'screen-privacy') {
-    displayUrl += '?mode=privacy'; // Voeg de parameter toe voor het privacyscherm
+    displayUrl += '?mode=privacy';
   }
-  
-  // Standard history logic
+
   if (id === MENU_SCREEN) {
     safeHistoryReplace({screen: MENU_SCREEN}, '', displayUrl);
   } else {
@@ -7793,12 +7766,12 @@ window.addEventListener('popstate',(e)=>{
   if(!current||current===MENU_SCREEN){
     return;
   }
-  // Auto-save Daily Challenge progress when hardware back button is pressed
+
   if(current==='screen-daily-game'&&typeof dailyState!=='undefined'&&!dailyState.done&&dailyState.current>0){
     const elapsed=dailyState.startTime>0?Date.now()-dailyState.startTime:0;
     try{localStorage.setItem('numfly_daily_progress',JSON.stringify({dateStr:getDailyDateStr(),current:dailyState.current,elapsedMs:elapsed}));}catch(e){}
   }
-  // Navigate to the screen recorded in history state, or fall back to menu
+
   const target=e.state?.screen;
   const known=target&&document.getElementById(target);
   if(known&&target!==current){

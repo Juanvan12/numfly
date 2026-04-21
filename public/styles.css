@@ -354,42 +354,44 @@ input[type=number]::-webkit-inner-spin-button{opacity:.4;}
   position:fixed;top:14px;left:14px;z-index:600;
   width:42px;height:42px;
   background:var(--surface);border:1px solid var(--border);border-radius:10px;
-  display:none;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  /* Standaard (Computer): Altijd zichtbaar */
+  display:flex; 
+  flex-direction:column;align-items:center;justify-content:center;gap:5px;
   cursor:pointer;transition:border-color .2s;
 }
-body.on-menu #burger-fixed{display:flex;}
 #burger-fixed:hover{border-color:var(--border2);}
 #burger-fixed span{display:block;width:18px;height:2px;background:var(--text);border-radius:2px;transition:all .25s;}
-/* Hide burger when sidebar is open */
-body.sidebar-open #burger-fixed{display:none;}
-/* Keep .burger-btn class in case it's used anywhere else */
-.burger-btn{display:none;}
+
+/* Verberg de knop tijdens actieve games (zowel PC als mobiel) */
+body.in-game #burger-fixed { display: none !important; }
+
+/* Verberg de knop als de sidebar open schuift */
+body.sidebar-open #burger-fixed { display: none !important; }
+
 /* Mobile tweaks */
 @media(max-width:479px){
-  /* On mobile: only show burger on home screen */
+  /* Op mobiel: standaard onzichtbaar */
   #burger-fixed{top:12px;left:12px;display:none;}
+  
+  /* Op mobiel: ALLEEN zichtbaar als je in het hoofdmenu bent */
   body.on-menu #burger-fixed{display:flex;}
-  /* But hide it when sidebar is open even on home */
-  body.sidebar-open #burger-fixed{display:none!important;}
-  /* Mobile: hide lang buttons from top bar, hide tagline */
+  
+  /* Mobile header logica (laat de rest hetzelfde) */
   .lang-bar .lang-btn{display:none;}
   .tagline{display:none;}
-  /* Mobile header: fixed bar at top, same height/position as burger */
   .mobile-header{
     display:flex!important;
     position:fixed;
     top:0;left:0;right:0;
     height:66px;
-    z-index:550; /* below sidebar (800) but above content */
+    z-index:550;
     background:var(--bg);
     border-bottom:1px solid var(--border);
     justify-content:center;
     align-items:center;
     gap:10px;
   }
-  /* Offset menu content so it starts below the fixed header */
   #screen-menu{padding-top:74px;}
-  /* Mobile: hide the full desktop logo block and tagline (mobile-header replaces them) */
   .numfly-logo{display:none;}
 }
 /* Desktop: hide mobile header */
