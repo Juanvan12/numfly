@@ -909,33 +909,33 @@ body.sidebar-open #burger-fixed { display: none !important; }
   cursor: pointer;
 }
 
-/* ════ THEMA 2: MODERN & PROFESSIONAL (SaaS Style) ════ */
+/* ════ THEMA 2: DARK PROFESSIONAL (SaaS Dark Mode) ════ */
 body.theme-pro {
-  /* Frisse, zakelijke kleuren (Tailwind Slate/Blue palet) */
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --surface2: #f1f5f9;
-  --surface3: #e2e8f0;
-  --border: #e2e8f0;
-  --border2: #cbd5e1;
+  /* Diepe, koele grijstinten (Slate) in plaats van hard zwart */
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #334155;
+  --surface3: #475569;
+  --border: #334155;
+  --border2: #475569;
   
-  /* Betrouwbaar Tech-Blauw als accent */
-  --accent: #2563eb; 
-  --accent2: #1d4ed8;
+  /* Helder maar rustig blauw als accent, geen agressief neon */
+  --accent: #38bdf8; 
+  --accent2: #0ea5e9;
   
-  --text: #0f172a;
-  --muted: #475569;
+  --text: #f8fafc;
+  --muted: #94a3b8;
   --muted2: #64748b;
 
-  /* Toegankelijke statuskleuren voor lichte achtergronden */
-  --success: #16a34a;
-  --error: #dc2626;
-  --info: #0284c7;
-  --orange: #ea580c;
-  --purple: #7c3aed;
+  /* Statuskleuren aangepast zodat ze mooi afsteken op donkergrijs */
+  --success: #4ade80;
+  --error: #f87171;
+  --info: #38bdf8;
+  --orange: #fb923c;
+  --purple: #a78bfa;
 }
 
-/* Verwijder de "vibey" achtergrond effecten */
+/* Verwijder de "vibey" achtergrond effecten voor een strakke look */
 body.theme-pro::before { background: none; }
 body.theme-pro::after { background: none; }
 
@@ -954,38 +954,27 @@ body.theme-pro .xp-pts,
 body.theme-pro .xp-title-display,
 body.theme-pro .levelup-num,
 body.theme-pro .levelup-title-name {
-  /* Vervang het agressieve Bebas Neue door een professioneel systeem-lettertype */
+  /* Professioneel systeem-lettertype in plaats van Bebas Neue */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   letter-spacing: normal !important;
   font-weight: 700;
 }
 
-/* Zachtere schaduwen voor kaarten (geeft diepte in plaats van platte randen) */
-body.theme-pro .q-card,
-body.theme-pro .mode-card,
-body.theme-pro .stat-card,
-body.theme-pro .ach-card,
-body.theme-pro .daily-card,
-body.theme-pro .tip-card,
-body.theme-pro .hs-block {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  border-color: var(--border);
-}
-
-/* Primaire knoppen een professionele look geven */
+/* Primaire knoppen: donkere tekst op lichte blauwe knop voor maximaal contrast */
 body.theme-pro .btn-primary,
 body.theme-pro .submit-btn {
   background: var(--accent);
-  color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  color: #0f172a; 
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.15);
   font-weight: 600;
 }
 body.theme-pro .btn-primary:hover,
 body.theme-pro .submit-btn:hover {
   background: var(--accent2);
+  color: #fff;
 }
 
-/* De accentkleur tekst moet op wit leesbaar blijven (dus niet geel maar blauw) */
+/* Accentkleur correcties voor specifieke teksten zodat alles netjes blauw kleurt */
 body.theme-pro .numfly-name .fly,
 body.theme-pro .numfly-name .dot,
 body.theme-pro .hs-val,
