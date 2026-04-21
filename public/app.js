@@ -782,27 +782,6 @@ window.getLocalizedUrl = function(basePath) {
   return basePath;
 };
 
-// ── Thema Logica (A/B Test) ──
-function toggleTheme() {
-  const body = document.body;
-  body.classList.toggle('theme-alt');
-  
-  const isAlt = body.classList.contains('theme-alt');
-  try {
-    localStorage.setItem('numfly_theme', isAlt ? 'alt' : 'default');
-  } catch(e) {}
-}
-
-function initTheme() {
-  try {
-    if (localStorage.getItem('numfly_theme') === 'alt') {
-      document.body.classList.add('theme-alt');
-    }
-  } catch(e) {}
-}
-
-initTheme();
-
 function applyTranslations(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const prefix=el.dataset.i18nPrefix||'';

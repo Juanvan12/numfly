@@ -73,12 +73,29 @@
     <button onclick="closeSidebar();showScreen('screen-privacy')" style="background:none;border:none;color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;padding:0;transition:color .15s;" data-i18n="sidebar_privacy"></button>
     
     <button onclick="toggleTheme()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;padding:6px 10px;border-radius:6px;margin-left:auto;transition:all .2s;">
-      💼 Pro Design
+      💼 Switch Design
     </button>
   </div>
 </div>
 
 <script is:inline>
+  // ── 1. THEMA LOGICA (Globaal gemaakt met 'window.' zodat de knop altijd werkt) ──
+  window.toggleTheme = function() {
+    document.body.classList.toggle('theme-pro');
+    const isPro = document.body.classList.contains('theme-pro');
+    try {
+      localStorage.setItem('numfly_theme', isPro ? 'pro' : 'dark-neon');
+    } catch(e) {}
+  };
+
+  // Zorg dat het thema direct goed staat als de pagina laadt
+  try {
+    if (localStorage.getItem('numfly_theme') === 'pro') {
+      document.body.classList.add('theme-pro');
+    }
+  } catch(e) {}
+
+  // ── 2. JOUW BESTAANDE TAAL LOGICA ──
   (function() {
     const path = window.location.pathname;
     let activeLang = 'en';
