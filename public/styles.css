@@ -350,15 +350,14 @@ input[type=number]::-webkit-inner-spin-button{opacity:.4;}
 .title-ramanujan{color:#ff6b9d;}
 
 /* ════ BURGER / SIDEBAR ════ */
-/* Single burger element #burger-fixed — always fixed top-left on desktop,
-   mobile-only visible on home screen via body.on-menu */
 #burger-fixed{
   position:fixed;top:14px;left:14px;z-index:600;
   width:42px;height:42px;
   background:var(--surface);border:1px solid var(--border);border-radius:10px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:5px;
   cursor:pointer;transition:border-color .2s;
 }
+body.on-menu #burger-fixed{display:flex;}
 #burger-fixed:hover{border-color:var(--border2);}
 #burger-fixed span{display:block;width:18px;height:2px;background:var(--text);border-radius:2px;transition:all .25s;}
 /* Hide burger when sidebar is open */

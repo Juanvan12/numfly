@@ -782,37 +782,6 @@ window.getLocalizedUrl = function(basePath) {
   return basePath;
 };
 
-// ── Thema Logica (A/B Test) ──
-function toggleTheme() {
-  document.body.classList.toggle('theme-warm');
-  try {
-    localStorage.setItem('numfly_theme', document.body.classList.contains('theme-warm') ? 'warm' : 'dark');
-  } catch(e) {}
-}
-
-function initTheme() {
-  try {
-    if (localStorage.getItem('numfly_theme') === 'warm') {
-      document.body.classList.add('theme-warm');
-    }
-  } catch(e) {}
-}
-
-initTheme();
-
-function initTheme() {
-  try {
-    const savedTheme = localStorage.getItem('numfly_theme');
-    if (savedTheme === 'light') {
-      document.body.classList.add('theme-light');
-    }
-  } catch(e) {}
-}
-
-// Roep deze direct aan als de pagina laadt, 
-// zodat hij niet eerst donker is en dan pas licht flitst.
-initTheme();
-
 function applyTranslations(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const prefix=el.dataset.i18nPrefix||'';
@@ -1787,7 +1756,7 @@ function showScreen(id){
       'screen-achievements': '/achievements'
     };
     if (routes[id]) {
-      window.location.href = routes[id];
+      window.location.href = typeof getLocalizedUrl === 'function' ? getLocalizedUrl(routes[id]) : routes[id];
       return;
     }
   }
@@ -6337,7 +6306,9 @@ async function loadLeaderboard(key){
         const totalMins=Math.floor((r[col]||0)/60);
         val=totalMins>=60?Math.floor(totalMins/60)+'H'+(totalMins%60>0?(totalMins%60)+'M':''):totalMins+'M';
       } else if(key==='daily_streak'){
-        val=(r[col]||0)+' 🔥';
+        const sc=r[col]||0;
+        const streakIcon=sc>=365?'👑':sc>=90?'🔮':sc>=30?'💎':'🔥';
+        val=sc+' '+streakIcon;
       } else {
         val=fmtN(r[col]||0);
       }
