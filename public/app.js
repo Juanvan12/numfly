@@ -3607,12 +3607,12 @@ function initApp(){
   updateDailyCard();
 
   const gamePages = ['/lightning', '/speed', '/practice', '/campaign', '/daily', '/1v1'];
-  
-  if (gamePages.includes(window.location.pathname)) {
-    document.body.classList.remove('on-menu');
-  } else {
-    document.body.classList.add('on-menu');
-  }
+  const isGamePage = gamePages.includes(window.location.pathname);
+  const isRootMenu = window.location.pathname === '/' || window.location.pathname === '';
+
+  document.body.classList.toggle('in-game', isGamePage);
+  document.body.classList.toggle('on-menu', isRootMenu);
+
   gdprInit();
   // Poll badge every 20s globally so user sees pending requests without navigating
   if(!window._globalBadgePoller){
@@ -7018,12 +7018,9 @@ function showChallengeResult(code,yourScore,theirScore,theirName,isCreator){
   else if(theyWin){verdictText=t('challenge_loss').replace('{name}',opponentName);}
   else{verdictText=t('challenge_tie');}
   document.getElementById('cr-verdict').textContent=verdictText;
+  
   const shareEl=document.getElementById('cr-share-section');
-  if(isCreator||theirScore===null){
-    shareEl.style.display='';
-    // Always use the root URL for challenge links so recipients aren't forced into a specific language
-    document.getElementById('cr-link').textContent=`${window.location.origin}/?challenge=${code}`;
-  } else shareEl.style.display='none';
+  shareEl.style.display='none';
   showScreen('screen-challenge-result');
 }
 function copyChallengeLink(){
