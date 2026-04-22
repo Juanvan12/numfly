@@ -1756,58 +1756,62 @@ function showScreen(id){
       'screen-achievements': '/achievements'
     };
     if (routes[id]) {
-      window.location.href = typeof getLocalizedUrl === 'function' ? getLocalizedUrl(routes[id]) : routes[id];
+      const targetUrl = typeof getLocalizedUrl === 'function' ? getLocalizedUrl(routes[id]) : routes[id];
+      // Forceer een 'klik' zodat Astro View Transitions de animatie oppakt
+      const a = document.createElement('a');
+      a.href = targetUrl;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
       return;
     }
   }
-  // Clear game timers on any game→non-game screen transition to prevent leaks
+  
+  // Clear game timers ...
   const _gameScreens=['screen-speed-game','screen-practice-game','screen-lightning-game','screen-daily-game','screen-campaign-game'];
   const _curId=document.querySelector('.screen.active')?.id;
   if(_curId&&_gameScreens.includes(_curId)&&!_gameScreens.includes(id)){clearGameTimers();}
-  // Reset lightning streak when leaving lightning screens without answering
+  
   const cur=document.querySelector('.screen.active')?.id;
   const leavingLightning=cur&&(cur==='screen-lightning-game'||cur==='screen-lightning-setup'||cur==='screen-lightning-result');
   const goingToLightning=id==='screen-lightning-game'||id==='screen-lightning-setup'||id==='screen-lightning-result';
   if(leavingLightning&&!goingToLightning){
-    // Abandon mid-flash if running
     if(lightning)lightning.abandoned=true;
-    // Only reset streak if leaving to menu (not just changing settings)
     if(id==='screen-menu'){lightning.score=0;lightning.sessionScore=0;}
   }
-  // Guard: redirect guests away from protected screens
+  
   const PROTECTED=['screen-friends','screen-leaderboard','screen-competition','screen-group-comp'];
   if(PROTECTED.includes(id)&&!currentUser){
     if(typeof openAuthModal==='function')openAuthModal('login');
     return;
   }
+  
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  // Always scroll to top when switching screens
   window.scrollTo(0,0);
-  // Toggle body class for mobile fixed burger visibility
   document.body.classList.toggle('on-menu', id==='screen-menu');
+  
   applyTranslations();
   if(id==='screen-menu'){renderHSPanel();renderXPPanel();updateDailyCard();}
   if(id==='screen-stats') renderStatsContent();
-  // Clear friend search result AND input when navigating away
   if(id!=='screen-friends'){
     const sr=document.getElementById('friend-search-result');
     if(sr)sr.innerHTML='';
     const si=document.getElementById('friend-search-input');
     if(si)si.value='';
   }
-  // Friend poller: fast when on friends, slow global otherwise
   if(id==='screen-friends'){loadFriends();startFriendPoller();}
   else{stopFriendPoller();}
   if(id==='screen-tips'){renderTipsFilterBtns();renderTipsList();}
   if(id==='screen-achievements') renderAchievements();
   if(id==='screen-leaderboard') { loadLeaderboard(_lbKey || 'xp'); }
-  // Show scroll-to-top on long screens
+  
   const scrollable=['screen-tips','screen-achievements'];
   if(scrollable.includes(id)){attachScrollTopListener();}
   else{detachScrollTopListener();}
   if(id==='screen-privacy'){renderPrivacy();requestAnimationFrame(()=>{window.scrollTo(0,0);document.getElementById('screen-privacy').scrollTop=0;});}
 }
+
 function showTips(){
   showScreen('screen-tips');
 }
@@ -7745,75 +7749,29 @@ showScreen = function(id) {
   const gameScreens = ['screen-speed-game','screen-practice-game','screen-lightning-game','screen-daily-game','screen-campaign-game'];
   document.body.classList.toggle('in-game', gameScreens.includes(id));
   document.body.classList.toggle('on-menu', id === 'screen-menu');
-
-  let displayUrl = location.pathname;
-  if (id === 'screen-privacy') {
-    displayUrl += '?mode=privacy';
-  }
-
-  if (id === MENU_SCREEN) {
-    safeHistoryReplace({screen: MENU_SCREEN}, '', displayUrl);
-  } else {
-    safeHistoryPush({screen: id}, '', displayUrl);
-  }
 };
-
-window.addEventListener('popstate',(e)=>{
-  const current=document.querySelector('.screen.active')?.id;
-  if(!current||current===MENU_SCREEN){
-    return;
-  }
-
-  if(current==='screen-daily-game'&&typeof dailyState!=='undefined'&&!dailyState.done&&dailyState.current>0){
-    const elapsed=dailyState.startTime>0?Date.now()-dailyState.startTime:0;
-    try{localStorage.setItem('numfly_daily_progress',JSON.stringify({dateStr:getDailyDateStr(),current:dailyState.current,elapsedMs:elapsed}));}catch(e){}
-  }
-
-  const target=e.state?.screen;
-  const known=target&&document.getElementById(target);
-  if(known&&target!==current){
-    _origShowScreen_withHistory(target);
-  } else {
-    _origShowScreen_withHistory(MENU_SCREEN);
-    safeHistoryReplace({screen:MENU_SCREEN},'',location.pathname);
-  }
-});
 
 function checkPendingStart() {
   try {
     const pending = localStorage.getItem('numfly_pending_start');
     if (pending && document.getElementById('screen-speed-game')) {
        const p = JSON.parse(pending);
-       localStorage.removeItem('numfly_pending_start'); // unpack the suitcase
+       localStorage.removeItem('numfly_pending_start'); 
        
-       // Restore all the challenge variables safely
        activeChallengeId = p.id;
        activeChallengeMode = p.mode;
-       diff.speed = p.diff || 'easy'; // Safe fallback
+       diff.speed = p.diff || 'easy';
        _challengeDiff = p.diff || 'easy';
        speed.remaining = p.dur || 120;
        speed.originalDur = p.origDur || p.dur || 120;
        challengeSeed = p.seed;
        _activeCompId = p.compId;
        
-       if (p.seed !== undefined && p.seed !== null) {
-         challengeRng = seededRand(p.seed);
-       }
-       
-       // Start the game automatically!
+       if (p.seed !== undefined && p.seed !== null) challengeRng = seededRand(p.seed);
        setTimeout(() => startSpeedWithCountdown(), 150);
     }
-  } catch (e) {
-    console.error("checkPendingStart failed", e);
-  }
+  } catch (e) {}
 }
 
-// Init — seed initial history state
-// FIX: Neem window.location.search mee, anders wordt ?mode=privacy direct bij het inladen gewist!
-const _initialUrl = window.location.pathname + window.location.search + window.location.hash;
-safeHistoryReplace({screen:MENU_SCREEN},'',_initialUrl);
-
-// Clear stale session from old storage key
 try{localStorage.removeItem('numfly_auth');}catch(e){}
-// Auth-dependent UI (sidebar, profile) is updated separately by updateSocialUI().
 initApp();
