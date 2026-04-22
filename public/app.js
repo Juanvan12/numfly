@@ -7777,27 +7777,43 @@ try{localStorage.removeItem('numfly_auth');}catch(e){}
 initApp();
 
 document.addEventListener('astro:page-load', () => {
-  // 1. Pas direct de vertalingen toe
   if (typeof applyTranslations === 'function') applyTranslations();
   if (typeof updateSidebarLangBtns === 'function') updateSidebarLangBtns();
   
-  const path = window.location.pathname.replace(/^\/(nl|es)/, '').replace(/\/$/, '') || '/';
-  let activeId = 'screen-menu';
+  let p = window.location.pathname.replace(/^\/(nl|es)/, '').replace(/\/$/, '') || '/';
   
-  if (path === '/friends') activeId = 'screen-friends';
-  else if (path === '/stats') activeId = 'screen-stats';
-  else if (path === '/leaderboard') activeId = 'screen-leaderboard';
-  else if (path === '/achievements') activeId = 'screen-achievements';
-  else if (path === '/tips' || path === '/how-to-practice-mental-math') activeId = 'screen-tips';
-  else if (path === '/campaign') activeId = 'screen-campaign';
-  else if (path === '/lightning') activeId = 'screen-lightning-setup';
-  else if (path === '/speed') activeId = 'screen-speed-setup';
-  else if (path === '/practice') activeId = 'screen-practice-setup';
-  else if (path === '/1v1') activeId = 'screen-speed-game';
+  const reverseMap = {
+    "/vrienden": "/friends", "/amigos": "/friends",
+    "/statistieken": "/stats", "/estadisticas": "/stats",
+    "/klassement": "/leaderboard", "/clasificacion": "/leaderboard",
+    "/prestaties": "/achievements", "/logros": "/achievements",
+    "/hoofdrekenen-oefenen": "/how-to-practice-mental-math",
+    "/como-practicar-calculo-mental": "/how-to-practice-mental-math",
+    "/campagne": "/campaign", "/campana": "/campaign",
+    "/dagelijks": "/daily", "/diario": "/daily",
+    "/bliksem": "/lightning", "/rayo": "/lightning",
+    "/snelheid": "/speed", "/velocidad": "/speed",
+    "/oefenen": "/practice", "/practica": "/practice",
+    "/tips": "/tips", "/consejos": "/tips"
+  };
+  
+  p = reverseMap[p] || p;
+
+  let activeId = 'screen-menu';
+  if (p === '/friends') activeId = 'screen-friends';
+  else if (p === '/stats') activeId = 'screen-stats';
+  else if (p === '/leaderboard') activeId = 'screen-leaderboard';
+  else if (p === '/achievements') activeId = 'screen-achievements';
+  else if (p === '/tips' || p === '/how-to-practice-mental-math') activeId = 'screen-tips';
+  else if (p === '/campaign') activeId = 'screen-campaign';
+  else if (p === '/lightning') activeId = 'screen-lightning-setup';
+  else if (p === '/speed') activeId = 'screen-speed-setup';
+  else if (p === '/practice') activeId = 'screen-practice-setup';
+  else if (p === '/1v1') activeId = 'screen-speed-game';
 
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   
-  if (path === '/daily') {
+  if (p === '/daily') {
     if (typeof openDailyChallenge === 'function') openDailyChallenge();
   } else {
     const targetScreen = document.getElementById(activeId);
@@ -7824,7 +7840,7 @@ document.addEventListener('astro:page-load', () => {
     if (typeof renderTipsList === 'function') renderTipsList();
   } else if (currentScreen === 'screen-campaign') {
     if (typeof renderCampaignMap === 'function') renderCampaignMap();
-  } else if (currentScreen === 'screen-speed-game' && path === '/1v1') {
+  } else if (currentScreen === 'screen-speed-game' && p === '/1v1') {
     if (typeof checkPendingStart === 'function') checkPendingStart();
   }
   
