@@ -7776,40 +7776,59 @@ function checkPendingStart() {
 try{localStorage.removeItem('numfly_auth');}catch(e){}
 initApp();
 
-// ── ASTRO VIEW TRANSITIONS LIFECYCLE ──
 document.addEventListener('astro:page-load', () => {
-  // 1. Pas direct de vertalingen toe op de nieuwe onzichtbare HTML
+  // 1. Pas direct de vertalingen toe
   if (typeof applyTranslations === 'function') applyTranslations();
   if (typeof updateSidebarLangBtns === 'function') updateSidebarLangBtns();
   
-  // 2. Zoek welk scherm nu actief is
-  const activeScreen = document.querySelector('.screen.active')?.id;
+  const path = window.location.pathname.replace(/^\/(nl|es)/, '').replace(/\/$/, '') || '/';
+  let activeId = 'screen-menu';
   
-  // 3. Render de bijbehorende dynamische data (XP, Highscores, Vrienden)
-  if (activeScreen === 'screen-menu') {
+  if (path === '/friends') activeId = 'screen-friends';
+  else if (path === '/stats') activeId = 'screen-stats';
+  else if (path === '/leaderboard') activeId = 'screen-leaderboard';
+  else if (path === '/achievements') activeId = 'screen-achievements';
+  else if (path === '/tips' || path === '/how-to-practice-mental-math') activeId = 'screen-tips';
+  else if (path === '/campaign') activeId = 'screen-campaign';
+  else if (path === '/lightning') activeId = 'screen-lightning-setup';
+  else if (path === '/speed') activeId = 'screen-speed-setup';
+  else if (path === '/practice') activeId = 'screen-practice-setup';
+  else if (path === '/1v1') activeId = 'screen-speed-game';
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  
+  if (path === '/daily') {
+    if (typeof openDailyChallenge === 'function') openDailyChallenge();
+  } else {
+    const targetScreen = document.getElementById(activeId);
+    if (targetScreen) targetScreen.classList.add('active');
+  }
+
+  const currentScreen = document.querySelector('.screen.active')?.id;
+  
+  if (currentScreen === 'screen-menu') {
     if (typeof renderHSPanel === 'function') renderHSPanel();
     if (typeof renderXPPanel === 'function') renderXPPanel();
     if (typeof updateDailyCard === 'function') updateDailyCard();
-  } else if (activeScreen === 'screen-stats') {
+  } else if (currentScreen === 'screen-stats') {
     if (typeof renderStatsContent === 'function') renderStatsContent();
-  } else if (activeScreen === 'screen-leaderboard') {
+  } else if (currentScreen === 'screen-leaderboard') {
     if (typeof loadLeaderboard === 'function') loadLeaderboard(typeof _lbKey !== 'undefined' ? _lbKey : 'xp');
-  } else if (activeScreen === 'screen-friends') {
+  } else if (currentScreen === 'screen-friends') {
     if (typeof loadFriends === 'function') loadFriends();
     if (typeof startFriendPoller === 'function') startFriendPoller();
-  } else if (activeScreen === 'screen-achievements') {
+  } else if (currentScreen === 'screen-achievements') {
     if (typeof renderAchievements === 'function') renderAchievements();
-  } else if (activeScreen === 'screen-tips') {
+  } else if (currentScreen === 'screen-tips') {
     if (typeof renderTipsFilterBtns === 'function') renderTipsFilterBtns();
     if (typeof renderTipsList === 'function') renderTipsList();
-  } else if (activeScreen === 'screen-campaign') {
+  } else if (currentScreen === 'screen-campaign') {
     if (typeof renderCampaignMap === 'function') renderCampaignMap();
-  } else if (activeScreen === 'screen-speed-game') {
+  } else if (currentScreen === 'screen-speed-game' && path === '/1v1') {
     if (typeof checkPendingStart === 'function') checkPendingStart();
   }
   
-  // 4. Stop de friend-poller als we niet op de friends pagina zijn
-  if (activeScreen !== 'screen-friends' && typeof stopFriendPoller === 'function') {
+  if (currentScreen !== 'screen-friends' && typeof stopFriendPoller === 'function') {
     stopFriendPoller();
   }
 });
