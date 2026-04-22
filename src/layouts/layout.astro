@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import Sidebar from '../components/Sidebar.astro';
 import Modals from '../components/Modals.astro';
 import SocialScreens from '../components/SocialScreens.astro';
@@ -51,6 +52,8 @@ const esPath = enToEs[basePage] || basePage;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Numfly - Free Math Games & Mental Math Practice</title>
+
+  <ClientRouter />
   
   <link rel="alternate" hreflang="x-default" href={`https://numfly.pro${basePage}`} />
   <link rel="alternate" hreflang="en" href={`https://numfly.pro${basePage}`} />
