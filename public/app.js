@@ -7775,3 +7775,41 @@ function checkPendingStart() {
 
 try{localStorage.removeItem('numfly_auth');}catch(e){}
 initApp();
+
+// ── ASTRO VIEW TRANSITIONS LIFECYCLE ──
+document.addEventListener('astro:page-load', () => {
+  // 1. Pas direct de vertalingen toe op de nieuwe onzichtbare HTML
+  if (typeof applyTranslations === 'function') applyTranslations();
+  if (typeof updateSidebarLangBtns === 'function') updateSidebarLangBtns();
+  
+  // 2. Zoek welk scherm nu actief is
+  const activeScreen = document.querySelector('.screen.active')?.id;
+  
+  // 3. Render de bijbehorende dynamische data (XP, Highscores, Vrienden)
+  if (activeScreen === 'screen-menu') {
+    if (typeof renderHSPanel === 'function') renderHSPanel();
+    if (typeof renderXPPanel === 'function') renderXPPanel();
+    if (typeof updateDailyCard === 'function') updateDailyCard();
+  } else if (activeScreen === 'screen-stats') {
+    if (typeof renderStatsContent === 'function') renderStatsContent();
+  } else if (activeScreen === 'screen-leaderboard') {
+    if (typeof loadLeaderboard === 'function') loadLeaderboard(typeof _lbKey !== 'undefined' ? _lbKey : 'xp');
+  } else if (activeScreen === 'screen-friends') {
+    if (typeof loadFriends === 'function') loadFriends();
+    if (typeof startFriendPoller === 'function') startFriendPoller();
+  } else if (activeScreen === 'screen-achievements') {
+    if (typeof renderAchievements === 'function') renderAchievements();
+  } else if (activeScreen === 'screen-tips') {
+    if (typeof renderTipsFilterBtns === 'function') renderTipsFilterBtns();
+    if (typeof renderTipsList === 'function') renderTipsList();
+  } else if (activeScreen === 'screen-campaign') {
+    if (typeof renderCampaignMap === 'function') renderCampaignMap();
+  } else if (activeScreen === 'screen-speed-game') {
+    if (typeof checkPendingStart === 'function') checkPendingStart();
+  }
+  
+  // 4. Stop de friend-poller als we niet op de friends pagina zijn
+  if (activeScreen !== 'screen-friends' && typeof stopFriendPoller === 'function') {
+    stopFriendPoller();
+  }
+});
