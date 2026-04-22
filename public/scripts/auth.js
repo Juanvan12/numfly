@@ -769,73 +769,21 @@ document.getElementById('google-confirm-btn').onclick = async () => {
 }
 
 async function doSignOut(){
-  currentUser=null;
-  currentProfile=null;
-  _profileLoadPromise=null;
-  _currentLoginUserId=null;
-  // Stop any active game timers before clearing state
-  if(practice&&practice.timer){clearInterval(practice.timer);practice.timer=null;}
-  if(dailyState&&dailyState.timer){clearInterval(dailyState.timer);dailyState.timer=null;}
-  if(dailyState&&dailyState.playTimeTimer){clearInterval(dailyState.playTimeTimer);dailyState.playTimeTimer=null;}
-  if(speed&&speed.timer){clearInterval(speed.timer);speed.timer=null;}
-  // Reset all in-memory progress so the UI shows clean state
-  ['easy','medium','hard'].forEach(d=>{
-    hs.lightning[d]={score:0,plays:0,bestPrecision:0};
-    hs.speed[d]={score:0,plays:0};
-  });
-  hs.speedDur = {}; 
-  xp.total=0;xp.level=1;
-  // Full stats reset — must match the initial stats object structure exactly
-  Object.assign(stats,{
-    totalAnswers:0,totalCorrect:0,totalWrong:0,totalPlayTime:0,
-    speedScoreHistory:[],lightningStreakHistory:[],
-    longestSpeedStreak:0,currentSpeedStreak:0,
-    longestLightningStreak:0,longestCorrectSequence:0,
-    practiceCorrect:0,practiceWrong:0,
-    currentPracticeStreak:0,longestPracticeStreak:0,
-    tipSessions:0,dailyCompleted:0,dailyBestStreak:0,dailyBestTime:Infinity,
-    modeAnswers:{lightning:0,speed:0,practice:0,daily:0},
-    modeCorrect:{lightning:0,speed:0,practice:0,daily:0},
-    modePlayTime:{lightning:0,speed:0,practice:0,daily:0},
-    opCorrect:{add:0,sub:0,mul:0,div:0,pct:0},
-    opWrong:{add:0,sub:0,mul:0,div:0,pct:0},
-    modeOpCorrect:{lightning:{add:0,sub:0,mul:0,div:0,pct:0},speed:{add:0,sub:0,mul:0,div:0,pct:0},practice:{add:0,sub:0,mul:0,div:0,pct:0},daily:{add:0,sub:0,mul:0,div:0,pct:0}},
-    modeOpWrong:{lightning:{add:0,sub:0,mul:0,div:0,pct:0},speed:{add:0,sub:0,mul:0,div:0,pct:0},practice:{add:0,sub:0,mul:0,div:0,pct:0},daily:{add:0,sub:0,mul:0,div:0,pct:0}},
-    diffOpCorrect:{easy:{add:0,sub:0,mul:0,div:0,pct:0},medium:{add:0,sub:0,mul:0,div:0,pct:0},hard:{add:0,sub:0,mul:0,div:0,pct:0}},
-    diffOpWrong:{easy:{add:0,sub:0,mul:0,div:0,pct:0},medium:{add:0,sub:0,mul:0,div:0,pct:0},hard:{add:0,sub:0,mul:0,div:0,pct:0}},
-  });
-  earnedAchievements.clear();
-  // Clear friends notification badge immediately on sign-out
-  updateFriendsBadge(0);
-  stopFriendPoller();
- // Load guest localStorage state (if any was saved before login)
-  loadGuestState();
-  clearDailyLocalState();
-  try{localStorage.removeItem('numfly_campaign');}catch(e){}
-  
-  // FIX: Forceer de streak naar 0 voordat we hem verwijderen, 
-  // zodat openstaande functies in app.js direct de lege status uitlezen.
+  if (sb) await sb.auth.signOut();
+
   try {
-      localStorage.setItem('numfly_daily_streak', JSON.stringify({count: 0, lastDate: ''}));
-      localStorage.removeItem('numfly_daily_streak');
+    localStorage.removeItem(GUEST_SAVE_KEY);
+    localStorage.removeItem('numfly_op_stats');
+    localStorage.removeItem('numfly_daily_streak');
+    localStorage.removeItem('numfly_campaign');
+    localStorage.removeItem('numfly_daily_progress');
+    localStorage.removeItem('numfly_pending_daily');
   } catch(e) {}
 
-  // Hide streak badge immediately and clear all badge state
-  const _sBadge=document.getElementById('daily-streak-badge');
-  const _sCard=document.getElementById('daily-card');
-  if(_sBadge){_sBadge.style.display='none';_sBadge.style.removeProperty('background');_sBadge.style.removeProperty('border');}
-  if(_sCard){['tier-yellow','tier-blue','tier-purple','tier-crystal','tier-crown'].forEach(c=>_sCard.classList.remove(c));}
-  // Clear streak count element to prevent flash on re-render
-  const _sCount=document.getElementById('daily-streak-count');
-  if(_sCount)_sCount.textContent='0';
-  await sb.auth.signOut();
-  renderXPPanel();renderHSPanel();
-  updateSocialUI();
-  closeSidebar();
-  showScreen('screen-menu');
+  window.location.href = '/';
 }
+
 function clearDailyLocalState(){
-  // Remove today's daily key (and yesterday's as cleanup)
   try{
     const today=getDailyDateStr();
     const d=new Date();d.setUTCDate(d.getUTCDate()-1);
@@ -1187,16 +1135,13 @@ async function pullFromSupabase(){
       }
     }catch(e){}
   }
-  // Sync streak — take whichever is more recent (server or local)
+  
   if(prog&&prog.daily_streak_count!=null){
     const local=getDailyStreak();
     const serverCount=prog.daily_streak_count||0;
-    // DB stores date as a date type — Supabase returns it as "YYYY-MM-DD" string
+  
     const serverDate=prog.daily_streak_last_date||prog.daily_streak_last||'';
-    // Take the most accurate streak:
-    // Server wins if: server date is newer, OR same date with higher/equal count
-    // Also: if server count is simply higher (device had stale local), always take server
-    // Check if server streak has expired (lastDate older than yesterday)
+
     const todayStr=getDailyDateStr();
     const yesterdayStr=getPrevDateStr(todayStr);
     const serverExpired=serverDate&&serverDate!==todayStr&&serverDate!==yesterdayStr;

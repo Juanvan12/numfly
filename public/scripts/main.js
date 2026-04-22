@@ -421,6 +421,7 @@ initApp();
 document.addEventListener('astro:page-load', () => {
   if (typeof applyTranslations === 'function') applyTranslations();
   if (typeof updateSidebarLangBtns === 'function') updateSidebarLangBtns();
+  if (typeof updateSocialUI === 'function') updateSocialUI();
   
   let p = window.location.pathname.replace(/^\/(nl|es)/, '').replace(/\/$/, '') || '/';
   
