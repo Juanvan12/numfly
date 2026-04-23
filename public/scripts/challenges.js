@@ -1,4 +1,3 @@
-// ── Challenge mode ────────────────────────────────────────────────────────────
 activeChallengeId=null,activeChallengeMode='normal',challengeSeed=0,challengeRng=null,_myJustPlayedScore=null;
 
 async function createChallenge(){
@@ -10,15 +9,14 @@ async function createChallenge(){
     const code=Math.random().toString(36).slice(2,8).toUpperCase();
     const{error:e1}=await sb.from('challenges').insert({
       id:code,creator_id:currentUser.id,seed,
-      difficulty:diff.speed,creator_score:speed.score, // will be updated by submit_dare_score RPC
+      difficulty:diff.speed,creator_score:speed.score,
       expires_at:new Date(Date.now()+7*24*3600*1000).toISOString()
     });
     if(e1){console.error('[Numfly] createChallenge insert error:',e1);showErrToast('Could not create challenge: '+e1.message);return;}
-    // submit_dare_score validates and records the score + attempt server-side
     const elapsedMs=speed.startedAt?Date.now()-speed.startedAt:0;
     const{data:dareRes,error:e2}=await withTimeout(sb.rpc('submit_dare_score',{p_challenge_id:code,p_score:speed.score,p_elapsed_ms:elapsedMs}));
     if(e2)console.warn('[Numfly] submit_dare_score error:',e2);
-    if(dareRes?.score!=null)speed.score=dareRes.score; // use server-validated score
+    if(dareRes?.score!=null)speed.score=dareRes.score;
     activeChallengeId=code;
     showChallengeResult(code,speed.score,null,null,true);
   }catch(e){
@@ -57,7 +55,6 @@ function copyChallengeLink(){
   }
   if(navigator.clipboard&&window.isSecureContext){
     navigator.clipboard.writeText(link).then(onCopied).catch(()=>{
-      // Fallback on clipboard permission denial
       try{const ta=document.createElement('textarea');ta.value=link;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);onCopied();}catch(e){}
     });
   } else {
@@ -88,13 +85,12 @@ async function handleChallengeLink(){
     return;
   }
 
-  // ── Store link data locally — do NOT mutate global state until user explicitly accepts ──
   const _linkCode=code;
   const _linkSeed=ch.seed;
   const _linkDiff=ch.difficulty||'easy';
   const _linkDuration=ch.duration_seconds||120;
   const _linkIsComp=!!ch.is_competition;
-  const _creatorId=ch.creator_id; // Store creator ID for the inline button check below
+  const _creatorId=ch.creator_id;
 
   window.history.replaceState({},'',window.location.pathname);
   
@@ -121,7 +117,6 @@ async function handleChallengeLink(){
     document.body.appendChild(banner);
   }
 }
-// Called only when user explicitly accepts a 1v1 link challenge — commits global state then starts
 function _commitChallengeLink(code,seed,difficulty,duration){
   activeChallengeId=code;
   challengeSeed=seed;
@@ -132,7 +127,6 @@ function _commitChallengeLink(code,seed,difficulty,duration){
   startSpeedWithCountdown()
 }
 function startSpeedWithCountdown() {
-  // 1. Resume check (bijv. als de browser crashte tijdens een potje)
   try{
     if(activeChallengeId&&localStorage.getItem('numfly_comp_resume_'+activeChallengeId)){
       const saved=localStorage.getItem('numfly_comp_resume_'+activeChallengeId);
@@ -154,7 +148,13 @@ function startSpeedWithCountdown() {
     }
   }catch(e){}
 
-  // 2. Bouw de 3-2-1 Overlay
+  const existingOverlay = document.getElementById('race-countdown-overlay');
+  if (existingOverlay) existingOverlay.remove();
+  if (speed.countdownTimer) {
+    clearInterval(speed.countdownTimer);
+    speed.countdownTimer = null;
+  }
+
   const overlay=document.createElement('div');
   overlay.id='race-countdown-overlay';
   overlay.style.cssText='position:fixed;inset:0;background:var(--bg,#0d0d0d);z-index:9999;display:flex;align-items:center;justify-content:center;';
@@ -164,10 +164,8 @@ function startSpeedWithCountdown() {
   </div>`;
   document.body.appendChild(overlay);
   
-  // Hier tonen we de game! Geen pagina herlaad meer nodig.
   if (typeof showScreen === 'function') showScreen('screen-speed-game');
   
-  // 3. Reset variabelen veilig
   if(speed.timer) clearInterval(speed.timer);
   const _cdDur = speed.remaining || 120;
   speed.score=0; speed.remaining=_cdDur; speed.wrongStreak=0; speed.waiting=false;
@@ -195,7 +193,6 @@ function startSpeedWithCountdown() {
     _timerElCD.className='hud-value';
   }
   
-  // Forceer de Back button tekst
   const _lbl=document.getElementById('speed-back-label');
   if(_lbl){
     let backText = 'Back';
@@ -205,7 +202,6 @@ function startSpeedWithCountdown() {
     _lbl.textContent = backText;
   }
   
-  // Genereer de eerste som
   try {
     if (typeof nextSpeedQ === 'function') nextSpeedQ(); 
   } catch(e) { console.error("nextSpeedQ crash", e); }
@@ -214,54 +210,60 @@ function startSpeedWithCountdown() {
   if(ansEl){ansEl.disabled=true;ansEl.blur();}
   
   let count=3;
-  const numEl=document.getElementById('race-countdown-num');
-  
-  // 4. Start de Countdown Timer
+
   speed.countdownTimer=setInterval(()=>{
+    const liveOverlay = document.getElementById('race-countdown-overlay');
+    const liveNum = document.getElementById('race-countdown-num');
+
+    // Player navigated away — abort cleanly
+    if (!liveOverlay) {
+      clearInterval(speed.countdownTimer);
+      speed.countdownTimer = null;
+      return;
+    }
+
     count--;
     if(count<=0){
       clearInterval(speed.countdownTimer);
       speed.countdownTimer=null;
-      const ov = document.getElementById('race-countdown-overlay');
-      if (ov) ov.remove();
-      
+      liveOverlay.remove();
+
       speed.startedAt=Date.now();
-      
-      // DE ECHTE TIMER
+
       speed.timer=setInterval(()=>{
         speed.remaining--;
-        
+
         try {
-            if (typeof stats !== 'undefined') {
-                stats.totalPlayTime = (stats.totalPlayTime || 0) + 1;
-                if (!stats.modePlayTime) stats.modePlayTime = {};
-                stats.modePlayTime.speed = (stats.modePlayTime.speed || 0) + 1;
-            }
+          if (typeof stats !== 'undefined') {
+            stats.totalPlayTime = (stats.totalPlayTime || 0) + 1;
+            if (!stats.modePlayTime) stats.modePlayTime = {};
+            stats.modePlayTime.speed = (stats.modePlayTime.speed || 0) + 1;
+          }
         } catch(e) {}
 
         const m=Math.floor(speed.remaining/60), s=String(speed.remaining%60).padStart(2,'0');
         const el=document.getElementById('s-timer');
         if(el){el.textContent=`${m}:${s}`;el.className='hud-value'+(speed.remaining<=20?' danger':'');}
-        
+
         if(speed.remaining<=0){
-            if (typeof endSpeed === 'function') endSpeed(false);
-            else clearInterval(speed.timer);
+          if (typeof endSpeed === 'function') endSpeed(false);
+          else clearInterval(speed.timer);
         }
       },1000);
-      
-      if(ansEl){ansEl.disabled=false;ansEl.style.opacity='1';ansEl.focus();}
+
+      const liveAns=document.getElementById('s-answer');
+      if(liveAns){liveAns.disabled=false;liveAns.style.opacity='1';liveAns.focus();}
     } else {
-      if(numEl){
-        numEl.textContent=count;
-        numEl.style.transition='transform .15s';
-        numEl.style.transform='scale(1.2)';
-        setTimeout(()=>{if(numEl)numEl.style.transform='scale(1)';},150);
+      if(liveNum){
+        liveNum.textContent=count;
+        liveNum.style.transition='transform .15s';
+        liveNum.style.transform='scale(1.2)';
+        setTimeout(()=>{ const n=document.getElementById('race-countdown-num'); if(n)n.style.transform='scale(1)'; },150);
       }
     }
   },1000);
 }
 
-// ── Speed overrides (challenge-aware, no hoisting issues) ─────────────────────
 const _nextSpeedQBase=function(){
   const op=pickFromBag(speed.opBag,['add','sub','mul','div','pct']);
   const p=genProblem(diff.speed,[op],'speed');
@@ -270,9 +272,8 @@ const _nextSpeedQBase=function(){
   document.getElementById('s-op-type').textContent=p.type;
   document.getElementById('s-answer').value='';document.getElementById('s-answer').focus();
   document.getElementById('s-feedback').textContent='';document.getElementById('s-feedback').className='feedback';
-  speed.answered=false;speed.waiting=false; // ready for next answer
+  speed.answered=false;speed.waiting=false;
 };
-// nextSpeedQ and endSpeed are defined earlier in the file; we patch them here
 const _origNextSpeedQ=nextSpeedQ;
 nextSpeedQ=function(){
   if(activeChallengeMode==='challenge'&&challengeRng){
@@ -286,7 +287,7 @@ nextSpeedQ=function(){
         document.getElementById('s-op-type').textContent=t('op_type_'+p.op);
         document.getElementById('s-answer').value='';document.getElementById('s-answer').focus();
         document.getElementById('s-feedback').textContent='';document.getElementById('s-feedback').className='feedback';
-        speed.answered=false;speed.waiting=false; // ready for next answer
+        speed.answered=false;speed.waiting=false;
       } else {
         _origNextSpeedQ();
       }
@@ -306,25 +307,20 @@ endSpeed=function(goMenu){
     stats.speedScoreHistory.push(speed.score);
     if(stats.speedScoreHistory.length>20)stats.speedScoreHistory.shift();
     
-    // FIX: Ensure duration high score is saved at the end of the challenge
     setSpeedDurHS(d, speed.originalDur || 120, speed.score);
 
     checkAchievements();flushPendingLevelUps();scheduleSync();
     
-    // Clear any saved resume state — game completed
     try{localStorage.removeItem('numfly_comp_resume_'+activeChallengeId);}catch(e){}
     const _elapsedMs=speed.startedAt?Date.now()-speed.startedAt:0;
     
-    // FIX: Guarantee the score saves to the database using both a direct update and the RPC
     const saveScore = async () => {
       const _elapsedSec = _elapsedMs / 1000;
       const _maxByTime = Math.ceil(Math.max(_elapsedSec, 1) / 0.9);
       const _cappedScore = Math.max(0, Math.min(speed.score, _maxByTime));
       
-      // Force direct update to guarantee the score saves and 'invited' drops to false
       await sb.from('challenge_attempts').update({ score: _cappedScore, invited: false }).eq('challenge_id', activeChallengeId).eq('player_id', currentUser.id);
       
-      // Call RPC as a backup/validation
       const rpcRes = await sb.rpc('submit_challenge_score', { p_challenge_id: activeChallengeId, p_score: _cappedScore, p_elapsed_ms: _elapsedMs });
       if (rpcRes?.data?.score != null) {
         speed.score = rpcRes.data.score;
@@ -336,7 +332,6 @@ endSpeed=function(goMenu){
     saveScore().then(async () => {
       const{data:ch}=await sb.from('challenges').select('creator_score,creator_id,profiles!creator_id(username),is_competition,seed,difficulty,duration_seconds').eq('id',activeChallengeId).single();
       if(ch&&ch.is_competition){
-        // Competition — show scoreboard with correct difficulty/duration from DB
         challengeSeed=ch.seed;
         _challengeDiff=ch.difficulty||_challengeDiff||'easy';
         diff.speed=_challengeDiff;
@@ -347,7 +342,6 @@ endSpeed=function(goMenu){
         if(pb){pb.style.display='none';}
         checkPendingRequests();
       } else if(ch){
-        // 1v1 — fetch opponent score from challenge_attempts
         let theirScore=null,theirName=null;
         const{data:oppRows}=await sb.from('challenge_attempts')
           .select('score,player_id').eq('challenge_id',activeChallengeId)
@@ -363,7 +357,7 @@ endSpeed=function(goMenu){
     });
     return;
   }
-  _origEndSpeed(goMenu); // must run first so it sees activeChallengeMode='challenge' for resume save
+  _origEndSpeed(goMenu);
   activeChallengeMode='normal';
   scheduleSync();
   saveOpStats();
@@ -371,4 +365,3 @@ endSpeed=function(goMenu){
 };
 const _origCheckAch=checkAchievements;
 checkAchievements=function(silent = false){_origCheckAch(silent);scheduleSync();};
-

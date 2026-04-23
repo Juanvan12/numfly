@@ -196,6 +196,16 @@ async function openDailyChallenge(){
     if(dcAnsEl){dcAnsEl.focus();}
     return;
   }
+// 1. Mijn spam-klik fix: gooi oude overlays direct weg
+  const existingOverlay = document.getElementById('daily-countdown-overlay');
+  if (existingOverlay) existingOverlay.remove();
+  
+  if (dailyState.countdownTimer) {
+    clearInterval(dailyState.countdownTimer);
+    dailyState.countdownTimer = null;
+  }
+
+
   const dcOverlay=document.createElement('div');
   dcOverlay.id='daily-countdown-overlay';
   dcOverlay.style.cssText='position:fixed;inset:0;background:var(--bg,#0d0d0d);z-index:9999;display:flex;align-items:center;justify-content:center;';
@@ -204,37 +214,62 @@ async function openDailyChallenge(){
     <div id="daily-countdown-num" style="font-family:'Bebas Neue',sans-serif;font-size:140px;color:var(--accent);line-height:1;letter-spacing:2px">3</div>
   </div>`;
   document.body.appendChild(dcOverlay);
-  // Load question but keep answer disabled during countdown
-  loadDailyQuestion(false); // false = don't start timer yet
+
+  loadDailyQuestion(false); 
   const dcAns=document.getElementById('dc-answer');
   if(dcAns){dcAns.disabled=true;dcAns.blur();}
+  
   let dcCount=3;
-  const dcNum=document.getElementById('daily-countdown-num');
-  dailyState.countdownTimer=setInterval(()=>{
+
+  dailyState.countdownTimer = setInterval(() => {
+
+    const liveOverlay = document.getElementById('daily-countdown-overlay');
+    const liveNum = document.getElementById('daily-countdown-num');
+
+    if (!liveOverlay) {
+      clearInterval(dailyState.countdownTimer);
+      dailyState.countdownTimer = null;
+      return;
+    }
+
     dcCount--;
-    if(dcCount<=0){
-      clearInterval(dailyState.countdownTimer);dailyState.countdownTimer=null;
-      dcOverlay.remove();
-      // NOW start the timer
-      dailyState.startTime=Date.now()-(dailyState.resumeElapsed||0);
-      dailyState.timer=setInterval(()=>{
-        const elapsed=(Date.now()-dailyState.startTime)/1000;
-        const el=document.getElementById('dc-timer');
-        if(el)el.textContent=elapsed.toFixed(1)+'s';
-      },100);
-      dailyState.playTimeTimer=setInterval(()=>{
-        stats.totalPlayTime++;stats.modePlayTime.daily=(stats.modePlayTime.daily||0)+1;
-      },1000);
-      if(dcAns){dcAns.disabled=false;dcAns.style.opacity='1';dcAns.focus();}
+
+    if (dcCount <= 0) {
+      clearInterval(dailyState.countdownTimer);
+      dailyState.countdownTimer = null;
+      liveOverlay.remove();
+
+      dailyState.startTime = Date.now() - (dailyState.resumeElapsed || 0);
+      dailyState.timer = setInterval(() => {
+        const elapsed = (Date.now() - dailyState.startTime) / 1000;
+        const el = document.getElementById('dc-timer');
+        if (el) el.textContent = elapsed.toFixed(1) + 's';
+      }, 100);
+
+      dailyState.playTimeTimer = setInterval(() => {
+        stats.totalPlayTime++; 
+        stats.modePlayTime.daily = (stats.modePlayTime.daily || 0) + 1;
+      }, 1000);
+
+      const liveAns = document.getElementById('dc-answer');
+      if (liveAns) { 
+        liveAns.disabled = false; 
+        liveAns.style.opacity = '1'; 
+        liveAns.focus(); 
+      }
+      
     } else {
-      if(dcNum){
-        dcNum.textContent=dcCount;
-        dcNum.style.transition='transform .15s';
-        dcNum.style.transform='scale(1.2)';
-        setTimeout(()=>{if(dcNum)dcNum.style.transform='scale(1)';},150);
+      if (liveNum) {
+        liveNum.textContent = dcCount;
+        liveNum.style.transition = 'transform .15s';
+        liveNum.style.transform = 'scale(1.2)';
+        setTimeout(() => { 
+          const n = document.getElementById('daily-countdown-num'); 
+          if (n) n.style.transform = 'scale(1)'; 
+        }, 150);
       }
     }
-  },1000);
+  }, 1000);
 }
 function loadDailyQuestion(isFirst){
   const q=dailyState.questions[dailyState.current];

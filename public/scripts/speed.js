@@ -1,8 +1,3 @@
-// ══════════════════════════════════════════════════════════════════════════════
-// SPEED
-// ══════════════════════════════════════════════════════════════════════════════
-// Returns the key used for per-duration HS (e.g. "easy_30", "medium_120").
-// Duration is snapped to the nearest standard value so mid-game values don't create orphan keys.
 function speedDurKey(d,durSecs){
   const snap=durSecs<=35?30:durSecs<=70?60:120;
   return(d||diff.speed)+'_'+snap;
@@ -21,20 +16,17 @@ function startSpeed(){
   if(speed.timer)clearInterval(speed.timer);
   const _dur = (activeChallengeMode === 'normal') ? 120 : (speed.remaining || 120);
   speed.score=0;speed.remaining=_dur;speed.wrongStreak=0;stats.currentSpeedStreak=0;speed.waiting=false;
-  speed.startedAt=Date.now(); // for timing validation
-  speed.originalDur=_dur; // remember full duration for per-duration HS key
+  speed.startedAt=Date.now();
+  speed.originalDur=_dur;
   speed.opBag=[];
-  speed.gameSeed=Date.now()%0xFFFFFF; // store seed for dare challenge
-  recentQs.speed=new Set(); // reset per game
+  speed.gameSeed=Date.now()%0xFFFFFF;
+  recentQs.speed=new Set();
   document.getElementById('s-score').textContent=0;
-  // In challenge/competition mode the personal HS is irrelevant — show 0 so it never
-  // appears to "reset" when the player moves between their normal games and challenges.
   document.getElementById('s-hs-display').textContent=activeChallengeMode==='challenge'?0:getSpeedDurHS(diff.speed,_dur);
   document.getElementById('s-feedback').textContent='';
   const _timerEl=document.getElementById('s-timer');
   if(_timerEl){const _m=Math.floor(_dur/60),_s=String(_dur%60).padStart(2,'0');_timerEl.textContent=`${_m}:${_s}`;_timerEl.className='hud-value';}
   showScreen('screen-speed-game');nextSpeedQ();
-  // Update back button label based on mode
   const _lbl=document.getElementById('speed-back-label');
   if(_lbl)_lbl.textContent=(activeChallengeMode==='challenge'&&_activeCompId)?t('comp_group_title')||'Competition':t('main_menu');
   speed.timer=setInterval(()=>{
@@ -50,9 +42,6 @@ function startSpeed(){
 function nextSpeedQ(){
   let p;
   if(activeChallengeMode==='challenge'&&challengeRng){
-    // Challenge mode: use seeded RNG so all players get identical questions.
-    // Pick op first (1 RNG call), then generate the problem (deterministic calls).
-    // IMPORTANT: resume fast-forward (line ~6283) must replicate this exact pattern.
     const ops=['add','sub','mul','div','pct'];
     const op=ops[Math.floor(challengeRng()*ops.length)];
     p=genOneProblemSeeded(challengeRng,diff.speed,op);
@@ -65,9 +54,8 @@ function nextSpeedQ(){
   document.getElementById('s-op-type').textContent=p.type;
   document.getElementById('s-answer').value='';document.getElementById('s-answer').focus();
   document.getElementById('s-feedback').textContent='';document.getElementById('s-feedback').className='feedback';
-  speed.answered=false;speed.waiting=false; // allow next answer
+  speed.answered=false;speed.waiting=false;
 }
-// Seeded version of genOneProblem — uses rng instead of Math.random
 function genOneProblemSeeded(rng,level,op){
   const ri=(lo,hi)=>Math.floor(rng()*(hi-lo+1))+lo;
   const r=RANGES[level]||RANGES.easy;
@@ -75,22 +63,20 @@ function genOneProblemSeeded(rng,level,op){
   if(op==='sub'){const[lo,hi]=r.sub;let a,b,attempts2=0;do{a=ri(lo,hi);b=ri(lo,hi);if(a<b){const tmp=a;a=b;b=tmp;}attempts2++;}while(a===b&&attempts2<30);if(a===b){a=hi;b=lo;}return{q:`${a} − ${b}`,ans:a-b,type:t('op_type_sub'),op:'sub'};}
   if(op==='mul'){const[lo,hi]=r.mul,a=ri(lo,hi);const bMin=level==='easy'?2:level==='medium'?3:6;const bMax=level==='easy'?9:level==='medium'?12:15;const b=ri(bMin,bMax);return{q:`${a} × ${b}`,ans:a*b,type:t('op_type_mul'),op:'mul'};}
   if(op==='div'){const b=ri(r.divB[0],r.divB[1]),q=ri(r.divQ[0],r.divQ[1]),a=b*q;return{q:`${a} ÷ ${b}`,ans:q,type:t('op_type_div'),op:'div'};}
-  // pct — use PCT_BASES_HARD for hard, PCT_BASES otherwise, to match genPct behaviour
   const bases=level==='hard'?PCT_BASES_HARD:(PCT_BASES[level]||PCT_BASES.easy);
   for(let i=0;i<50;i++){const p=PCT_NICE[Math.floor(rng()*PCT_NICE.length)],base=bases[Math.floor(rng()*bases.length)],ans=p*base/100;if(Number.isInteger(ans)&&ans>0)return{q:`${p}% of ${base}`,ans,type:t('op_type_pct'),op:'pct'};}
   return{q:`10% of 50`,ans:5,type:t('op_type_pct'),op:'pct'};
 }
 function checkSpeedAnswer(){
   if(speed.remaining<=0)return;
-  if(speed.waiting)return; // block double-submit during question transition
-  if(speed.answered)return; // block re-scoring the same question
+  if(speed.waiting)return;
+  if(speed.answered)return;
   const val=document.getElementById('s-answer').value;
-  if(!val.trim())return; // ignore empty submissions
+  if(!val.trim())return;
   const fb=document.getElementById('s-feedback');
   const isRight=checkAns(val,speed.ans);
-  const isFirstAttempt=speed.wrongStreak===0; // no wrong answers yet on this question
+  const isFirstAttempt=speed.wrongStreak===0;
   
-  // Only record stats on first attempt — subsequent retries don't affect global stats
   if(isFirstAttempt){
     recordAnswer(speed.currentOp,isRight,'speed',diff.speed);
   }
@@ -101,18 +87,16 @@ function checkSpeedAnswer(){
     document.getElementById('s-score').textContent=fmtN(speed.score);
     const d=diff.speed;
     
-    // FIX: ALWAYS save duration-based high score and update UI, even during challenges
     setSpeedDurHS(d, speed.originalDur || 120, speed.score);
     document.getElementById('s-hs-display').textContent=getSpeedDurHS(d, speed.originalDur || 120);
 
-    // Only update the global 120s personal highscore in normal (non-challenge) games
     if(activeChallengeMode!=='challenge'){
       if(speed.score>hs.speed[d].score){hs.speed[d].score=speed.score;}
     }
     
     fb.textContent=t('speed_correct');fb.className='feedback ok';
-    speed.answered=true; // lock this question — already scored
-    speed.waiting=true; // prevent double-submit until next question loads
+    speed.answered=true;
+    speed.waiting=true;
     setTimeout(nextSpeedQ,350);
   }else{
     stats.currentSpeedStreak=0;speed.wrongStreak++;
@@ -122,10 +106,7 @@ function checkSpeedAnswer(){
   }
 }
 function _validateScore(score,startedAt,durationSec){
-  // Reject scores that are physically impossible given elapsed time.
-  // Minimum time per correct answer is ~1.5s (read + type + submit).
-  // We allow up to 1 answer per 0.9s to be generous, but no more.
-  if(!startedAt)return true; // no timestamp → allow (guest/edge case)
+  if(!startedAt)return true;
   const elapsed=(Date.now()-startedAt)/1000;
   const maxPossible=Math.ceil(Math.min(elapsed,durationSec)/0.9);
   if(score>maxPossible){
@@ -137,12 +118,11 @@ function _validateScore(score,startedAt,durationSec){
 function endSpeed(goMenu){
   if(speed.timer){clearInterval(speed.timer);speed.timer=null;}
   if(goMenu){
-    // Save mid-competition state so the player can resume
     if(activeChallengeMode==='challenge'&&activeChallengeId){
       try{
         localStorage.setItem('numfly_comp_resume_'+activeChallengeId,JSON.stringify({
           score:speed.score,remaining:speed.remaining,
-          questionsAnswered:speed.score+(speed.wrongStreak||0) // approx questions seen
+          questionsAnswered:speed.score+(speed.wrongStreak||0)
         }));
       }catch(e){}
     }
@@ -157,7 +137,6 @@ function endSpeed(goMenu){
   const d=diff.speed;hs.speed[d].plays++;
   stats.speedScoreHistory.push(speed.score);
   if(stats.speedScoreHistory.length>20)stats.speedScoreHistory.shift();
-  // Update per-duration HS with the final score
   setSpeedDurHS(d,speed.originalDur||120,speed.score);
   document.getElementById('sr-score').textContent=fmtN(speed.score);
   document.getElementById('sr-detail').textContent=`${t('highscore_label')}: ${fmtN(getSpeedDurHS(d,speed.originalDur||120))}`;
@@ -168,4 +147,3 @@ function endSpeed(goMenu){
 }
 const sAns = document.getElementById('s-answer');
 if (sAns) sAns.addEventListener('keydown', e => { if(e.key==='Enter') checkSpeedAnswer(); });
-
