@@ -464,6 +464,7 @@ document.addEventListener('astro:page-load', () => {
   }
 
   const currentScreen = document.querySelector('.screen.active')?.id;
+  document.body.classList.toggle('on-menu', currentScreen === 'screen-menu');
   
   if (currentScreen === 'screen-menu') {
     if (typeof renderHSPanel === 'function') renderHSPanel();
