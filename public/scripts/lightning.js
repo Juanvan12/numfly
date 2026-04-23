@@ -62,6 +62,7 @@ function checkLightningAnswer(){
   const precisionScore=calcLightningPrecisionScore(lightning.count,lightning.interval,d);
   const penaltyScore=Math.round(precisionScore*0.4);
   if(isRight){
+    sfxCorrect();
     lightning.score++;
     // Streak tracking
     if(lightning.score>stats.longestLightningStreak)stats.longestLightningStreak=lightning.score;
@@ -76,6 +77,7 @@ function checkLightningAnswer(){
     const xpEarned=Math.max(1,Math.round(precisionScore*(GAME_CONFIG.XP_EVENT_MULTIPLIER||1)/3));
     gainXP(xpEarned);
   }else{
+    sfxWrong();
     // Record streak in history before resetting
     stats.lightningStreakHistory.push(lightning.score);
     if(stats.lightningStreakHistory.length>50)stats.lightningStreakHistory.shift();

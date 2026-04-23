@@ -33,12 +33,14 @@ function checkPracticeAnswer(){
   }
   const disp=Number.isInteger(practice.ans)?practice.ans:practice.ans.toFixed(2);
   if(isRight){
+    sfxCorrect();
     fb.textContent=t('check_correct');fb.className='feedback ok';
     stats.practiceCorrect=(stats.practiceCorrect||0)+1;
     stats.currentPracticeStreak=(stats.currentPracticeStreak||0)+1;
     if(stats.currentPracticeStreak>stats.longestPracticeStreak)stats.longestPracticeStreak=stats.currentPracticeStreak;
   } else {
     if(isPracticeFirstAttempt){
+      sfxWrong();
       stats.currentPracticeStreak=0;
       stats.practiceWrong=(stats.practiceWrong||0)+1; // first wrong attempt only
     }

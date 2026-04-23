@@ -167,10 +167,12 @@ function checkTipAnswer(){
   const isRight=checkAns(val,tipPractice.ans);
   const disp=Number.isInteger(tipPractice.ans)?tipPractice.ans:tipPractice.ans.toFixed(2);
   if(isRight){
+    sfxCorrect();
     tipPractice.correct++;
     document.getElementById('tp-correct').textContent=tipPractice.correct;
     fb.textContent=t('check_correct');fb.className='feedback ok';
   }else{
+    sfxWrong();
     tipPractice.wrong++;
     document.getElementById('tp-wrong').textContent=tipPractice.wrong;
     fb.textContent=`${t('check_wrong_prefix')} ${disp}.`;fb.className='feedback bad';

@@ -82,6 +82,7 @@ function checkSpeedAnswer(){
   }
   
   if(isRight){
+    sfxCorrect();
     speed.score++;stats.currentSpeedStreak++;
     if(stats.currentSpeedStreak>stats.longestSpeedStreak)stats.longestSpeedStreak=stats.currentSpeedStreak;
     document.getElementById('s-score').textContent=fmtN(speed.score);
@@ -99,6 +100,7 @@ function checkSpeedAnswer(){
     speed.waiting=true;
     setTimeout(nextSpeedQ,350);
   }else{
+    sfxWrong();
     stats.currentSpeedStreak=0;speed.wrongStreak++;
     document.getElementById('s-answer').value='';document.getElementById('s-answer').focus();
     fb.textContent=speed.wrongStreak>=3?`${t('speed_hint')} ${Number.isInteger(speed.ans)?speed.ans:speed.ans.toFixed(2)}`:t('speed_wrong');

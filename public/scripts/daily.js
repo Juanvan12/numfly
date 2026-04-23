@@ -279,8 +279,7 @@ function loadDailyQuestion(isFirst){
   document.getElementById('dc-answer').value='';
   document.getElementById('dc-feedback').textContent='';
   document.getElementById('dc-feedback').className='feedback';
-  // Start/resume timer on first load
-  // Timer is started by the countdown overlay (or directly if resuming without countdown)
+  
   if(isFirst&&!dailyState.timer){
     dailyState.startTime=Date.now()-(dailyState.resumeElapsed||0);
     dailyState.timer=setInterval(()=>{
@@ -301,6 +300,7 @@ function checkDailyAnswer(){
   const correct=checkAns(val,q.ans);
   const fb=document.getElementById('dc-feedback');
   if(correct){
+    sfxCorrect();
     fb.textContent=t('speed_correct');fb.className='feedback ok';
     dailyState.answers.push({correct:true,time:Date.now()-dailyState.startTime});
     // Only record as correct if not already recorded wrong for this question
@@ -315,6 +315,7 @@ function checkDailyAnswer(){
       setTimeout(loadDailyQuestion,250);
     }
   } else {
+    sfxWrong();
     const disp=Number.isInteger(q.ans)?q.ans:q.ans.toFixed(2);
     fb.textContent=t('speed_wrong');fb.className='feedback bad';
     // Only record wrong once per expression (not on every retry)
