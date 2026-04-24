@@ -90,18 +90,23 @@ function getAudioCtx() {
 // Mobile Safari/Chrome requires a silent buffer to be played on first interaction
 function _unlockAudio() {
   if (_audioUnlocked) return;
-  // Create the context here, inside the gesture handler, so iOS allows it
-  const ctx = getAudioCtx();
+  // Must create the context here, inside the gesture, for iOS to allow it
+  if (!_audioCtx) {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      _audioCtx = new AudioContext();
+    } catch(e) { return; }
+  }
+  const ctx = _audioCtx;
   if (!ctx) return;
 
-  const doUnlock = () => {
+  const _doUnlock = () => {
     try {
       const buffer = ctx.createBuffer(1, 1, 22050);
       const source = ctx.createBufferSource();
       source.buffer = buffer;
       source.connect(ctx.destination);
-      if (source.start) source.start(0);
-      else if (source.noteOn) source.noteOn(0);
+      source.start(0);
       _audioUnlocked = true;
       ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
         document.removeEventListener(evt, _unlockAudio, { capture: true });
@@ -109,11 +114,11 @@ function _unlockAudio() {
     } catch(e) {}
   };
 
+  // iOS requires resume() to fully complete before any node can play
   if (ctx.state === 'suspended') {
-    // Must await resume() before playing the unlock buffer on iOS
-    ctx.resume().then(doUnlock).catch(doUnlock);
+    ctx.resume().then(_doUnlock).catch(_doUnlock);
   } else {
-    doUnlock();
+    _doUnlock();
   }
 }
 
@@ -123,8 +128,8 @@ function _unlockAudio() {
 
 function playTone(freq, duration, type='sine', gainVal=0.12, freqEnd=null) {
   try {
-    if (!_audioUnlocked) return; // Don't attempt if user hasn't interacted yet — avoids a blocked context error on iOS
-    const ctx = getAudioCtx();
+    if (!_audioUnlocked) return;
+    const ctx = _audioCtx;
     if (!ctx) return;
     if (ctx.state === 'suspended') {
       ctx.resume().then(() => _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd)).catch(()=>{});
