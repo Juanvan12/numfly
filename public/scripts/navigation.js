@@ -74,7 +74,10 @@ function showScreen(id){
   else{stopFriendPoller();}
   if(id==='screen-tips'){renderTipsFilterBtns();renderTipsList();}
   if(id==='screen-achievements') renderAchievements();
-  if(id==='screen-leaderboard') { loadLeaderboard(_lbKey || 'xp'); }
+  if(id==='screen-leaderboard') { 
+    if(typeof setLbScope === 'function') setLbScope(_lbScope); 
+    else loadLeaderboard(_lbKey || 'xp'); 
+  }
   
   const scrollable=['screen-tips','screen-achievements'];
   if(scrollable.includes(id)){attachScrollTopListener();}

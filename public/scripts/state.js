@@ -73,89 +73,102 @@ function fmtN(n){
   return new Intl.NumberFormat(locale,{useGrouping:true}).format(Number(n));
 }
 
-// ── Campaign sound effects (Web Audio API) ───────────────────────────────────
-let _audioCtx=null;
-let _audioUnlocked=false;
+// ── Sound effects (Web Audio API) ───────────────────────────────────
+let _audioCtx = null;
+let _audioUnlocked = false;
 
-function _createAudioCtx(){
-  if(_audioCtx)return;
-  try{_audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}
-}
-
-// iOS/Android: AudioContext must be created AND resumed inside a user-gesture handler.
-// We also play a real (inaudible) note to fully unlock it — a silent buffer alone is
-// not sufficient on all iOS versions.
-function _unlockAudio(){
-  _createAudioCtx();
-  if(!_audioCtx)return;
-  if(_audioCtx.state==='suspended'){
-    _audioCtx.resume().then(()=>{_audioUnlocked=true;}).catch(()=>{});
-  } else {
-    _audioUnlocked=true;
+function getAudioCtx() {
+  if (!_audioCtx) {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      _audioCtx = new AudioContext();
+    } catch (e) {}
   }
-}
-
-// Attach to every meaningful user gesture. passive:true keeps scroll performance intact.
-['touchstart','touchend','pointerdown','click','keydown'].forEach(evt=>{
-  document.addEventListener(evt,_unlockAudio,{passive:true,capture:true});
-});
-
-function getAudioCtx(){
-  _createAudioCtx();
   return _audioCtx;
 }
 
-function playTone(freq,duration,type='sine',gainVal=0.12,freqEnd=null){
-  try{
-    const ctx=getAudioCtx();
-    if(!ctx)return;
-    // If still suspended (e.g. iOS not yet fully unlocked), resume first then play
-    if(ctx.state==='suspended'){
-      ctx.resume().then(()=>_doPlayTone(ctx,freq,duration,type,gainVal,freqEnd)).catch(()=>{});
+// Mobile Safari/Chrome requires a silent buffer to be played on first interaction
+function _unlockAudio() {
+  if (_audioUnlocked) return;
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+
+  // Force resume on mobile
+  if (ctx.state === 'suspended') {
+    ctx.resume();
+  }
+
+  // Play a completely silent 1-sample buffer to permanently unlock the audio engine
+  try {
+    const buffer = ctx.createBuffer(1, 1, 22050);
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    if (source.start) source.start(0);
+    else if (source.noteOn) source.noteOn(0);
+    _audioUnlocked = true;
+
+    // Clean up event listeners once unlocked
+    ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
+      document.removeEventListener(evt, _unlockAudio, { capture: true });
+    });
+  } catch(e) {}
+}
+
+['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
+  document.addEventListener(evt, _unlockAudio, { passive: true, capture: true });
+});
+
+function playTone(freq, duration, type='sine', gainVal=0.12, freqEnd=null) {
+  try {
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') {
+      ctx.resume().then(() => _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd)).catch(()=>{});
     } else {
-      _doPlayTone(ctx,freq,duration,type,gainVal,freqEnd);
+      _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
     }
-  }catch(e){}
+  } catch(e) {}
 }
 
-function _doPlayTone(ctx,freq,duration,type,gainVal,freqEnd){
-  try{
-    const osc=ctx.createOscillator();
-    const gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.type=type;
-    osc.frequency.setValueAtTime(freq,ctx.currentTime);
-    if(freqEnd)osc.frequency.linearRampToValueAtTime(freqEnd,ctx.currentTime+duration);
-    gain.gain.setValueAtTime(gainVal,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+duration);
+function _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd) {
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    if (freqEnd) osc.frequency.linearRampToValueAtTime(freqEnd, ctx.currentTime + duration);
+    gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
     osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime+duration);
-  }catch(e){}
+    osc.stop(ctx.currentTime + duration);
+  } catch(e) {}
 }
 
-function sfxCorrect(){
-  playTone(1046,0.04,'sine',0.13,1318);
-  setTimeout(()=>playTone(1318,0.07,'sine',0.11,1568),40);
-  setTimeout(()=>playTone(1568,0.10,'sine',0.09,1760),90);
+function sfxCorrect() {
+  // High-pitched "Coin/Money" sound (B6 -> E7)
+  playTone(1975, 0.05, 'sine', 0.1); 
+  setTimeout(() => playTone(2637, 0.25, 'sine', 0.1), 50); 
 }
-function sfxWrong(){
-  playTone(220,0.12,'sawtooth',0.08,160);
+function sfxWrong() {
+  playTone(220, 0.12, 'sawtooth', 0.08, 160);
 }
-function sfxLifeLost(){
-  playTone(300,0.10,'sawtooth',0.12,180);
-  setTimeout(()=>playTone(180,0.15,'sawtooth',0.10,120),110);
+function sfxLifeLost() {
+  playTone(300, 0.10, 'sawtooth', 0.12, 180);
+  setTimeout(() => playTone(180, 0.15, 'sawtooth', 0.10, 120), 110);
 }
-function sfxLevelComplete(){
-  playTone(440,0.08,'sine',0.10,523);
-  setTimeout(()=>playTone(523,0.08,'sine',0.10,659),90);
-  setTimeout(()=>playTone(659,0.10,'sine',0.12,784),180);
-  setTimeout(()=>playTone(784,0.18,'sine',0.14),280);
+function sfxLevelComplete() {
+  playTone(440, 0.08, 'sine', 0.10, 523);
+  setTimeout(() => playTone(523, 0.08, 'sine', 0.10, 659), 90);
+  setTimeout(() => playTone(659, 0.10, 'sine', 0.12, 784), 180);
+  setTimeout(() => playTone(784, 0.18, 'sine', 0.14), 280);
 }
-function sfxBossComplete(){
-  playTone(523,0.07,'sine',0.10,659);
-  setTimeout(()=>playTone(659,0.07,'sine',0.10,784),80);
-  setTimeout(()=>playTone(784,0.07,'sine',0.10,1047),160);
-  setTimeout(()=>playTone(1047,0.25,'sine',0.15),240);
+function sfxBossComplete() {
+  playTone(523, 0.07, 'sine', 0.10, 659);
+  setTimeout(() => playTone(659, 0.07, 'sine', 0.10, 784), 80);
+  setTimeout(() => playTone(784, 0.07, 'sine', 0.10, 1047), 160);
+  setTimeout(() => playTone(1047, 0.25, 'sine', 0.15), 240);
 }
 
 // XP required to reach each level (cumulative thresholds)

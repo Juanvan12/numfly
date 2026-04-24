@@ -170,6 +170,7 @@ const diffRows=(mode)=>['easy','medium','hard'].map((d,i)=>{
   // Color legend: good=green(correct/accuracy), warn=orange(time/effort), accent=yellow(best/performance), info=blue(averages), purple=unique
   const card=(val,label,sub,colorClass='')=>`<div class="stat-card"><div class="stat-val ${colorClass}">${typeof val==='number'?fmtN(val):val}</div><div class="stat-label">${label}</div><div class="stat-sub">${sub}</div></div>`;
   const timeCard=filtHrs>0?`${filtHrs}<span style="font-size:16px">h ${filtRemMins}m ${filtSecs}s</span>`:`${filtMins}<span style="font-size:16px">m ${filtSecs}s</span>`;
+  
   // ── Daily view (here so card/opBarsHTML/bestOpDisplay are all available) ─────
   if(f==='daily'){
     const dailyAcc=totalAns>0?Math.round(totalCor/totalAns*100):0;
@@ -181,6 +182,7 @@ const diffRows=(mode)=>['easy','medium','hard'].map((d,i)=>{
     const bestMs=stats.dailyBestTime&&stats.dailyBestTime!==Infinity?stats.dailyBestTime:null;
     const worstMs=stats.dailyWorstTime||null;
     const fmtMs=ms=>{if(!ms)return'—';const sc=(ms/1000);const mn=Math.floor(sc/60);const ss=(sc%60).toFixed(2);return mn>0?`${mn}m ${ss}s`:`${ss}s`;};
+    
     // Layout: TL=accuracy, BL=time, TM=fastest, BM=slowest, TR=games, BR=streak
     const dc=[
       card(`<span class="${accCls2}">${dailyAcc}%</span>`,t('stat_accuracy'),`${totalCor}✓ / ${totalAns} total`,accCls2),
@@ -190,25 +192,34 @@ const diffRows=(mode)=>['easy','medium','hard'].map((d,i)=>{
       card(fmtMs(worstMs),t('stat_slowest'),'🏁',''),
       card(stats.dailyBestStreak||0,t('stat_daily_best_streak'),'🔥','accent'),
     ];
+    
     el.innerHTML=`
     <div class="stats-section-title">${t('stats_sec_overview')}</div>
     <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">${dc[0]}${dc[1]}${dc[2]}</div>
     <div class="stats-grid" style="margin-top:8px;grid-template-columns:repeat(3,1fr)">${dc[3]}${dc[4]}${dc[5]}</div>
+    
     <div class="stats-section-title">${t('stats_sec_accuracy')}</div>
     <div class="stat-card" style="margin-bottom:10px">
       <div style="margin-bottom:14px"><div class="stat-label" style="text-align:left;font-size:11px">${t('stat_op_breakdown')}</div></div>
       <div class="op-breakdown">${opBarsHTML}</div>
     </div>
+    
     <div class="stats-grid-2">
-      <div class="stat-card" style="border-color:rgba(77,255,180,.2)">
-        <div style="font-size:11px;color:var(--success);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🏆 ${t('stat_most_correct')}</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1.1;margin-bottom:6px">${bestOpDisplay}</div>
-        <div class="stat-sub" style="text-align:left;line-height:1.5">${bestOpSub}</div>
+      <div class="op-showcase-card best">
+        <div class="op-showcase-icon">🏆</div>
+        <div class="op-showcase-info">
+          <div class="op-showcase-label">${t('stat_most_correct')}</div>
+          <div class="op-showcase-title">${bestOpDisplay}</div>
+          <div class="op-showcase-sub">${bestOpSub}</div>
+        </div>
       </div>
-      <div class="stat-card" style="border-color:rgba(255,77,107,.2)">
-        <div style="font-size:11px;color:var(--error);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🎯 ${t('stat_most_wrong')}</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1.1;margin-bottom:6px">${worstOpDisplay}</div>
-        <div class="stat-sub" style="text-align:left;line-height:1.5">${worstOpSub}</div>
+      <div class="op-showcase-card worst">
+        <div class="op-showcase-icon">🎯</div>
+        <div class="op-showcase-info">
+          <div class="op-showcase-label">${t('stat_most_wrong')}</div>
+          <div class="op-showcase-title">${worstOpDisplay}</div>
+          <div class="op-showcase-sub">${worstOpSub}</div>
+        </div>
       </div>
     </div>`;
     return;
@@ -276,16 +287,23 @@ const diffRows=(mode)=>['easy','medium','hard'].map((d,i)=>{
       </div>
       <div class="op-breakdown">${opBarsHTML}</div>
     </div>`:''}
+    
     ${f!=='lightning'?`<div class="stats-grid-2">
-      <div class="stat-card" style="border-color:rgba(77,255,180,.2)">
-        <div style="font-size:11px;color:var(--success);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🏆 ${t('stat_most_correct')}</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1.1;margin-bottom:6px">${bestOpDisplay}</div>
-        <div class="stat-sub" style="text-align:left;line-height:1.5">${bestOpSub}</div>
+      <div class="op-showcase-card best">
+        <div class="op-showcase-icon">🏆</div>
+        <div class="op-showcase-info">
+          <div class="op-showcase-label">${t('stat_most_correct')}</div>
+          <div class="op-showcase-title">${bestOpDisplay}</div>
+          <div class="op-showcase-sub">${bestOpSub}</div>
+        </div>
       </div>
-      <div class="stat-card" style="border-color:rgba(255,77,107,.2)">
-        <div style="font-size:11px;color:var(--error);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🎯 ${t('stat_most_wrong')}</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1.1;margin-bottom:6px">${worstOpDisplay}</div>
-        <div class="stat-sub" style="text-align:left;line-height:1.5">${worstOpSub}</div>
+      <div class="op-showcase-card worst">
+        <div class="op-showcase-icon">🎯</div>
+        <div class="op-showcase-info">
+          <div class="op-showcase-label">${t('stat_most_wrong')}</div>
+          <div class="op-showcase-title">${worstOpDisplay}</div>
+          <div class="op-showcase-sub">${worstOpSub}</div>
+        </div>
       </div>
     </div>`:''}
 
@@ -302,4 +320,3 @@ const diffRows=(mode)=>['easy','medium','hard'].map((d,i)=>{
     </div>`:''}
   `;
 }
-

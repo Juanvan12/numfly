@@ -909,3 +909,32 @@ body.sidebar-open #burger-fixed { display: none !important; }
   width: 100%;
   cursor: pointer;
 }
+/* ════ STATS OP SHOWCASE CARDS ════ */
+.op-showcase-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px; position: relative;
+  overflow: hidden; transition: transform 0.2s;
+}
+.op-showcase-card:hover { transform: translateY(-2px); }
+.op-showcase-card.best {
+  border-color: rgba(77, 255, 180, 0.3);
+  background: linear-gradient(135deg, rgba(77,255,180,0.08) 0%, var(--surface) 60%);
+}
+.op-showcase-card.worst {
+  border-color: rgba(255, 77, 107, 0.3);
+  background: linear-gradient(135deg, rgba(255,77,107,0.08) 0%, var(--surface) 60%);
+}
+.op-showcase-icon { font-size: 32px; flex-shrink: 0; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2)); }
+.op-showcase-info { flex: 1; text-align: left; }
+.op-showcase-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;
+}
+.op-showcase-card.best .op-showcase-label { color: var(--success); }
+.op-showcase-card.worst .op-showcase-label { color: var(--error); }
+.op-showcase-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 24px;
+  color: var(--text); letter-spacing: 1px; line-height: 1.1; margin-bottom: 4px;
+}
+.op-showcase-sub { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); line-height: 1.4; }
