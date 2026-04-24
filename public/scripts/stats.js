@@ -205,21 +205,17 @@ const diffRows=(mode)=>['easy','medium','hard'].map((d,i)=>{
     </div>
     
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <div class="op-showcase-card best" style="display:flex;flex-direction:column;gap:4px;padding:12px;min-width:0;box-sizing:border-box;">
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;">
-          <span style="font-size:18px;flex-shrink:0">🏆</span>
-          <span class="op-showcase-label" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t('stat_most_correct')}</span>
-        </div>
-        <div class="op-showcase-title" style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${bestOpDisplay}</div>
-        <div class="op-showcase-sub" style="font-size:9px;color:var(--muted);line-height:1.4;overflow-wrap:break-word;word-break:break-word">${bestOpSub}</div>
+      <div class="op-showcase-card best" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;min-width:0;box-sizing:border-box;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--success);font-family:'DM Mono',monospace;background:rgba(34,197,94,.1);padding:2px 8px;border-radius:20px;white-space:nowrap">${t('stat_most_correct')}</div>
+        <div style="font-size:28px;font-weight:700;color:var(--success);line-height:1;font-family:'Bebas Neue',sans-serif;letter-spacing:1px">${bestOpKey?Math.round(bestRate*100)+'%':'—'}</div>
+        <div style="font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%">${bestOpDisplay}</div>
+        <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace">${bestOpKey?t('stat_most_correct_sub'):t('stat_not_enough')}</div>
       </div>
-      <div class="op-showcase-card worst" style="display:flex;flex-direction:column;gap:4px;padding:12px;min-width:0;box-sizing:border-box;">
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;">
-          <span style="font-size:18px;flex-shrink:0">🎯</span>
-          <span class="op-showcase-label" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t('stat_most_wrong')}</span>
-        </div>
-        <div class="op-showcase-title" style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${worstOpDisplay}</div>
-        <div class="op-showcase-sub" style="font-size:9px;color:var(--muted);line-height:1.4;overflow-wrap:break-word;word-break:break-word">${worstOpSub}</div>
+      <div class="op-showcase-card worst" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;min-width:0;box-sizing:border-box;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--error);font-family:'DM Mono',monospace;background:rgba(255,77,107,.1);padding:2px 8px;border-radius:20px;white-space:nowrap">${t('stat_most_wrong')}</div>
+        <div style="font-size:28px;font-weight:700;color:var(--error);line-height:1;font-family:'Bebas Neue',sans-serif;letter-spacing:1px">${worstOpKey?Math.round(worstRate*100)+'%':'—'}</div>
+        <div style="font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%">${worstOpDisplay}</div>
+        <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace">${worstOpKey?t('stat_most_wrong_sub'):t('stat_not_enough')}</div>
       </div>
     </div>`;
     return;
@@ -289,21 +285,17 @@ const diffRows=(mode)=>['easy','medium','hard'].map((d,i)=>{
     </div>`:''}
     
     ${f!=='lightning'?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <div class="op-showcase-card best" style="display:flex;flex-direction:column;gap:4px;padding:12px;min-width:0;box-sizing:border-box;">
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;">
-          <span style="font-size:18px;flex-shrink:0">🏆</span>
-          <span class="op-showcase-label" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t('stat_most_correct')}</span>
-        </div>
-        <div class="op-showcase-title" style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${bestOpDisplay}</div>
-        <div class="op-showcase-sub" style="font-size:9px;color:var(--muted);line-height:1.4;overflow-wrap:break-word;word-break:break-word">${bestOpSub}</div>
+      <div class="op-showcase-card best" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;min-width:0;box-sizing:border-box;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--success);font-family:'DM Mono',monospace;background:rgba(34,197,94,.1);padding:2px 8px;border-radius:20px;white-space:nowrap">${t('stat_most_correct')}</div>
+        <div style="font-size:28px;font-weight:700;color:var(--success);line-height:1;font-family:'Bebas Neue',sans-serif;letter-spacing:1px">${bestOpKey?Math.round(bestRate*100)+'%':'—'}</div>
+        <div style="font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%">${bestOpDisplay}</div>
+        <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace">${bestOpKey?t('stat_most_correct_sub'):t('stat_not_enough')}</div>
       </div>
-      <div class="op-showcase-card worst" style="display:flex;flex-direction:column;gap:4px;padding:12px;min-width:0;box-sizing:border-box;">
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;">
-          <span style="font-size:18px;flex-shrink:0">🎯</span>
-          <span class="op-showcase-label" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t('stat_most_wrong')}</span>
-        </div>
-        <div class="op-showcase-title" style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${worstOpDisplay}</div>
-        <div class="op-showcase-sub" style="font-size:9px;color:var(--muted);line-height:1.4;overflow-wrap:break-word;word-break:break-word">${worstOpSub}</div>
+      <div class="op-showcase-card worst" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;min-width:0;box-sizing:border-box;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--error);font-family:'DM Mono',monospace;background:rgba(255,77,107,.1);padding:2px 8px;border-radius:20px;white-space:nowrap">${t('stat_most_wrong')}</div>
+        <div style="font-size:28px;font-weight:700;color:var(--error);line-height:1;font-family:'Bebas Neue',sans-serif;letter-spacing:1px">${worstOpKey?Math.round(worstRate*100)+'%':'—'}</div>
+        <div style="font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%">${worstOpDisplay}</div>
+        <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace">${worstOpKey?t('stat_most_wrong_sub'):t('stat_not_enough')}</div>
       </div>
     </div>`:''}
 
