@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Numfly</string>
+    <string name="title_activity_main">Numfly</string>
+    <string name="package_name">pro.numfly.app</string>
+    <string name="custom_url_scheme">pro.numfly.app</string>
+</resources>

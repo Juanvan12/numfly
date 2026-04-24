@@ -769,8 +769,6 @@ document.getElementById('google-confirm-btn').onclick = async () => {
 }
 
 async function doSignOut(){
-  if (sb) await sb.auth.signOut();
-
   try {
     localStorage.removeItem(GUEST_SAVE_KEY);
     localStorage.removeItem('numfly_op_stats');
@@ -778,7 +776,10 @@ async function doSignOut(){
     localStorage.removeItem('numfly_campaign');
     localStorage.removeItem('numfly_daily_progress');
     localStorage.removeItem('numfly_pending_daily');
+    localStorage.removeItem('numfly_sb');
   } catch(e) {}
+
+  try { if (sb) await sb.auth.signOut(); } catch(e) {}
 
   window.location.href = '/';
 }
