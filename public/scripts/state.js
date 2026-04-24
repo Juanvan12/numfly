@@ -78,19 +78,16 @@ let _audioCtx = null;
 let _audioUnlocked = false;
 
 function getAudioCtx() {
-  if (!_audioCtx) {
-    try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      _audioCtx = new AudioContext();
-    } catch (e) {}
-  }
   return _audioCtx;
 }
 
 // Mobile Safari/Chrome requires a silent buffer to be played on first interaction
 function _unlockAudio() {
   if (_audioUnlocked) return;
-  // Must create the context here, inside the gesture, for iOS to allow it
+
+  // Create the context HERE, synchronously inside the gesture handler.
+  // Safari marks the context as trusted only if new AudioContext() is called
+  // in the same call stack as the user touch/click event.
   if (!_audioCtx) {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -98,7 +95,6 @@ function _unlockAudio() {
     } catch(e) { return; }
   }
   const ctx = _audioCtx;
-  if (!ctx) return;
 
   const _doUnlock = () => {
     try {
@@ -114,7 +110,6 @@ function _unlockAudio() {
     } catch(e) {}
   };
 
-  // iOS requires resume() to fully complete before any node can play
   if (ctx.state === 'suspended') {
     ctx.resume().then(_doUnlock).catch(_doUnlock);
   } else {
