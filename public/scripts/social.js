@@ -1439,20 +1439,25 @@ async function openDirectChallenge(friendId,friendName){
 }
 
 // ── Leaderboard ───────────────────────────────────────────────────────────────
-let _lbScope='global'; // 'friends' or 'global' — default to global so it works without friends
+let _lbScope='global';
 let _lbKey='xp';
 function setLbScope(scope,btn){
+
+  if(!btn && scope === 'global') {
+    scope = _lbScope; 
+  }
   _lbScope=scope;
   // Update inline-styled toggle buttons
   ['friends','global'].forEach(s=>{
     const b=document.getElementById('lb-scope-'+s);
     if(b){b.style.background=s===scope?'var(--accent)':'transparent';b.style.color=s===scope?'#000':'var(--muted)';}
   });
-  // Clear immediately to prevent stale scope content flash
+
   const el=document.getElementById('lb-content');
   if(el)el.innerHTML='<span class="spinner"></span>';
   loadLeaderboard(_lbKey);
 }
+
 async function setLbTab(key,btn){
   _lbKey=key;
   // Use lb-cat-btn class (new design)

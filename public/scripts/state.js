@@ -90,29 +90,31 @@ function getAudioCtx() {
 // Mobile Safari/Chrome requires a silent buffer to be played on first interaction
 function _unlockAudio() {
   if (_audioUnlocked) return;
+  // Create the context here, inside the gesture handler, so iOS allows it
   const ctx = getAudioCtx();
   if (!ctx) return;
 
-  // Force resume on mobile
+  const doUnlock = () => {
+    try {
+      const buffer = ctx.createBuffer(1, 1, 22050);
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      if (source.start) source.start(0);
+      else if (source.noteOn) source.noteOn(0);
+      _audioUnlocked = true;
+      ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
+        document.removeEventListener(evt, _unlockAudio, { capture: true });
+      });
+    } catch(e) {}
+  };
+
   if (ctx.state === 'suspended') {
-    ctx.resume();
+    // Must await resume() before playing the unlock buffer on iOS
+    ctx.resume().then(doUnlock).catch(doUnlock);
+  } else {
+    doUnlock();
   }
-
-  // Play a completely silent 1-sample buffer to permanently unlock the audio engine
-  try {
-    const buffer = ctx.createBuffer(1, 1, 22050);
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    source.connect(ctx.destination);
-    if (source.start) source.start(0);
-    else if (source.noteOn) source.noteOn(0);
-    _audioUnlocked = true;
-
-    // Clean up event listeners once unlocked
-    ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
-      document.removeEventListener(evt, _unlockAudio, { capture: true });
-    });
-  } catch(e) {}
 }
 
 ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
@@ -121,6 +123,7 @@ function _unlockAudio() {
 
 function playTone(freq, duration, type='sine', gainVal=0.12, freqEnd=null) {
   try {
+    if (!_audioUnlocked) return; // Don't attempt if user hasn't interacted yet — avoids a blocked context error on iOS
     const ctx = getAudioCtx();
     if (!ctx) return;
     if (ctx.state === 'suspended') {

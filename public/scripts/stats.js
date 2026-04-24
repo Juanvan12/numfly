@@ -204,22 +204,22 @@ const diffRows=(mode)=>['easy','medium','hard'].map((d,i)=>{
       <div class="op-breakdown">${opBarsHTML}</div>
     </div>
     
-    <div class="stats-grid-2">
-      <div class="op-showcase-card best">
-        <div class="op-showcase-icon">🏆</div>
-        <div class="op-showcase-info">
-          <div class="op-showcase-label">${t('stat_most_correct')}</div>
-          <div class="op-showcase-title">${bestOpDisplay}</div>
-          <div class="op-showcase-sub">${bestOpSub}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div class="op-showcase-card best" style="display:flex;flex-direction:column;gap:4px;padding:12px;min-width:0;box-sizing:border-box;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;">
+          <span style="font-size:18px;flex-shrink:0">🏆</span>
+          <span class="op-showcase-label" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t('stat_most_correct')}</span>
         </div>
+        <div class="op-showcase-title" style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${bestOpDisplay}</div>
+        <div class="op-showcase-sub" style="font-size:9px;color:var(--muted);line-height:1.4;overflow-wrap:break-word;word-break:break-word">${bestOpSub}</div>
       </div>
-      <div class="op-showcase-card worst">
-        <div class="op-showcase-icon">🎯</div>
-        <div class="op-showcase-info">
-          <div class="op-showcase-label">${t('stat_most_wrong')}</div>
-          <div class="op-showcase-title">${worstOpDisplay}</div>
-          <div class="op-showcase-sub">${worstOpSub}</div>
+      <div class="op-showcase-card worst" style="display:flex;flex-direction:column;gap:4px;padding:12px;min-width:0;box-sizing:border-box;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;">
+          <span style="font-size:18px;flex-shrink:0">🎯</span>
+          <span class="op-showcase-label" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t('stat_most_wrong')}</span>
         </div>
+        <div class="op-showcase-title" style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${worstOpDisplay}</div>
+        <div class="op-showcase-sub" style="font-size:9px;color:var(--muted);line-height:1.4;overflow-wrap:break-word;word-break:break-word">${worstOpSub}</div>
       </div>
     </div>`;
     return;
@@ -288,22 +288,22 @@ const diffRows=(mode)=>['easy','medium','hard'].map((d,i)=>{
       <div class="op-breakdown">${opBarsHTML}</div>
     </div>`:''}
     
-    ${f!=='lightning'?`<div class="stats-grid-2">
-      <div class="op-showcase-card best">
-        <div class="op-showcase-icon">🏆</div>
-        <div class="op-showcase-info">
-          <div class="op-showcase-label">${t('stat_most_correct')}</div>
-          <div class="op-showcase-title">${bestOpDisplay}</div>
-          <div class="op-showcase-sub">${bestOpSub}</div>
+    ${f!=='lightning'?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div class="op-showcase-card best" style="display:flex;flex-direction:column;gap:4px;padding:12px;min-width:0;box-sizing:border-box;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;">
+          <span style="font-size:18px;flex-shrink:0">🏆</span>
+          <span class="op-showcase-label" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t('stat_most_correct')}</span>
         </div>
+        <div class="op-showcase-title" style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${bestOpDisplay}</div>
+        <div class="op-showcase-sub" style="font-size:9px;color:var(--muted);line-height:1.4;overflow-wrap:break-word;word-break:break-word">${bestOpSub}</div>
       </div>
-      <div class="op-showcase-card worst">
-        <div class="op-showcase-icon">🎯</div>
-        <div class="op-showcase-info">
-          <div class="op-showcase-label">${t('stat_most_wrong')}</div>
-          <div class="op-showcase-title">${worstOpDisplay}</div>
-          <div class="op-showcase-sub">${worstOpSub}</div>
+      <div class="op-showcase-card worst" style="display:flex;flex-direction:column;gap:4px;padding:12px;min-width:0;box-sizing:border-box;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;">
+          <span style="font-size:18px;flex-shrink:0">🎯</span>
+          <span class="op-showcase-label" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t('stat_most_wrong')}</span>
         </div>
+        <div class="op-showcase-title" style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${worstOpDisplay}</div>
+        <div class="op-showcase-sub" style="font-size:9px;color:var(--muted);line-height:1.4;overflow-wrap:break-word;word-break:break-word">${worstOpSub}</div>
       </div>
     </div>`:''}
 
