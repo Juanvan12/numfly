@@ -686,8 +686,14 @@ body.sidebar-open #burger-fixed { display: none !important; }
   margin-bottom: 16px; line-height: 1.5;
 }
 .titles-list {
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
+  display: grid; 
+  grid-template-columns: repeat(4, minmax(0, 1fr)); 
+  gap: 8px;
+  max-height: 55vh;
+  overflow-y: auto;
+  padding-right: 4px; 
 }
+
 .titles-item {
   display: flex; flex-direction: column; align-items: center;
   gap: 6px; text-align: center;
@@ -705,8 +711,10 @@ body.sidebar-open #burger-fixed { display: none !important; }
 }
 .titles-item-info { width: 100%; }
 .titles-item-name {
-  font-family: 'Bebas Neue', sans-serif; font-size: 14px;
-  letter-spacing: 1px; line-height: 1.2;
+  font-family: 'Bebas Neue', sans-serif; 
+  font-size: 14px;
+  letter-spacing: 1px; 
+  line-height: 1.2;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -941,3 +949,16 @@ body.sidebar-open #burger-fixed { display: none !important; }
   color: var(--text); letter-spacing: 1px; line-height: 1.1; margin-bottom: 4px;
 }
 .op-showcase-sub { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+/* ─── Mobile Specific Fixes ─── */
+@media (max-width: 600px) {
+  .titles-list {
+    /* Drop to 3 columns on small screens */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-height: 50vh; /* Slightly shorter on mobile */
+  }
+  
+  .titles-item-name {
+    font-size: 12px; /* Slightly smaller text to prevent ugly line breaks */
+  }
+}

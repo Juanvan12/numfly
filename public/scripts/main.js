@@ -111,17 +111,24 @@ function copyDailyLink(){
   });
 }
 
-// ── Flush sync on page unload (safety net for fast refresh) ─────────────────
-window.addEventListener('beforeunload',()=>{
-  if(syncTimer&&currentUser){clearTimeout(syncTimer);pushToSupabase();}
-  saveOpStats();
-  if(typeof saveDailyLocalState === 'function') saveDailyLocalState();
+function flushAllData() {
+  if (typeof syncTimer !== 'undefined' && syncTimer && typeof currentUser !== 'undefined' && currentUser) {
+    clearTimeout(syncTimer);
+    if (typeof pushToSupabase === 'function') pushToSupabase();
+  }
+  if (typeof saveOpStats === 'function') saveOpStats();
+  if (typeof saveDailyLocalState === 'function') saveDailyLocalState();
+}
+
+window.addEventListener('beforeunload', flushAllData);
+
+window.addEventListener('pagehide', flushAllData);
+window.addEventListener('popstate', flushAllData);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') flushAllData();
 });
 
-// Astro View Transitions safety net for browser back button
-document.addEventListener('astro:before-preparation', () => {
-  if(typeof saveDailyLocalState === 'function') saveDailyLocalState();
-});
+document.addEventListener('astro:before-preparation', flushAllData);
 
 // ── GDPR ──────────────────────────────────────────────────────────────────────
 document.addEventListener('click',function(e){
