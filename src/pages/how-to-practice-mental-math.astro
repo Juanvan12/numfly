@@ -1,30 +1,355 @@
-<!DOCTYPE html>
-<!--
-  SEO NOTE: This page uses client-side i18n (JS dictionary + setLang()).
-  For optimal multilingual SEO, consider migrating to SSR (Next.js, Astro, Eleventy, PHP)
-  so that /es/como-practicar-calculo-mental and /nl/hoofdrekenen-oefenen are served as
-  separate static HTML files. This guarantees Googlebot indexes each language independently.
+---
+const translations = {
+  en: {
+    nav_techniques: 'Techniques', nav_routine: 'Routine', nav_cta: 'Practice Free →',
+    hero_tag: 'Complete Guide', hero_meta_techniques: '12 techniques', hero_meta_read: '~8 min read', hero_updated: 'Updated April 2026',
+    stat1: 'weeks to first gains', stat2: 'min/day is enough', stat3: 'operations to master',
+    toc_label: 'In this guide', toc_why: 'Why it matters', toc_addition: 'Addition tricks',
+    toc_mult: 'Multiplication shortcuts', toc_pct: 'Percentage strategies', toc_routine: 'Daily routine',
+    toc_levels: 'Beginner to advanced', toc_mistakes: 'Common mistakes',
+    why_h2: 'Why it matters',
+    cta1_title: 'Train while you read', cta1_sub: 'Free speed rounds and daily challenges — no sign-up needed.', cta1_btn: 'Start Practice Mode →',
+    addition_h2: 'Addition &amp; subtraction', addition_intro: 'These four techniques alone will noticeably speed up your mental math. Work through them in order — each builds on the last.',
+    t1_title: 'Calculate left-to-right, not right-to-left',
+    t1_body: "School teaches addition right-to-left. This is terrible for mental math — you carry uncertain values into a result you haven't formed yet. <strong>Left-to-right means you build the answer progressively</strong>: at every step you hold a real number in your head, not a partial carry.",
+    t1_body2: 'This single change will speed up your addition more than any other technique. It takes 1–2 weeks to feel natural; after that, right-to-left will feel wrong.',
+    t1_ex_label: 'Example — 347 + 285', t1_ex_comment: '// Each step is a complete number, no uncertain carries',
+    t2_title: 'Round to a friendly number, then adjust',
+    t2_body: 'Instead of working with awkward numbers, <strong>round one number to the nearest 10 or 100, operate, then subtract the difference</strong>. Dramatically reduces cognitive load.',
+    t2_ex1_label: 'Addition — 68 + 47', t2_ex1_step1: 'Round 68 → 70 (+2)',
+    t2_ex2_label: 'Subtraction — 293 − 148', t2_ex2_step1: 'Round 293 → 300 (+7)',
+    t3_title: 'Spot compatible pairs first',
+    t3_body: 'When adding a list of numbers, <strong>scan for pairs that sum to 10 or 100 first</strong>. Add those together, then handle the rest. Turns hard addition into easy addition.',
+    t3_ex_label: 'Example — 37 + 53 + 24 + 16 + 45', t3_ex_step1: 'Spot: 37 + 53 = 90 · 24 + 16 = 40', t3_ex_comment: '// Two hard additions become one easy one',
+    t4_title: 'Count up instead of subtracting',
+    t4_body: 'For subtraction, ask: <em>"what do I add to reach the target?"</em> <strong>Count up from the smaller number in convenient steps</strong> — eliminates borrowing entirely.',
+    t4_ex_label: 'Example — 1000 − 437',
+    t4_body2: "This is how shopkeepers made change before electronic tills. For large gaps it's significantly faster than direct subtraction.",
+    mult_h2: 'Multiplication', mult_intro: "Four shortcuts that cover 80% of multiplication you'll encounter outside a textbook.",
+    t5_title: 'Use the distributive property',
+    t5_body: '<strong>Split one number into easy parts, multiply each, then add the results.</strong> The most general multiplication technique — works for any number, any size.',
+    t5_ex1_label: 'Example — 47 × 8', t5_ex2_label: 'Example — 23 × 14',
+    t6_title: 'Multiply by 5: halve, then ×10',
+    t6_body: '5 = 10 ÷ 2. So <strong>any ×5 becomes: halve the number, then shift the decimal.</strong> Always faster than multiplying by 5 directly.',
+    t7_title: 'Multiply by 9: ×10 then subtract the original',
+    t7_body: '9 = 10 − 1, so <strong>n × 9 = (n × 10) − n</strong>. Same logic applies to ×11 (add n), ×19, ×99 — anything near a round number.',
+    t7_ex_label: 'Example — 67 × 9',
+    t8_title: 'Multiply by 11: add the neighbours',
+    t8_body: 'For any two-digit number × 11: <strong>write the first digit, add the two digits together for the middle, write the last digit.</strong> If the middle sum exceeds 9, carry 1 to the left.',
+    t8_ex1_label: 'Example — 43 × 11', t8_ex1_step: '4 _ 3 → middle: 4 + 3 = 7',
+    t8_ex2_label: 'Example — 78 × 11', t8_ex2_step: '7 _ 8 → middle: 7 + 8 = 15, carry 1',
+    pct_h2: 'Percentages', pct_intro: 'The most practically useful mental math skill for everyday life: tips, discounts, tax, interest. All comes down to these four strategies.',
+    t9_title: 'Find 1%, then scale up',
+    t9_body: '1% of any number = move the decimal two places left. <strong>Once you have 1%, build any percentage by scaling.</strong>',
+    t9_ex_label: 'Example — 13% of 400',
+    t10_title: 'Flip the percentage (x% of y = y% of x)',
+    t10_body: 'Percentage is commutative. <strong>If one direction looks hard, flip it.</strong> 4% of 75 is identical to 75% of 4 — but one is trivial.',
+    t10_ex_label: 'Example — 4% of 75', t10_ex_step1: 'Flip: 75% of 4 = ¾ of 4', t10_ex_comment: '// Far easier than 75 × 0.04',
+    t11_title: 'Use fraction equivalents for common percentages',
+    t11_body: 'The fastest percentage work is fraction conversion. <strong>Memorise these and skip decimal multiplication entirely:</strong>',
+    t12_title: 'Tip calculation: start from 10%, then adjust',
+    t12_body: 'For any tip or service charge: <strong>find 10% first (shift the decimal), then scale up or adjust</strong> to your target.',
+    t12_ex_label: 'Example — 15% of €80',
+    t12_body2: 'In practice: round to the nearest 5% and move on. Speed matters more than precision here.',
+    table_technique: 'Technique', table_level: 'Level', table_best: 'Best for', table_impact: 'Daily impact',
+    trow1_name: 'Left-to-right addition', trow1_best: 'All addition',
+    trow2_name: 'Round and adjust', trow2_best: 'Add &amp; subtract',
+    trow3_name: 'Find 1%, scale up', trow3_best: 'Percentages',
+    trow4_name: 'Count up (complement)', trow4_best: 'Subtraction',
+    trow5_name: 'Distributive property', trow5_best: 'Multiplication',
+    trow6_name: 'Flip the percentage', trow6_best: 'Percentages',
+    trow7_name: '×5 (halve then ×10)', trow7_best: '×5 problems',
+    trow8_name: '×9 (×10 minus n)', trow8_best: '×9, ×11, ×19',
+    trow9_name: 'Fraction shortcuts', trow9_best: '25%, 33%, 75%',
+    trow10_name: 'Multiply by 11', trow10_best: '×11 problems',
+    trow_easy: 'Easy', trow_easy2: 'Easy', trow_easy3: 'Easy', trow_easy4: 'Easy',
+    trow_med: 'Medium', trow_med2: 'Medium', trow_med3: 'Medium', trow_med4: 'Medium',
+    trow_hard: 'Hard', trow_hard2: 'Hard',
+    routine_h2: 'Daily routine',
+    routine_intro1: 'Knowing techniques is not the same as being fast. Speed comes from <strong>automaticity</strong> — where you no longer consciously apply a method, it just happens. Getting there requires structure.',
+    routine_intro2: 'This routine takes <strong>10–15 minutes total</strong> and produces real improvement within 3–4 weeks.',
+    routine_warmup_title: 'Warm-Up', routine_warmup_body: 'Easy addition &amp; subtraction, ~20 problems. Get your brain into number mode.',
+    routine_speed_title: 'Speed Round', routine_speed_body: 'Mixed operations, Medium difficulty, clock running. Track your score and try to beat it every session.',
+    routine_drill_title: 'Weak-Spot Drill', routine_drill_body: 'Whichever operation you missed most — drill that specifically. This is where real gains come from.',
+    callout_key_principle: 'Key principle',
+    callout_consistency: '<strong>Consistency beats intensity.</strong> 10 minutes every day produces far better results than 90 minutes on a Saturday. Mental math improvement is almost entirely a function of practice time spread out so your brain can consolidate between sessions.',
+    results_h3: 'How long until results?',
+    tl1_when: '2–3 weeks', tl1_what: 'Certain problem types feel noticeably easier.',
+    tl2_when: '6–8 weeks', tl2_what: 'Measurable speed gains on timed tests.',
+    tl3_when: '3–6 months', tl3_what: 'Everyday calculations feel effortless. Expect a plateau around weeks 2–3, then a breakthrough as techniques become automatic.',
+    cta2_title: 'Ready to test yourself?', cta2_sub: 'Numfly tracks score, streak, and accuracy automatically across every session.', cta2_btn: 'Start a Speed Round →',
+    levels_h2: 'Beginner to advanced', levels_intro: "One of the most common mistakes is practicing at the wrong level. Too easy and you're not building capacity; too hard and you're reinforcing errors.",
+    callout_calibration: 'Calibration', callout_calibration_body: 'Time yourself on 10 mixed problems. More than 30 seconds per problem → start Easy. 10–20 seconds → Medium. Under 10 seconds → Hard. Pick the difficulty that challenges you without causing errors.',
+    beginner_h3: 'Beginner', beginner_body: "Addition and subtraction only, left-to-right method and rounding. Don't move to multiplication until you answer two-digit addition in under 5 seconds without stress. Most adults underestimate how much their addition can improve — it's often the hidden bottleneck.",
+    intermediate_h3: 'Intermediate', intermediate_body: "Drill multiplication automaticity and percentage fluency. Work through the 12–20× tables until they're instant. Practice percentages from real situations (bills, discounts, interest). Use the distributive property for anything above the times tables.",
+    advanced_h3: 'Advanced', advanced_body: "Your bottleneck is working memory and multi-step calculation. Practice problems requiring you to hold intermediate results while computing the next step — Numfly's Lightning mode is designed exactly for this.",
+    mistakes_h2: 'Common mistakes',
+    mistake1_tag: 'Mistake 1', mistake1_body: "<strong>Only practicing when you feel like it.</strong> Sporadic sessions don't build automaticity. The brain needs consistent repetition — 10 minutes daily beats 60 minutes twice a week.",
+    mistake2_tag: 'Mistake 2', mistake2_body: "<strong>Practicing only your strong operations.</strong> If multiplication is slow, drilling addition won't help. Identify your weakest operation and target it directly.",
+    mistake3_tag: 'Mistake 3', mistake3_body: '<strong>Never practicing under time pressure.</strong> Untimed practice builds accuracy but not speed. Timed sessions train your brain to retrieve answers quickly rather than carefully.',
+    mistake4_tag: 'Mistake 4', mistake4_body: "<strong>Skipping easy levels too fast.</strong> Automaticity comes from repetition at a comfortable level — not a challenging one. If you're consciously applying a technique, it isn't automatic yet.",
+    faq1_q: 'How long does it take to get better at mental math?',
+    faq1_a: 'Most people notice a real difference within <strong>2–4 weeks of daily practice</strong> (10 minutes/day). Measurable speed gains come at 6–8 weeks. Full automaticity typically takes 3–6 months. Consistency is the key variable, not session length.',
+    faq2_q: 'What is the best way to practice mental math as an adult?',
+    faq2_a: "Short timed sessions with immediate feedback. Timed practice forces your brain to prioritise speed, not just correctness. Numfly's speed round mode — 2 minutes, mixed operations — is specifically built around this principle.",
+    faq3_q: 'Is mental math a talent or a learned skill?',
+    faq3_a: 'Overwhelmingly a <strong>learned skill</strong>. What looks like natural talent is almost always accumulated practice. World-class mental calculators trained to get there. Almost anyone can dramatically improve with consistent, structured practice.',
+    faq4_q: 'Should I practice all operations or focus on one?',
+    faq4_a: "Identify your weakest operation and <strong>focus there</strong> while maintaining the others. Progress on your weak spot lifts your overall ceiling. Numfly's statistics page shows accuracy broken down by operation type.",
+    faq5_q: 'Does mental math training help with other cognitive skills?',
+    faq5_a: 'Yes. Regular arithmetic training exercises <strong>working memory, sustained attention, and processing speed</strong>. Studies have found improvements in reading comprehension and logical reasoning following arithmetic training in both children and adults.',
+    faq6_q: 'What operations should a beginner start with?',
+    faq6_a: 'Addition and subtraction only. Get to the point where two-digit addition takes under 5 seconds before adding multiplication. Fast, automatic addition makes every other operation easier — most beginners underestimate how much improvement is available here.',
+    compete_tag: 'Challenge Mode', compete_title: 'Practice alone — or race someone.', compete_sub: 'Numfly lets you challenge friends, join live speed rounds, and climb the global leaderboard. Free, no account required to start.',
+    compete_btn1: 'Start Practicing →', compete_btn2: 'Find a Match', compete_you: 'You',
+    footer_practice: 'Practice', footer_privacy: 'Privacy',
+    page_title: 'How to Practice Mental Math: 12 Techniques That Actually Work | Numfly',
+    page_description: 'A complete guide to mental math practice. Learn 12 proven techniques for faster mental math — rounding, left-to-right, percentage shortcuts and more. Free practice tool included.',
+  },
+  es: {
+    nav_techniques: 'Técnicas', nav_routine: 'Rutina', nav_cta: 'Practicar gratis →',
+    hero_tag: 'Guía completa', hero_meta_techniques: '12 técnicas', hero_meta_read: '~8 min de lectura', hero_updated: 'Actualizado abril 2026',
+    stat1: 'semanas hasta las primeras mejoras', stat2: 'min/día es suficiente', stat3: 'operaciones a dominar',
+    toc_label: 'En esta guía', toc_why: 'Por qué importa', toc_addition: 'Trucos de suma',
+    toc_mult: 'Atajos de multiplicación', toc_pct: 'Estrategias con porcentajes', toc_routine: 'Rutina diaria',
+    toc_levels: 'De principiante a avanzado', toc_mistakes: 'Errores habituales',
+    why_h2: 'Por qué importa',
+    cta1_title: 'Entrena mientras lees', cta1_sub: 'Rondas de velocidad y retos diarios gratuitos — sin registro.', cta1_btn: 'Empezar a practicar →',
+    addition_h2: 'Suma y resta', addition_intro: 'Solo estas cuatro técnicas acelerarán notablemente tu cálculo. Trabájalas en orden — cada una se apoya en la anterior.',
+    t1_title: 'Calcula de izquierda a derecha, no al revés',
+    t1_body: 'En el colegio te enseñan a sumar de derecha a izquierda. Para el cálculo mental es terrible. <strong>De izquierda a derecha construyes la respuesta poco a poco</strong>: en cada paso tienes un número real en la cabeza, no un acarreo a medias.',
+    t1_body2: 'Este único cambio mejorará tu velocidad más que cualquier otra técnica. Tarda una o dos semanas en hacerse natural; después, calcular al revés te parecerá extraño.',
+    t1_ex_label: 'Ejemplo — 347 + 285', t1_ex_comment: '// Cada paso es un número completo, sin acarreos inciertos',
+    t2_title: 'Redondea a un número cómodo y ajusta',
+    t2_body: 'En lugar de lidiar con números difíciles, <strong>redondea uno al 10 o 100 más cercano, opera y luego ajusta la diferencia</strong>. Reduce drásticamente el esfuerzo mental.',
+    t2_ex1_label: 'Suma — 68 + 47', t2_ex1_step1: 'Redondea 68 → 70 (+2)',
+    t2_ex2_label: 'Resta — 293 − 148', t2_ex2_step1: 'Redondea 293 → 300 (+7)',
+    t3_title: 'Busca primero los pares que se complementan',
+    t3_body: 'Cuando sumas una lista de números, <strong>busca antes los pares que suman 10 o 100</strong>. Súmalos primero y luego maneja el resto.',
+    t3_ex_label: 'Ejemplo — 37 + 53 + 24 + 16 + 45', t3_ex_step1: 'Pares: 37 + 53 = 90 · 24 + 16 = 40', t3_ex_comment: '// Dos sumas difíciles se convierten en una fácil',
+    t4_title: 'Cuenta hacia arriba en vez de restar',
+    t4_body: 'Ante una resta, pregúntate: <em>"¿qué tengo que sumar para llegar al número mayor?"</em> <strong>Ve sumando desde el número menor en pasos cómodos</strong>.',
+    t4_ex_label: 'Ejemplo — 1000 − 437',
+    t4_body2: 'Así daban el cambio los tenderos antes de las cajas registradoras. Con diferencias grandes es bastante más rápido que restar directamente.',
+    mult_h2: 'Multiplicación', mult_intro: 'Cuatro atajos que cubren el 80% de las multiplicaciones que encontrarás fuera de un libro de texto.',
+    t5_title: 'Usa la propiedad distributiva',
+    t5_body: '<strong>Divide un número en partes manejables, multiplica cada una y suma los resultados.</strong> La técnica de multiplicación más versátil.',
+    t5_ex1_label: 'Ejemplo — 47 × 8', t5_ex2_label: 'Ejemplo — 23 × 14',
+    t6_title: 'Multiplicar por 5: divide entre 2 y luego por 10',
+    t6_body: '5 = 10 ÷ 2. Por eso <strong>cualquier ×5 se convierte en: divide entre dos y desplaza el decimal una posición.</strong>',
+    t7_title: 'Multiplicar por 9: ×10 y resta el original',
+    t7_body: '9 = 10 − 1, así que <strong>n × 9 = (n × 10) − n</strong>. La misma lógica funciona para ×11 (suma n), ×19, ×99.',
+    t7_ex_label: 'Ejemplo — 67 × 9',
+    t8_title: 'Multiplicar por 11: suma los vecinos',
+    t8_body: 'Para cualquier número de dos cifras × 11: <strong>escribe la primera cifra, suma ambas cifras para el centro y escribe la última cifra.</strong>',
+    t8_ex1_label: 'Ejemplo — 43 × 11', t8_ex1_step: '4 _ 3 → centro: 4 + 3 = 7',
+    t8_ex2_label: 'Ejemplo — 78 × 11', t8_ex2_step: '7 _ 8 → centro: 7 + 8 = 15, llevo 1',
+    pct_h2: 'Porcentajes', pct_intro: 'La habilidad de cálculo mental más útil en el día a día: propinas, descuentos, impuestos, intereses.',
+    t9_title: 'Calcula el 1% y escala',
+    t9_body: 'El 1% de cualquier número equivale a desplazar el decimal dos posiciones a la izquierda. <strong>Con el 1% como base, construyes cualquier porcentaje escalando.</strong>',
+    t9_ex_label: 'Ejemplo — 13% de 400',
+    t10_title: 'Dale la vuelta al porcentaje (x% de y = y% de x)',
+    t10_body: 'El porcentaje es conmutativo. <strong>Si una dirección te parece complicada, dale la vuelta.</strong>',
+    t10_ex_label: 'Ejemplo — 4% de 75', t10_ex_step1: 'Giramos: 75% de 4 = ¾ de 4', t10_ex_comment: '// Mucho más fácil que 75 × 0,04',
+    t11_title: 'Usa equivalencias de fracciones para porcentajes habituales',
+    t11_body: 'La forma más rápida de trabajar con porcentajes es pasarlos a fracciones. <strong>Memoriza estas y olvídate de multiplicar decimales:</strong>',
+    t12_title: 'Calcular propinas: empieza desde el 10% y ajusta',
+    t12_body: 'Para cualquier propina o recargo: <strong>calcula primero el 10% (desplaza el decimal) y luego escala o ajusta</strong> hasta llegar al porcentaje que quieres.',
+    t12_ex_label: 'Ejemplo — 15% de €80',
+    t12_body2: 'En la práctica: redondea al 5% más cercano y ya está. Aquí la velocidad importa más que la exactitud.',
+    table_technique: 'Técnica', table_level: 'Nivel', table_best: 'Ideal para', table_impact: 'Impacto diario',
+    trow1_name: 'Suma de izquierda a derecha', trow1_best: 'Toda suma',
+    trow2_name: 'Redondear y ajustar', trow2_best: 'Suma y resta',
+    trow3_name: 'Calcular el 1% y escalar', trow3_best: 'Porcentajes',
+    trow4_name: 'Contar hacia arriba', trow4_best: 'Resta',
+    trow5_name: 'Propiedad distributiva', trow5_best: 'Multiplicación',
+    trow6_name: 'Dar la vuelta al porcentaje', trow6_best: 'Porcentajes',
+    trow7_name: '×5 (÷2 y luego ×10)', trow7_best: 'Problemas con ×5',
+    trow8_name: '×9 (×10 menos n)', trow8_best: '×9, ×11, ×19',
+    trow9_name: 'Atajos con fracciones', trow9_best: '25%, 33%, 75%',
+    trow10_name: 'Multiplicar por 11', trow10_best: 'Problemas con ×11',
+    trow_easy: 'Fácil', trow_easy2: 'Fácil', trow_easy3: 'Fácil', trow_easy4: 'Fácil',
+    trow_med: 'Medio', trow_med2: 'Medio', trow_med3: 'Medio', trow_med4: 'Medio',
+    trow_hard: 'Difícil', trow_hard2: 'Difícil',
+    routine_h2: 'Rutina diaria',
+    routine_intro1: 'Conocer las técnicas no es lo mismo que ser rápido. La velocidad viene de la <strong>automaticidad</strong> — cuando ya no aplicas el método conscientemente, simplemente ocurre.',
+    routine_intro2: 'Esta rutina lleva <strong>10–15 minutos en total</strong> y produce mejoras reales en 3–4 semanas.',
+    routine_warmup_title: 'Calentamiento', routine_warmup_body: 'Suma y resta sencillas, unos 20 ejercicios. Pon el cerebro en modo cálculo.',
+    routine_speed_title: 'Ronda de velocidad', routine_speed_body: 'Operaciones mixtas, dificultad media, con el reloj puesto. Apunta tu puntuación e intenta superarla cada sesión.',
+    routine_drill_title: 'Ejercicio de punto débil', routine_drill_body: 'La operación que más hayas fallado — practica esa en concreto. Aquí es donde se producen los verdaderos avances.',
+    callout_key_principle: 'Principio clave',
+    callout_consistency: '<strong>La constancia vence a la intensidad.</strong> 10 minutos cada día da resultados mucho mejores que 90 minutos el sábado.',
+    results_h3: '¿Cuánto tiempo hasta ver resultados?',
+    tl1_when: '2–3 semanas', tl1_what: 'Ciertos tipos de problemas te parecerán notablemente más fáciles.',
+    tl2_when: '6–8 semanas', tl2_what: 'Ganancias de velocidad medibles en pruebas cronometradas.',
+    tl3_when: '3–6 meses', tl3_what: 'Los cálculos del día a día se vuelven automáticos. Espera un estancamiento hacia las semanas 2–3; después llegará un salto.',
+    cta2_title: '¿Listo para ponerte a prueba?', cta2_sub: 'Numfly registra puntuación, racha y precisión automáticamente en cada sesión.', cta2_btn: 'Empezar una ronda de velocidad →',
+    levels_h2: 'De principiante a avanzado', levels_intro: 'Uno de los errores más habituales es practicar en el nivel equivocado.',
+    callout_calibration: 'Cómo elegir tu nivel', callout_calibration_body: 'Cronométrate con 10 problemas mixtos. Más de 30 segundos → Fácil. Entre 10 y 20 segundos → Medio. Menos de 10 → Difícil.',
+    beginner_h3: 'Principiante', beginner_body: 'Solo suma y resta, con el método de izquierda a derecha y redondeo. No pases a la multiplicación hasta que respondas sumas de dos cifras en menos de 5 segundos.',
+    intermediate_h3: 'Intermedio', intermediate_body: 'Trabaja la automaticidad de la multiplicación y la fluidez con porcentajes. Repasa las tablas del 12 al 20 hasta que salgan sin pensar.',
+    advanced_h3: 'Avanzado', advanced_body: 'Tu cuello de botella es la memoria de trabajo y el cálculo en varios pasos.',
+    mistakes_h2: 'Errores habituales',
+    mistake1_tag: 'Error 1', mistake1_body: '<strong>Practicar solo cuando te apetece.</strong> Las sesiones irregulares no generan automaticidad. El cerebro necesita repetición constante.',
+    mistake2_tag: 'Error 2', mistake2_body: '<strong>Practicar solo las operaciones que ya dominas.</strong> Si la multiplicación te cuesta, entrenar la suma no ayudará.',
+    mistake3_tag: 'Error 3', mistake3_body: '<strong>No practicar nunca con presión de tiempo.</strong> La práctica sin límite de tiempo mejora la precisión, pero no la velocidad.',
+    mistake4_tag: 'Error 4', mistake4_body: '<strong>Pasar demasiado rápido a niveles más difíciles.</strong> La automaticidad viene de la repetición en un nivel cómodo.',
+    faq1_q: '¿Cuánto tiempo tarda en mejorar el cálculo mental?',
+    faq1_a: 'La mayoría de las personas nota una diferencia real en <strong>2–4 semanas de práctica diaria</strong>. Las ganancias de velocidad medibles llegan a las 6–8 semanas.',
+    faq2_q: '¿Cuál es la mejor manera de practicar el cálculo mental siendo adulto?',
+    faq2_a: 'Sesiones cortas y cronometradas con retroalimentación inmediata.',
+    faq3_q: '¿El cálculo mental es un talento o una habilidad que se aprende?',
+    faq3_a: 'Es, de forma aplastante, una <strong>habilidad aprendida</strong>.',
+    faq4_q: '¿Debo practicar todas las operaciones o centrarme en una?',
+    faq4_a: 'Identifica tu operación más floja y <strong>céntrate en ella</strong> sin descuidar las demás.',
+    faq5_q: '¿Entrenar el cálculo mental ayuda en otras habilidades cognitivas?',
+    faq5_a: 'Sí. El entrenamiento aritmético regular ejercita la <strong>memoria de trabajo, la atención sostenida y la velocidad de procesamiento</strong>.',
+    faq6_q: '¿Por dónde debe empezar alguien que quiere mejorar su cálculo mental?',
+    faq6_a: 'Por suma y resta. Consigue hacer sumas de dos cifras en menos de 5 segundos antes de pasar a la multiplicación.',
+    compete_tag: 'Modo reto', compete_title: 'Practica solo — o compite contra alguien.', compete_sub: 'Numfly te permite retar a amigos, unirte a rondas de velocidad en vivo y escalar la clasificación global. Gratis, sin cuenta.',
+    compete_btn1: 'Empezar a practicar →', compete_btn2: 'Buscar rival', compete_you: 'Tú',
+    footer_practice: 'Practicar', footer_privacy: 'Privacidad',
+    page_title: 'Cómo practicar el cálculo mental: 12 técnicas que de verdad funcionan | Numfly',
+    page_description: 'Guía completa de cálculo mental. Aprende 12 técnicas probadas para calcular más rápido: redondeo, cálculo de izquierda a derecha, atajos de porcentaje y más.',
+  },
+  nl: {
+    nav_techniques: 'Technieken', nav_routine: 'Routine', nav_cta: 'Gratis oefenen →',
+    hero_tag: 'Complete gids', hero_meta_techniques: '12 technieken', hero_meta_read: '~8 min lezen', hero_updated: 'Bijgewerkt april 2026',
+    stat1: 'weken tot de eerste verbeteringen', stat2: 'min/dag is genoeg', stat3: 'bewerkingen om te beheersen',
+    toc_label: 'In deze gids', toc_why: 'Waarom het loont', toc_addition: 'Optellen en aftrekken',
+    toc_mult: 'Vermenigvuldigingstrucs', toc_pct: 'Percentagestrategieën', toc_routine: 'Dagelijkse routine',
+    toc_levels: 'Van beginner tot gevorderd', toc_mistakes: 'Veelgemaakte fouten',
+    why_h2: 'Waarom het loont',
+    cta1_title: 'Oefen terwijl je leest', cta1_sub: 'Gratis snelheidsrondes en dagelijkse uitdagingen — geen account nodig.', cta1_btn: 'Start met oefenen →',
+    addition_h2: 'Optellen &amp; aftrekken', addition_intro: 'Deze vier technieken alleen al versnellen je rekensnelheid merkbaar. Werk ze op volgorde door — elke techniek bouwt voort op de vorige.',
+    t1_title: 'Reken van links naar rechts, niet andersom',
+    t1_body: 'Op school leer je optellen van rechts naar links. Voor hoofdrekenen werkt dat slecht. <strong>Van links naar rechts bouw je het antwoord stap voor stap op</strong>: bij elke stap houd je een echt getal in je hoofd.',
+    t1_body2: 'Na een week of twee voelt het vanzelfsprekend; daarna zal rekenen van rechts naar links raar aanvoelen.',
+    t1_ex_label: 'Voorbeeld — 347 + 285', t1_ex_comment: '// Elke stap is een volledig getal, geen onzekere restgetallen',
+    t2_title: 'Rond af naar een handig getal en corrigeer',
+    t2_body: 'In plaats van worstelen met lastige getallen, <strong>rond je één getal af naar het dichtstbijzijnde tiental of honderdtal, reken en trek dan het verschil eraf</strong>.',
+    t2_ex1_label: 'Optellen — 68 + 47', t2_ex1_step1: 'Rond 68 → 70 (+2) af',
+    t2_ex2_label: 'Aftrekken — 293 − 148', t2_ex2_step1: 'Rond 293 → 300 (+7) af',
+    t3_title: 'Zoek eerst de paren die samen 10 of 100 geven',
+    t3_body: 'Als je een rij getallen optelt, <strong>zoek dan eerst naar paren die samen 10 of 100 geven</strong>.',
+    t3_ex_label: 'Voorbeeld — 37 + 53 + 24 + 16 + 45', t3_ex_step1: 'Paren: 37 + 53 = 90 · 24 + 16 = 40', t3_ex_comment: '// Twee moeilijke optellingen worden één makkelijke',
+    t4_title: 'Tel op in plaats van aftrekken',
+    t4_body: 'Vraag je bij aftrekken af: <em>"Wat moet ik erbij optellen om het doel te bereiken?"</em> <strong>Tel op van het kleinste getal in handige stappen</strong>.',
+    t4_ex_label: 'Voorbeeld — 1000 − 437',
+    t4_body2: 'Zo gaven winkeliers vroeger wisselgeld terug. Bij grote verschillen is dit stukken sneller dan rechtstreeks aftrekken.',
+    mult_h2: 'Vermenigvuldigen', mult_intro: 'Vier trucs die 80% dekken van de vermenigvuldigingen die je buiten een schoolboek tegenkomt.',
+    t5_title: 'Gebruik de distributieve eigenschap',
+    t5_body: '<strong>Splits één getal op in makkelijke delen, vermenigvuldig elk deel en tel de resultaten op.</strong>',
+    t5_ex1_label: 'Voorbeeld — 47 × 8', t5_ex2_label: 'Voorbeeld — 23 × 14',
+    t6_title: 'Vermenigvuldigen met 5: halveer en dan ×10',
+    t6_body: '5 = 10 ÷ 2. Daardoor wordt elke ×5-som: <strong>halveer het getal en verschuif het decimaalteken één positie.</strong>',
+    t7_title: 'Vermenigvuldigen met 9: ×10 en trek het origineel eraf',
+    t7_body: '9 = 10 − 1, dus <strong>n × 9 = (n × 10) − n</strong>. Dezelfde redenering werkt voor ×11, ×19 en ×99.',
+    t7_ex_label: 'Voorbeeld — 67 × 9',
+    t8_title: 'Vermenigvuldigen met 11: tel de buren op',
+    t8_body: 'Voor elk tweecijferig getal × 11: <strong>schrijf het eerste cijfer, tel de twee cijfers bij elkaar op voor het midden en schrijf het laatste cijfer.</strong>',
+    t8_ex1_label: 'Voorbeeld — 43 × 11', t8_ex1_step: '4 _ 3 → midden: 4 + 3 = 7',
+    t8_ex2_label: 'Voorbeeld — 78 × 11', t8_ex2_step: '7 _ 8 → midden: 7 + 8 = 15, onthoud 1',
+    pct_h2: 'Percentages', pct_intro: 'De nuttigste hoofdrekenvaardigheid voor het dagelijks leven: fooien, kortingen, belasting, rente.',
+    t9_title: 'Bereken 1% en schaal omhoog',
+    t9_body: '1% van een getal: verschuif het decimaalteken twee plaatsen naar links. <strong>Met dat 1% als basis bouw je elk percentage op door te schalen.</strong>',
+    t9_ex_label: 'Voorbeeld — 13% van 400',
+    t10_title: 'Draai het percentage om (x% van y = y% van x)',
+    t10_body: 'Percentage is commutatief. <strong>Als één richting lastig lijkt, draai hem gewoon om.</strong>',
+    t10_ex_label: 'Voorbeeld — 4% van 75', t10_ex_step1: 'Omdraaien: 75% van 4 = ¾ van 4', t10_ex_comment: '// Veel makkelijker dan 75 × 0,04',
+    t11_title: 'Gebruik breukequivalenten voor veelvoorkomende percentages',
+    t11_body: 'De snelste manier om met percentages te werken is ze omzetten naar breuken. <strong>Ken deze uit je hoofd en je hoeft nooit meer met decimalen te rekenen:</strong>',
+    t12_title: 'Fooi berekenen: begin bij 10% en pas aan',
+    t12_body: 'Voor elke fooi of toeslag: <strong>bereken eerst 10% (verschuif het decimaalteken) en schaal daarna op of bij</strong> naar het gewenste percentage.',
+    t12_ex_label: 'Voorbeeld — 15% van €80',
+    t12_body2: 'In de praktijk: rond af op het dichtstbijzijnde 5% en ga verder.',
+    table_technique: 'Techniek', table_level: 'Niveau', table_best: 'Beste voor', table_impact: 'Dagelijks effect',
+    trow1_name: 'Optellen van links naar rechts', trow1_best: 'Al het optellen',
+    trow2_name: 'Afronden en corrigeren', trow2_best: 'Optellen en aftrekken',
+    trow3_name: '1% berekenen en schalen', trow3_best: 'Percentages',
+    trow4_name: 'Optellen in plaats van aftrekken', trow4_best: 'Aftrekken',
+    trow5_name: 'Distributieve eigenschap', trow5_best: 'Vermenigvuldigen',
+    trow6_name: 'Percentage omdraaien', trow6_best: 'Percentages',
+    trow7_name: '×5 (halveer dan ×10)', trow7_best: '×5-sommen',
+    trow8_name: '×9 (×10 min n)', trow8_best: '×9, ×11, ×19',
+    trow9_name: 'Breukequivalenten', trow9_best: '25%, 33%, 75%',
+    trow10_name: 'Vermenigvuldigen met 11', trow10_best: '×11-sommen',
+    trow_easy: 'Makkelijk', trow_easy2: 'Makkelijk', trow_easy3: 'Makkelijk', trow_easy4: 'Makkelijk',
+    trow_med: 'Gemiddeld', trow_med2: 'Gemiddeld', trow_med3: 'Gemiddeld', trow_med4: 'Gemiddeld',
+    trow_hard: 'Moeilijk', trow_hard2: 'Moeilijk',
+    routine_h2: 'Dagelijkse routine',
+    routine_intro1: 'Technieken kennen is niet hetzelfde als snel zijn. Snelheid komt van <strong>automaticiteit</strong> — wanneer je een methode niet meer bewust toepast maar het gewoon gebeurt.',
+    routine_intro2: 'Deze routine duurt <strong>10–15 minuten in totaal</strong> en levert echte verbetering op binnen 3–4 weken.',
+    routine_warmup_title: 'Warming-up', routine_warmup_body: "Makkelijk optellen en aftrekken, zo'n 20 sommen. Zet je hersenen in de rekenstand.",
+    routine_speed_title: 'Snelheidsronde', routine_speed_body: 'Gemengde bewerkingen, gemiddeld niveau, klok loopt. Noteer je score en probeer hem elke sessie te verbeteren.',
+    routine_drill_title: 'Zwakke-plek-oefening', routine_drill_body: 'De bewerking die je het vaakst fout had — oefen die gericht. Hier haal je de echte winst vandaan.',
+    callout_key_principle: 'Kernprincipe',
+    callout_consistency: '<strong>Regelmaat wint van intensiteit.</strong> 10 minuten per dag geeft veel betere resultaten dan 90 minuten op zaterdag.',
+    results_h3: 'Hoe lang duurt het voor je resultaat ziet?',
+    tl1_when: '2–3 weken', tl1_what: 'Bepaalde soorten sommen voelen merkbaar makkelijker.',
+    tl2_when: '6–8 weken', tl2_what: 'Meetbare snelheidswinst op getimede tests.',
+    tl3_when: '3–6 maanden', tl3_what: 'Dagelijkse berekeningen gaan vanzelf. Verwacht een plateau rond week 2–3, gevolgd door een doorbraak.',
+    cta2_title: 'Klaar om jezelf te testen?', cta2_sub: 'Numfly houdt je score, reeks en nauwkeurigheid automatisch bij — sessie na sessie.', cta2_btn: 'Start een snelheidsronde →',
+    levels_h2: 'Van beginner tot gevorderd', levels_intro: 'Een van de meest voorkomende fouten is oefenen op het verkeerde niveau.',
+    callout_calibration: 'Hoe kies je je niveau', callout_calibration_body: 'Doe 10 gemengde sommen en meet hoe lang je erover doet. Meer dan 30 seconden → Makkelijk. 10–20 seconden → Gemiddeld. Onder de 10 seconden → Moeilijk.',
+    beginner_h3: 'Beginner', beginner_body: 'Alleen optellen en aftrekken, van links naar rechts en afronden. Ga pas naar vermenigvuldigen als je tweecijferige sommen in minder dan 5 seconden kunt beantwoorden.',
+    intermediate_h3: 'Gemiddeld', intermediate_body: 'Oefen de automaticiteit van vermenigvuldigen en vloeiendheid met percentages. Werk de tafels van 12 tot en met 20 door totdat ze direct komen.',
+    advanced_h3: 'Gevorderd', advanced_body: 'Je knelpunt is werkgeheugen en berekening in meerdere stappen.',
+    mistakes_h2: 'Veelgemaakte fouten',
+    mistake1_tag: 'Fout 1', mistake1_body: '<strong>Alleen oefenen als je er zin in hebt.</strong> Sporadische sessies bouwen geen automaticiteit op.',
+    mistake2_tag: 'Fout 2', mistake2_body: '<strong>Alleen je sterke bewerkingen oefenen.</strong> Als vermenigvuldigen langzaam gaat, helpt optellen oefenen niet.',
+    mistake3_tag: 'Fout 3', mistake3_body: '<strong>Nooit oefenen onder tijdsdruk.</strong> Ongetimed oefenen bouwt nauwkeurigheid op, maar geen snelheid.',
+    mistake4_tag: 'Fout 4', mistake4_body: '<strong>Te snel naar een moeilijker niveau overstappen.</strong> Automaticiteit ontstaat door herhaling op een comfortabel niveau.',
+    faq1_q: 'Hoe lang duurt het voor ik beter word in hoofdrekenen?',
+    faq1_a: 'De meeste mensen merken een echt verschil binnen <strong>2–4 weken dagelijks oefenen</strong>. Meetbare snelheidswinst komt na 6–8 weken.',
+    faq2_q: 'Wat is de beste manier om als volwassene hoofdrekenen te oefenen?',
+    faq2_a: 'Korte, getimede sessies met directe feedback.',
+    faq3_q: 'Is hoofdrekenen een talent of een aangeleerde vaardigheid?',
+    faq3_a: 'Overweldigend een <strong>aangeleerde vaardigheid</strong>.',
+    faq4_q: 'Moet ik alle bewerkingen oefenen of me op één richten?',
+    faq4_a: 'Zoek je zwakste bewerking en <strong>richt je daarop</strong> terwijl je de andere bewerkingen op peil houdt.',
+    faq5_q: 'Helpt hoofdrekenen bij andere cognitieve vaardigheden?',
+    faq5_a: 'Ja. Regelmatig rekenen traint <strong>werkgeheugen, volgehouden aandacht en verwerkingssnelheid</strong>.',
+    faq6_q: 'Met welke bewerkingen moet een beginner beginnen?',
+    faq6_a: 'Alleen optellen en aftrekken. Zorg dat tweecijferig optellen minder dan 5 seconden kost voordat je vermenigvuldigen toevoegt.',
+    compete_tag: 'Uitdagingsmodus', compete_title: 'Oefen alleen — of strijd tegen iemand.', compete_sub: 'Met Numfly kun je vrienden uitdagen, meedoen aan live snelheidsrondes en de wereldranglijst beklimmen. Gratis, geen account nodig.',
+    compete_btn1: 'Begin met oefenen →', compete_btn2: 'Zoek een tegenstander', compete_you: 'Jij',
+    footer_practice: 'Oefenen', footer_privacy: 'Privacy',
+    page_title: 'Hoofdrekenen oefenen: 12 technieken die écht werken | Numfly',
+    page_description: 'Een complete gids voor hoofdrekenen. Leer 12 bewezen technieken om sneller te rekenen — afronden, van links naar rechts, percentagestrategieën en meer.',
+  },
+};
 
-  CANONICAL / TRAILING SLASH: The canonical points to the no-slash URL:
-    https://numfly.pro/how-to-practice-mental-math
-  Ensure your server 301-redirects the trailing-slash variant to this URL to prevent
-  duplicate content penalties.
--->
-<html lang="en">
+type Lang = keyof typeof translations;
+const lang = (Astro.params.lang as Lang) || 'en';
+const t = (key: string): string =>
+  (translations[lang] as Record<string, string>)?.[key] ??
+  (translations['en'] as Record<string, string>)[key] ??
+  key;
+
+const canonicals: Record<string, string> = {
+  en: 'https://numfly.pro/how-to-practice-mental-math',
+  nl: 'https://numfly.pro/nl/hoofdrekenen-oefenen',
+  es: 'https://numfly.pro/es/como-practicar-calculo-mental',
+};
+const canonical = canonicals[lang] || canonicals.en;
+---
+<!DOCTYPE html>
+<html lang={lang}>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Practice Mental Math: 12 Techniques That Actually Work | Numfly</title>
-<meta name="description" content="A complete guide to mental math practice. Learn 12 proven techniques for faster mental math — rounding, left-to-right, percentage shortcuts and more. Free practice tool included.">
+<title>{t('page_title')}</title>
+<meta name="description" content={t('page_description')}>
 <meta name="keywords" content="how to practice mental math, mental math techniques, mental arithmetic tricks, improve mental math, mental math tips, faster mental calculation, mental math for adults">
-<link rel="canonical" href="https://numfly.pro/how-to-practice-mental-math">
+<link rel="canonical" href={canonical}>
 <link rel="alternate" hreflang="en" href="https://numfly.pro/how-to-practice-mental-math">
 <link rel="alternate" hreflang="es" href="https://numfly.pro/es/como-practicar-calculo-mental">
 <link rel="alternate" hreflang="nl" href="https://numfly.pro/nl/hoofdrekenen-oefenen">
 <link rel="alternate" hreflang="x-default" href="https://numfly.pro/how-to-practice-mental-math">
 <meta property="og:title" content="How to Practice Mental Math: 12 Techniques That Actually Work | Numfly">
 <meta property="og:description" content="Learn the techniques used by fast mental calculators. A practical guide with real examples and a free daily training tool.">
-<meta property="og:url" content="https://numfly.pro/how-to-practice-mental-math">
+<meta property="og:url" content={canonical}>
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://numfly.pro/og-image.png">
 <meta property="og:site_name" content="Numfly">
@@ -935,12 +1260,7 @@ footer {
 .reveal.visible { opacity: 1; transform: none; }
 
 /* Language-specific content hiding */
-[data-lang] { display: none; }
-[data-lang].lang-active { display: block; }
-[data-lang-inline] { display: none; }
-[data-lang-inline].lang-active { display: inline; }
-h1[data-lang].lang-active { display: block; }
-p[data-lang].lang-active { display: block; }
+/* i18n handled server-side */
 
 @media (max-width: 600px) {
   body > nav { padding: 0 16px; }
@@ -984,11 +1304,11 @@ p[data-lang].lang-active { display: block; }
   <a href="https://numfly.pro" class="nav-logo">NUM<span>FLY</span>.</a>
   <div class="nav-right">
     <div class="nav-links">
-      <a href="#techniques"><span data-lang-key="nav_techniques">Techniques</span></a>
-      <a href="#routine"><span data-lang-key="nav_routine">Routine</span></a>
+      <a href="#techniques"><span>{t('nav_techniques')}</span></a>
+      <a href="#routine"><span>{t('nav_routine')}</span></a>
       <a href="#faq">FAQ</a>
     </div>
-    <a href="https://numfly.pro/?mode=speed" class="nav-cta" data-lang-key="nav_cta">Practice Free →</a>
+    <a href="https://numfly.pro/?mode=speed" class="nav-cta">{t('nav_cta')}</a>
   </div>
 </nav>
 
@@ -996,10 +1316,10 @@ p[data-lang].lang-active { display: block; }
 <div class="page" id="main-content">
 
   <header class="hero">
-    <div class="hero-tag" data-lang-key="hero_tag">Complete Guide</div>
+    <div class="hero-tag">{t('hero_tag')}</div>
 
     <!-- English -->
-    <h1 data-lang="en" class="lang-active">How to practice<br><span class="ac">mental math</span><br>and get faster</h1>
+    <h1 data-lang="en">How to practice<br><span class="ac">mental math</span><br>and get faster</h1>
     <p class="hero-sub lang-active" data-lang="en">Mental math is a trainable skill. This guide covers 12 techniques that produce the fastest results, how to structure daily practice, and the mistakes that keep most people stuck.</p>
 
     <!-- Spanish -->
@@ -1011,125 +1331,125 @@ p[data-lang].lang-active { display: block; }
     <p class="hero-sub" data-lang="nl">Hoofdrekenen is een trainbare vaardigheid. Deze gids behandelt 12 technieken die de snelste resultaten opleveren, hoe je dagelijkse oefening structureert en de valkuilen waar de meeste mensen op stuiten.</p>
 
     <div class="hero-meta">
-      <span data-lang-key="hero_meta_techniques">12 techniques</span>
+      <span>{t('hero_meta_techniques')}</span>
       <span class="dot">·</span>
-      <span data-lang-key="hero_meta_read">~8 min read</span>
+      <span>{t('hero_meta_read')}</span>
       <span class="dot">·</span>
-      <span data-lang-key="hero_updated">Updated April 2026</span>
+      <span>{t('hero_updated')}</span>
     </div>
   </header>
 
   <div class="stats-row reveal">
     <div class="stat-card">
       <div class="stat-val">2–4</div>
-      <div class="stat-lbl" data-lang-key="stat1">weeks to first gains</div>
+      <div class="stat-lbl">{t('stat1')}</div>
     </div>
     <div class="stat-card">
       <div class="stat-val">10</div>
-      <div class="stat-lbl" data-lang-key="stat2">min/day is enough</div>
+      <div class="stat-lbl">{t('stat2')}</div>
     </div>
     <div class="stat-card">
       <div class="stat-val">4</div>
-      <div class="stat-lbl" data-lang-key="stat3">operations to master</div>
+      <div class="stat-lbl">{t('stat3')}</div>
     </div>
   </div>
 
   <div class="toc reveal" aria-label="Table of contents">
-    <div class="toc-label" data-lang-key="toc_label">In this guide</div>
+    <div class="toc-label">{t('toc_label')}</div>
     <div class="toc-grid">
-      <a href="#why"><span class="toc-n">01</span><span data-lang-key="toc_why">Why it matters</span></a>
-      <a href="#addition"><span class="toc-n">02</span><span data-lang-key="toc_addition">Addition tricks</span></a>
-      <a href="#multiplication"><span class="toc-n">03</span><span data-lang-key="toc_mult">Multiplication shortcuts</span></a>
-      <a href="#percentages"><span class="toc-n">04</span><span data-lang-key="toc_pct">Percentage strategies</span></a>
-      <a href="#routine"><span class="toc-n">05</span><span data-lang-key="toc_routine">Daily routine</span></a>
-      <a href="#levels"><span class="toc-n">06</span><span data-lang-key="toc_levels">Beginner to advanced</span></a>
-      <a href="#mistakes"><span class="toc-n">07</span><span data-lang-key="toc_mistakes">Common mistakes</span></a>
+      <a href="#why"><span class="toc-n">01</span><span>{t('toc_why')}</span></a>
+      <a href="#addition"><span class="toc-n">02</span><span>{t('toc_addition')}</span></a>
+      <a href="#multiplication"><span class="toc-n">03</span><span>{t('toc_mult')}</span></a>
+      <a href="#percentages"><span class="toc-n">04</span><span>{t('toc_pct')}</span></a>
+      <a href="#routine"><span class="toc-n">05</span><span>{t('toc_routine')}</span></a>
+      <a href="#levels"><span class="toc-n">06</span><span>{t('toc_levels')}</span></a>
+      <a href="#mistakes"><span class="toc-n">07</span><span>{t('toc_mistakes')}</span></a>
       <a href="#faq"><span class="toc-n">08</span><span>FAQ</span></a>
     </div>
   </div>
 
   <section id="why">
-    <h2 class="reveal" data-lang-key="why_h2">Why it matters</h2>
+    <h2 class="reveal">{t('why_h2')}</h2>
 
-    <div data-lang="en" class="lang-active">
+    {lang === 'en' && <div>
       <p class="reveal">It's a fair question in the age of smartphones. Why train mental math when a calculator is always one tap away?</p>
       <p class="reveal">Two reasons. First, <strong>speed in context</strong>. In meetings, at the market, during an exam — there are dozens of moments every day where reaching for a phone is slow, awkward, or embarrassing. The person who computes instantly has a real-world edge that compounds.</p>
       <p class="reveal">Second, and more importantly: <strong>mental math trains your working memory</strong>. Holding intermediate results in your head while computing the next step exercises the same cognitive muscles used in reading comprehension, logical reasoning, and focused attention. Regular arithmetic practice produces measurable improvements in general cognitive performance — not just number speed.</p>
       <div class="pull reveal">
         <p>Mental math isn't about memorising tables. It's about building a <em>flexible relationship with numbers</em> — and that fluency transfers everywhere.</p>
-      </div>
+      </div>}
       <p class="reveal">The good news: this is one of the most measurable skills you can train. You can count the seconds it takes to answer a problem today and compare it to eight weeks from now. Visible progress makes it motivating to continue.</p>
     </div>
 
-    <div data-lang="es">
+    {lang === 'es' && <div>
       <p class="reveal">Es una pregunta relevante en la era de los smartphones y calculadoras. ¿Por qué entrenar el cálculo mental cuando siempre hay una calculadora a disposición?</p>
       <p class="reveal">Dos razones. Primero, <strong>velocidad en ciertas situaciones</strong>. En reuniones de trabajo, en el mercado, en un examen — hay decenas de momentos cada día donde sacar el teléfono es lento, incómodo o vergonzoso.</p>
       <p class="reveal">Segundo, y más importante: <strong>el cálculo mental entrena tu memoria de trabajo</strong>. Mantener resultados intermedios en la cabeza mientras calculas el siguiente paso ejercita los mismos músculos cognitivos que la comprensión lectora, el razonamiento lógico y la atención sostenida.</p>
       <div class="pull reveal">
         <p>El cálculo mental no se trata de memorizar tablas. Se trata de construir una <em>relación flexible con los números</em> — y esa fluidez se transfiere a todo.</p>
-      </div>
+      </div>}
     </div>
 
-    <div data-lang="nl">
+    {lang === 'nl' && <div>
       <p class="reveal">Het is een terechte vraag in het tijdperk van smartphones. Waarom hoofdrekenen trainen als er altijd een rekenmachine bij de hand is?</p>
       <p class="reveal">Twee redenen. Ten eerste: <strong>snelheid in context</strong>. In vergaderingen, op de markt, tijdens een examen — er zijn tientallen momenten per dag waarop je telefoon erbij pakken traag, onhandig of ongemakkelijk is.</p>
       <p class="reveal">Ten tweede, en belangrijker: <strong>hoofdrekenen traint je werkgeheugen</strong>. Tussenresultaten in je hoofd bewaren terwijl je de volgende stap berekent, traint dezelfde cognitieve spieren die je nodig hebt voor leesbegrip, logisch redeneren en geconcentreerde aandacht.</p>
       <div class="pull reveal">
         <p>Hoofdrekenen gaat niet over het memoriseren van tafels. Het gaat over het opbouwen van een <em>flexibele relatie met getallen</em> — en die vaardigheid is overal van pas.</p>
-      </div>
+      </div>}
     </div>
   </section>
 
   <div class="cta-card reveal">
     <div class="cta-text">
-      <h3 data-lang-key="cta1_title">Train while you read</h3>
-      <p data-lang-key="cta1_sub">Free speed rounds and daily challenges — no sign-up needed.</p>
+      <h3>{t('cta1_title')}</h3>
+      <p>{t('cta1_sub')}</p>
     </div>
-    <a href="https://numfly.pro/?mode=practice" class="btn-acc" data-lang-key="cta1_btn">Start Practice Mode →</a>
+    <a href="https://numfly.pro/?mode=practice" class="btn-acc">{t('cta1_btn')}</a>
   </div>
 
   <div id="techniques"></div>
 
   <section id="addition">
-    <h2 class="reveal" data-lang-key="addition_h2">Addition &amp; subtraction</h2>
-    <p class="reveal" data-lang-key="addition_intro">These four techniques alone will noticeably speed up your mental math. Work through them in order — each builds on the last.</p>
+    <h2 class="reveal">{t('addition_h2')}</h2>
+    <p class="reveal">{t('addition_intro')}</p>
 
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">01</span>
-        <span class="t-title" data-lang-key="t1_title">Calculate left-to-right, not right-to-left</span>
+        <span class="t-title">{t('t1_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t1_body">School teaches addition right-to-left. This is terrible for mental math — you carry uncertain values into a result you haven't formed yet. <strong>Left-to-right means you build the answer progressively</strong>: at every step you hold a real number in your head, not a partial carry.</p>
+        <p>{t('t1_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t1_ex_label">Example — 347 + 285</span></span>
+          <span class="ex-label"><span>{t('t1_ex_label')}</span></span>
           <div>300 + 200 = 500</div>
           <div>500 + 40 = 540 → 540 + 80 = 620</div>
           <div>620 + 7 = 627 → <span class="hi">627 + 5 = 632 ✓</span></div>
-          <div class="dim"><span data-lang-key="t1_ex_comment">// Each step is a complete number, no uncertain carries</span></div>
+          <div class="dim"><span>{t('t1_ex_comment')}</span></div>
         </div>
-        <p data-lang-key="t1_body2">This single change will speed up your addition more than any other technique. It takes 1–2 weeks to feel natural; after that, right-to-left will feel wrong.</p>
+        <p>{t('t1_body2')}</p>
       </div></div>
     </div>
 
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">02</span>
-        <span class="t-title" data-lang-key="t2_title">Round to a friendly number, then adjust</span>
+        <span class="t-title">{t('t2_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t2_body">Instead of working with awkward numbers, <strong>round one number to the nearest 10 or 100, operate, then subtract the difference</strong>. Dramatically reduces cognitive load.</p>
+        <p>{t('t2_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t2_ex1_label">Addition — 68 + 47</span></span>
-          <div><span data-lang-key="t2_ex1_step1">Round 68 → 70 (+2)</span></div>
+          <span class="ex-label"><span>{t('t2_ex1_label')}</span></span>
+          <div><span>{t('t2_ex1_step1')}</span></div>
           <div>70 + 47 = 117</div>
           <div><span class="hi">117 − 2 = 115 ✓</span></div>
         </div>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t2_ex2_label">Subtraction — 293 − 148</span></span>
-          <div><span data-lang-key="t2_ex2_step1">Round 293 → 300 (+7)</span></div>
+          <span class="ex-label"><span>{t('t2_ex2_label')}</span></span>
+          <div><span>{t('t2_ex2_step1')}</span></div>
           <div>300 − 148 = 152</div>
           <div><span class="hi">152 − 7 = 145 ✓</span></div>
         </div>
@@ -1139,16 +1459,16 @@ p[data-lang].lang-active { display: block; }
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">03</span>
-        <span class="t-title" data-lang-key="t3_title">Spot compatible pairs first</span>
+        <span class="t-title">{t('t3_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t3_body">When adding a list of numbers, <strong>scan for pairs that sum to 10 or 100 first</strong>. Add those together, then handle the rest. Turns hard addition into easy addition.</p>
+        <p>{t('t3_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t3_ex_label">Example — 37 + 53 + 24 + 16 + 45</span></span>
-          <div><span data-lang-key="t3_ex_step1">Spot: 37 + 53 = 90 · 24 + 16 = 40</span></div>
+          <span class="ex-label"><span>{t('t3_ex_label')}</span></span>
+          <div><span>{t('t3_ex_step1')}</span></div>
           <div><span class="hi">90 + 40 + 45 = 175 ✓</span></div>
-          <div class="dim"><span data-lang-key="t3_ex_comment">// Two hard additions become one easy one</span></div>
+          <div class="dim"><span>{t('t3_ex_comment')}</span></div>
         </div>
       </div></div>
     </div>
@@ -1156,43 +1476,43 @@ p[data-lang].lang-active { display: block; }
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">04</span>
-        <span class="t-title" data-lang-key="t4_title">Count up instead of subtracting</span>
+        <span class="t-title">{t('t4_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t4_body">For subtraction, ask: <em>"what do I add to reach the target?"</em> <strong>Count up from the smaller number in convenient steps</strong> — eliminates borrowing entirely.</p>
+        <p>{t('t4_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t4_ex_label">Example — 1000 − 437</span></span>
+          <span class="ex-label"><span>{t('t4_ex_label')}</span></span>
           <div>437 → 440 (+3)</div>
           <div>440 → 500 (+60)</div>
           <div>500 → 1000 (+500)</div>
           <div><span class="hi">3 + 60 + 500 = 563 ✓</span></div>
         </div>
-        <p data-lang-key="t4_body2">This is how shopkeepers made change before electronic tills. For large gaps it's significantly faster than direct subtraction.</p>
+        <p>{t('t4_body2')}</p>
       </div></div>
     </div>
   </section>
 
   <section id="multiplication">
-    <h2 class="reveal" data-lang-key="mult_h2">Multiplication</h2>
-    <p class="reveal" data-lang-key="mult_intro">Four shortcuts that cover 80% of multiplication you'll encounter outside a textbook.</p>
+    <h2 class="reveal">{t('mult_h2')}</h2>
+    <p class="reveal">{t('mult_intro')}</p>
 
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">05</span>
-        <span class="t-title" data-lang-key="t5_title">Use the distributive property</span>
+        <span class="t-title">{t('t5_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t5_body"><strong>Split one number into easy parts, multiply each, then add the results.</strong> The most general multiplication technique — works for any number, any size.</p>
+        <p>{t('t5_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t5_ex1_label">Example — 47 × 8</span></span>
+          <span class="ex-label"><span>{t('t5_ex1_label')}</span></span>
           <div>40 × 8 = 320</div>
           <div>7 × 8 = 56</div>
           <div><span class="hi">320 + 56 = 376 ✓</span></div>
         </div>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t5_ex2_label">Example — 23 × 14</span></span>
+          <span class="ex-label"><span>{t('t5_ex2_label')}</span></span>
           <div>23 × 10 = 230</div>
           <div>23 × 4 = 92</div>
           <div><span class="hi">230 + 92 = 322 ✓</span></div>
@@ -1203,11 +1523,11 @@ p[data-lang].lang-active { display: block; }
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">06</span>
-        <span class="t-title" data-lang-key="t6_title">Multiply by 5: halve, then ×10</span>
+        <span class="t-title">{t('t6_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t6_body">5 = 10 ÷ 2. So <strong>any ×5 becomes: halve the number, then shift the decimal.</strong> Always faster than multiplying by 5 directly.</p>
+        <p>{t('t6_body')}</p>
         <div class="math-box">
           <div>84 × 5 → 84 ÷ 2 = 42 → <span class="hi">42 × 10 = 420 ✓</span></div>
           <div>124 × 5 → 124 ÷ 2 = 62 → <span class="hi">62 × 10 = 620 ✓</span></div>
@@ -1218,13 +1538,13 @@ p[data-lang].lang-active { display: block; }
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">07</span>
-        <span class="t-title" data-lang-key="t7_title">Multiply by 9: ×10 then subtract the original</span>
+        <span class="t-title">{t('t7_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t7_body">9 = 10 − 1, so <strong>n × 9 = (n × 10) − n</strong>. Same logic applies to ×11 (add n), ×19, ×99 — anything near a round number.</p>
+        <p>{t('t7_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t7_ex_label">Example — 67 × 9</span></span>
+          <span class="ex-label"><span>{t('t7_ex_label')}</span></span>
           <div>67 × 10 = 670</div>
           <div><span class="hi">670 − 67 = 603 ✓</span></div>
         </div>
@@ -1234,19 +1554,19 @@ p[data-lang].lang-active { display: block; }
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">08</span>
-        <span class="t-title" data-lang-key="t8_title">Multiply by 11: add the neighbours</span>
+        <span class="t-title">{t('t8_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t8_body">For any two-digit number × 11: <strong>write the first digit, add the two digits together for the middle, write the last digit.</strong> If the middle sum exceeds 9, carry 1 to the left.</p>
+        <p>{t('t8_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t8_ex1_label">Example — 43 × 11</span></span>
-          <div><span data-lang-key="t8_ex1_step">4 _ 3 → middle: 4 + 3 = 7</span></div>
+          <span class="ex-label"><span>{t('t8_ex1_label')}</span></span>
+          <div><span>{t('t8_ex1_step')}</span></div>
           <div><span class="hi">4 7 3 = 473 ✓</span></div>
         </div>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t8_ex2_label">Example — 78 × 11</span></span>
-          <div><span data-lang-key="t8_ex2_step">7 _ 8 → middle: 7 + 8 = 15, carry 1</span></div>
+          <span class="ex-label"><span>{t('t8_ex2_label')}</span></span>
+          <div><span>{t('t8_ex2_step')}</span></div>
           <div><span class="hi">(7+1) 5 8 = 858 ✓</span></div>
         </div>
       </div></div>
@@ -1254,19 +1574,19 @@ p[data-lang].lang-active { display: block; }
   </section>
 
   <section id="percentages">
-    <h2 class="reveal" data-lang-key="pct_h2">Percentages</h2>
-    <p class="reveal" data-lang-key="pct_intro">The most practically useful mental math skill for everyday life: tips, discounts, tax, interest. All comes down to these four strategies.</p>
+    <h2 class="reveal">{t('pct_h2')}</h2>
+    <p class="reveal">{t('pct_intro')}</p>
 
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">09</span>
-        <span class="t-title" data-lang-key="t9_title">Find 1%, then scale up</span>
+        <span class="t-title">{t('t9_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t9_body">1% of any number = move the decimal two places left. <strong>Once you have 1%, build any percentage by scaling.</strong></p>
+        <p>{t('t9_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t9_ex_label">Example — 13% of 400</span></span>
+          <span class="ex-label"><span>{t('t9_ex_label')}</span></span>
           <div>1% = 4</div>
           <div>10% = 40 · 3% = 12</div>
           <div><span class="hi">10% + 3% = 40 + 12 = 52 ✓</span></div>
@@ -1277,16 +1597,16 @@ p[data-lang].lang-active { display: block; }
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">10</span>
-        <span class="t-title" data-lang-key="t10_title">Flip the percentage (x% of y = y% of x)</span>
+        <span class="t-title">{t('t10_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t10_body">Percentage is commutative. <strong>If one direction looks hard, flip it.</strong> 4% of 75 is identical to 75% of 4 — but one is trivial.</p>
+        <p>{t('t10_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t10_ex_label">Example — 4% of 75</span></span>
-          <div><span data-lang-key="t10_ex_step1">Flip: 75% of 4 = ¾ of 4</span></div>
+          <span class="ex-label"><span>{t('t10_ex_label')}</span></span>
+          <div><span>{t('t10_ex_step1')}</span></div>
           <div><span class="hi">¾ × 4 = 3 ✓</span></div>
-          <div class="dim"><span data-lang-key="t10_ex_comment">// Far easier than 75 × 0.04</span></div>
+          <div class="dim"><span>{t('t10_ex_comment')}</span></div>
         </div>
       </div></div>
     </div>
@@ -1294,11 +1614,11 @@ p[data-lang].lang-active { display: block; }
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">11</span>
-        <span class="t-title" data-lang-key="t11_title">Use fraction equivalents for common percentages</span>
+        <span class="t-title">{t('t11_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t11_body">The fastest percentage work is fraction conversion. <strong>Memorise these and skip decimal multiplication entirely:</strong></p>
+        <p>{t('t11_body')}</p>
         <div class="math-box">
           <div>10% = ÷10 · 20% = ÷5 · 25% = ÷4</div>
           <div>33⅓% = ÷3 · 50% = ÷2 · 75% = ×3÷4</div>
@@ -1310,17 +1630,17 @@ p[data-lang].lang-active { display: block; }
     <div class="technique reveal">
       <button class="t-header" onclick="tog(this)" aria-expanded="false">
         <span class="t-num">12</span>
-        <span class="t-title" data-lang-key="t12_title">Tip calculation: start from 10%, then adjust</span>
+        <span class="t-title">{t('t12_title')}</span>
         <span class="t-arrow" aria-hidden="true">▾</span>
       </button>
       <div class="t-body"><div class="t-inner">
-        <p data-lang-key="t12_body">For any tip or service charge: <strong>find 10% first (shift the decimal), then scale up or adjust</strong> to your target.</p>
+        <p>{t('t12_body')}</p>
         <div class="math-box">
-          <span class="ex-label"><span data-lang-key="t12_ex_label">Example — 15% of €80</span></span>
+          <span class="ex-label"><span>{t('t12_ex_label')}</span></span>
           <div>10% = 8 · 5% = 4</div>
           <div><span class="hi">10% + 5% = 8 + 4 = €12 ✓</span></div>
         </div>
-        <p data-lang-key="t12_body2">In practice: round to the nearest 5% and move on. Speed matters more than precision here.</p>
+        <p>{t('t12_body2')}</p>
       </div></div>
     </div>
   </section>
@@ -1328,79 +1648,79 @@ p[data-lang].lang-active { display: block; }
   <div class="table-wrap reveal">
     <table>
       <thead>
-        <tr><th data-lang-key="table_technique">Technique</th><th data-lang-key="table_level">Level</th><th data-lang-key="table_best">Best for</th><th data-lang-key="table_impact">Daily impact</th></tr>
+        <tr><th>{t('table_technique')}</th><th>{t('table_level')}</th><th>{t('table_best')}</th><th>{t('table_impact')}</th></tr>
       </thead>
       <tbody>
-        <tr><td data-lang-key="trow1_name">Left-to-right addition</td><td><span class="pill p-easy" data-lang-key="trow_easy">Easy</span></td><td data-lang-key="trow1_best">All addition</td><td>★★★★★</td></tr>
-        <tr><td data-lang-key="trow2_name">Round and adjust</td><td><span class="pill p-easy" data-lang-key="trow_easy2">Easy</span></td><td data-lang-key="trow2_best">Add &amp; subtract</td><td>★★★★★</td></tr>
-        <tr><td data-lang-key="trow3_name">Find 1%, scale up</td><td><span class="pill p-easy" data-lang-key="trow_easy3">Easy</span></td><td data-lang-key="trow3_best">Percentages</td><td>★★★★★</td></tr>
-        <tr><td data-lang-key="trow4_name">Count up (complement)</td><td><span class="pill p-easy" data-lang-key="trow_easy4">Easy</span></td><td data-lang-key="trow4_best">Subtraction</td><td>★★★★☆</td></tr>
-        <tr><td data-lang-key="trow5_name">Distributive property</td><td><span class="pill p-med" data-lang-key="trow_med">Medium</span></td><td data-lang-key="trow5_best">Multiplication</td><td>★★★★★</td></tr>
-        <tr><td data-lang-key="trow6_name">Flip the percentage</td><td><span class="pill p-med" data-lang-key="trow_med2">Medium</span></td><td data-lang-key="trow6_best">Percentages</td><td>★★★★☆</td></tr>
-        <tr><td data-lang-key="trow7_name">×5 (halve then ×10)</td><td><span class="pill p-med" data-lang-key="trow_med3">Medium</span></td><td data-lang-key="trow7_best">×5 problems</td><td>★★★☆☆</td></tr>
-        <tr><td data-lang-key="trow8_name">×9 (×10 minus n)</td><td><span class="pill p-med" data-lang-key="trow_med4">Medium</span></td><td data-lang-key="trow8_best">×9, ×11, ×19</td><td>★★★☆☆</td></tr>
-        <tr><td data-lang-key="trow9_name">Fraction shortcuts</td><td><span class="pill p-hard" data-lang-key="trow_hard">Hard</span></td><td data-lang-key="trow9_best">25%, 33%, 75%</td><td>★★★★☆</td></tr>
-        <tr><td data-lang-key="trow10_name">Squares ending in 5</td><td><span class="pill p-hard" data-lang-key="trow_hard2">Hard</span></td><td data-lang-key="trow10_best">Quick squares</td><td>★★☆☆☆</td></tr>
+        <tr><td>{t('trow1_name')}</td><td><span class="pill p-easy">{t('trow_easy')}</span></td><td>{t('trow1_best')}</td><td>★★★★★</td></tr>
+        <tr><td>{t('trow2_name')}</td><td><span class="pill p-easy">{t('trow_easy2')}</span></td><td>{t('trow2_best')}</td><td>★★★★★</td></tr>
+        <tr><td>{t('trow3_name')}</td><td><span class="pill p-easy">{t('trow_easy3')}</span></td><td>{t('trow3_best')}</td><td>★★★★★</td></tr>
+        <tr><td>{t('trow4_name')}</td><td><span class="pill p-easy">{t('trow_easy4')}</span></td><td>{t('trow4_best')}</td><td>★★★★☆</td></tr>
+        <tr><td>{t('trow5_name')}</td><td><span class="pill p-med">{t('trow_med')}</span></td><td>{t('trow5_best')}</td><td>★★★★★</td></tr>
+        <tr><td>{t('trow6_name')}</td><td><span class="pill p-med">{t('trow_med2')}</span></td><td>{t('trow6_best')}</td><td>★★★★☆</td></tr>
+        <tr><td>{t('trow7_name')}</td><td><span class="pill p-med">{t('trow_med3')}</span></td><td>{t('trow7_best')}</td><td>★★★☆☆</td></tr>
+        <tr><td>{t('trow8_name')}</td><td><span class="pill p-med">{t('trow_med4')}</span></td><td>{t('trow8_best')}</td><td>★★★☆☆</td></tr>
+        <tr><td>{t('trow9_name')}</td><td><span class="pill p-hard">{t('trow_hard')}</span></td><td>{t('trow9_best')}</td><td>★★★★☆</td></tr>
+        <tr><td>{t('trow10_name')}</td><td><span class="pill p-hard">{t('trow_hard2')}</span></td><td>{t('trow10_best')}</td><td>★★☆☆☆</td></tr>
       </tbody>
     </table>
   </div>
 
   <section id="routine">
-    <h2 class="reveal" data-lang-key="routine_h2">Daily routine</h2>
-    <p class="reveal" data-lang-key="routine_intro1">Knowing techniques is not the same as being fast. Speed comes from <strong>automaticity</strong> — where you no longer consciously apply a method, it just happens. Getting there requires structure.</p>
-    <p class="reveal" data-lang-key="routine_intro2">This routine takes <strong>10–15 minutes total</strong> and produces real improvement within 3–4 weeks.</p>
+    <h2 class="reveal">{t('routine_h2')}</h2>
+    <p class="reveal">{t('routine_intro1')}</p>
+    <p class="reveal">{t('routine_intro2')}</p>
 
     <div class="routine-row reveal">
       <div class="routine-step">
         <div class="r-badge">2 min</div>
         <div class="r-content">
-          <h4 data-lang-key="routine_warmup_title">Warm-Up</h4>
-          <p data-lang-key="routine_warmup_body">Easy addition &amp; subtraction, ~20 problems. Get your brain into number mode.</p>
+          <h4>{t('routine_warmup_title')}</h4>
+          <p>{t('routine_warmup_body')}</p>
         </div>
       </div>
       <div class="routine-step">
         <div class="r-badge">5 min</div>
         <div class="r-content">
-          <h4 data-lang-key="routine_speed_title">Speed Round</h4>
-          <p data-lang-key="routine_speed_body">Mixed operations, Medium difficulty, clock running. Track your score and try to beat it every session.</p>
+          <h4>{t('routine_speed_title')}</h4>
+          <p>{t('routine_speed_body')}</p>
         </div>
       </div>
       <div class="routine-step">
         <div class="r-badge">5 min</div>
         <div class="r-content">
-          <h4 data-lang-key="routine_drill_title">Weak-Spot Drill</h4>
-          <p data-lang-key="routine_drill_body">Whichever operation you missed most — drill that specifically. This is where real gains come from.</p>
+          <h4>{t('routine_drill_title')}</h4>
+          <p>{t('routine_drill_body')}</p>
         </div>
       </div>
     </div>
 
 
     <div class="callout reveal">
-      <div class="callout-tag" data-lang-key="callout_key_principle">Key principle</div>
-      <p data-lang-key="callout_consistency"><strong>Consistency beats intensity.</strong> 10 minutes every day produces far better results than 90 minutes on a Saturday. Mental math improvement is almost entirely a function of practice time spread out so your brain can consolidate between sessions.</p>
+      <div class="callout-tag">{t('callout_key_principle')}</div>
+      <p>{t('callout_consistency')}</p>
     </div>
 
-    <h3 class="reveal" data-lang-key="results_h3">How long until results?</h3>
+    <h3 class="reveal">{t('results_h3')}</h3>
     <div class="timeline reveal">
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-content">
-          <div class="tl-when" data-lang-key="tl1_when">2–3 weeks</div>
-          <div class="tl-what" data-lang-key="tl1_what">Certain problem types feel noticeably easier</div>
+          <div class="tl-when">{t('tl1_when')}</div>
+          <div class="tl-what">{t('tl1_what')}</div>
         </div>
       </div>
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-content">
-          <div class="tl-when" data-lang-key="tl2_when">6–8 weeks</div>
-          <div class="tl-what" data-lang-key="tl2_what">Measurable speed gains on timed tests</div>
+          <div class="tl-when">{t('tl2_when')}</div>
+          <div class="tl-what">{t('tl2_what')}</div>
         </div>
       </div>
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-content">
-          <div class="tl-when" data-lang-key="tl3_when">3–6 months</div>
-          <div class="tl-what" data-lang-key="tl3_what">Everyday calculation feels effortless. Expect a plateau around weeks 2–3, then a breakthrough as techniques become automatic.</div>
+          <div class="tl-when">{t('tl3_when')}</div>
+          <div class="tl-what">{t('tl3_what')}</div>
         </div>
       </div>
     </div>
@@ -1408,49 +1728,49 @@ p[data-lang].lang-active { display: block; }
 
   <div class="cta-card reveal">
     <div class="cta-text">
-      <h3 data-lang-key="cta2_title">Ready to test yourself?</h3>
-      <p data-lang-key="cta2_sub">Numfly tracks score, streak, and accuracy automatically across every session.</p>
+      <h3>{t('cta2_title')}</h3>
+      <p>{t('cta2_sub')}</p>
     </div>
-    <a href="https://numfly.pro/?mode=speed" class="btn-acc" data-lang-key="cta2_btn">Start a Speed Round →</a>
+    <a href="https://numfly.pro/?mode=speed" class="btn-acc">{t('cta2_btn')}</a>
   </div>
 
   <section id="levels">
-    <h2 class="reveal" data-lang-key="levels_h2">Beginner to advanced</h2>
-    <p class="reveal" data-lang-key="levels_intro">One of the most common mistakes is practicing at the wrong level. Too easy and you're not building capacity; too hard and you're reinforcing errors.</p>
+    <h2 class="reveal">{t('levels_h2')}</h2>
+    <p class="reveal">{t('levels_intro')}</p>
 
     <div class="callout reveal">
-      <div class="callout-tag" data-lang-key="callout_calibration">Calibration</div>
-      <p data-lang-key="callout_calibration_body">Time yourself on 10 mixed problems. More than 30 seconds per problem → start Easy. 10–20 seconds → Medium. Under 10 seconds → Hard. Pick the difficulty that challenges you without causing errors.</p>
+      <div class="callout-tag">{t('callout_calibration')}</div>
+      <p>{t('callout_calibration_body')}</p>
     </div>
 
-    <h3 class="reveal" data-lang-key="beginner_h3">Beginner</h3>
-    <p class="reveal" data-lang-key="beginner_body">Addition and subtraction only, left-to-right method and rounding. Don't move to multiplication until you answer two-digit addition in under 5 seconds without stress. Most adults underestimate how much their addition can improve — it's often the hidden bottleneck.</p>
+    <h3 class="reveal">{t('beginner_h3')}</h3>
+    <p class="reveal">{t('beginner_body')}</p>
 
-    <h3 class="reveal" data-lang-key="intermediate_h3">Intermediate</h3>
-    <p class="reveal" data-lang-key="intermediate_body">Drill multiplication automaticity and percentage fluency. Work through the 12–20× tables until they're instant. Practice percentages from real situations (bills, discounts, interest). Use the distributive property for anything above the times tables.</p>
+    <h3 class="reveal">{t('intermediate_h3')}</h3>
+    <p class="reveal">{t('intermediate_body')}</p>
 
-    <h3 class="reveal" data-lang-key="advanced_h3">Advanced</h3>
-    <p class="reveal" data-lang-key="advanced_body">Your bottleneck is working memory and multi-step calculation. Practice problems requiring you to hold intermediate results while computing the next step — Numfly's Lightning mode is designed exactly for this.</p>
+    <h3 class="reveal">{t('advanced_h3')}</h3>
+    <p class="reveal">{t('advanced_body')}</p>
   </section>
 
   <section id="mistakes">
-    <h2 class="reveal" data-lang-key="mistakes_h2">Common mistakes</h2>
+    <h2 class="reveal">{t('mistakes_h2')}</h2>
 
     <div class="callout reveal">
-      <div class="callout-tag" data-lang-key="mistake1_tag">Mistake 1</div>
-      <p data-lang-key="mistake1_body"><strong>Only practicing when you feel like it.</strong> Sporadic sessions don't build automaticity. The brain needs consistent repetition — 10 minutes daily beats 60 minutes twice a week.</p>
+      <div class="callout-tag">{t('mistake1_tag')}</div>
+      <p>{t('mistake1_body')}</p>
     </div>
     <div class="callout reveal">
-      <div class="callout-tag" data-lang-key="mistake2_tag">Mistake 2</div>
-      <p data-lang-key="mistake2_body"><strong>Practicing only your strong operations.</strong> If multiplication is slow, drilling addition won't help. Identify your weakest operation and target it directly.</p>
+      <div class="callout-tag">{t('mistake2_tag')}</div>
+      <p>{t('mistake2_body')}</p>
     </div>
     <div class="callout reveal">
-      <div class="callout-tag" data-lang-key="mistake3_tag">Mistake 3</div>
-      <p data-lang-key="mistake3_body"><strong>Never practicing under time pressure.</strong> Untimed practice builds accuracy but not speed. Timed sessions train your brain to retrieve answers quickly rather than carefully.</p>
+      <div class="callout-tag">{t('mistake3_tag')}</div>
+      <p>{t('mistake3_body')}</p>
     </div>
     <div class="callout reveal">
-      <div class="callout-tag" data-lang-key="mistake4_tag">Mistake 4</div>
-      <p data-lang-key="mistake4_body"><strong>Skipping easy levels too fast.</strong> Automaticity comes from repetition at a comfortable level — not a challenging one. If you're consciously applying a technique, it isn't automatic yet.</p>
+      <div class="callout-tag">{t('mistake4_tag')}</div>
+      <p>{t('mistake4_body')}</p>
     </div>
   </section>
 
@@ -1459,45 +1779,45 @@ p[data-lang].lang-active { display: block; }
     <div class="reveal">
       <div class="faq-item">
         <button class="faq-q" onclick="faq(this)">
-          <span class="fq-t" data-lang-key="faq1_q">How long does it take to get better at mental math?</span>
+          <span class="fq-t">{t('faq1_q')}</span>
           <span class="fq-icon">+</span>
         </button>
-        <div class="faq-a"><p data-lang-key="faq1_a">Most people notice a real difference within <strong>2–4 weeks of daily practice</strong> (10 minutes/day). Measurable speed gains come at 6–8 weeks. Full automaticity typically takes 3–6 months. Consistency is the key variable, not session length.</p></div>
+        <div class="faq-a"><p set:html={t("faq1_a")}></p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="faq(this)">
-          <span class="fq-t" data-lang-key="faq2_q">What is the best way to practice mental math as an adult?</span>
+          <span class="fq-t">{t('faq2_q')}</span>
           <span class="fq-icon">+</span>
         </button>
-        <div class="faq-a"><p data-lang-key="faq2_a">Short timed sessions with immediate feedback. Timed practice forces your brain to prioritise speed, not just correctness. Numfly's speed round mode — 2 minutes, mixed operations — is specifically built around this principle.</p></div>
+        <div class="faq-a"><p set:html={t("faq2_a")}></p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="faq(this)">
-          <span class="fq-t" data-lang-key="faq3_q">Is mental math a talent or a learned skill?</span>
+          <span class="fq-t">{t('faq3_q')}</span>
           <span class="fq-icon">+</span>
         </button>
-        <div class="faq-a"><p data-lang-key="faq3_a">Overwhelmingly a <strong>learned skill</strong>. What looks like natural talent is almost always accumulated practice. World-class mental calculators trained to get there. Almost anyone can dramatically improve with consistent, structured practice.</p></div>
+        <div class="faq-a"><p set:html={t("faq3_a")}></p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="faq(this)">
-          <span class="fq-t" data-lang-key="faq4_q">Should I practice all operations or focus on one?</span>
+          <span class="fq-t">{t('faq4_q')}</span>
           <span class="fq-icon">+</span>
         </button>
-        <div class="faq-a"><p data-lang-key="faq4_a">Identify your weakest operation and <strong>focus there</strong> while maintaining the others. Progress on your weak spot lifts your overall ceiling. Numfly's statistics page shows accuracy broken down by operation type.</p></div>
+        <div class="faq-a"><p set:html={t("faq4_a")}></p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="faq(this)">
-          <span class="fq-t" data-lang-key="faq5_q">Does mental math training help with other cognitive skills?</span>
+          <span class="fq-t">{t('faq5_q')}</span>
           <span class="fq-icon">+</span>
         </button>
-        <div class="faq-a"><p data-lang-key="faq5_a">Yes. Regular arithmetic training exercises <strong>working memory, sustained attention, and processing speed</strong>. Studies have found improvements in reading comprehension and logical reasoning following arithmetic training in both children and adults.</p></div>
+        <div class="faq-a"><p set:html={t("faq5_a")}></p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="faq(this)">
-          <span class="fq-t" data-lang-key="faq6_q">What operations should a beginner start with?</span>
+          <span class="fq-t">{t('faq6_q')}</span>
           <span class="fq-icon">+</span>
         </button>
-        <div class="faq-a"><p data-lang-key="faq6_a">Addition and subtraction only. Get to the point where two-digit addition takes under 5 seconds before adding multiplication. Fast, automatic addition makes every other operation easier — most beginners underestimate how much improvement is available here.</p></div>
+        <div class="faq-a"><p set:html={t("faq6_a")}></p></div>
       </div>
     </div>
   </section>
@@ -1508,18 +1828,18 @@ p[data-lang].lang-active { display: block; }
 <div class="compete-cta-wrap">
   <div class="compete-cta">
     <div class="compete-left">
-      <div class="compete-tag" data-lang-key="compete_tag">Challenge Mode</div>
-      <div class="compete-title" data-lang-key="compete_title">Practice alone — or race someone.</div>
-      <p class="compete-sub" data-lang-key="compete_sub">Numfly lets you challenge friends, join live speed rounds, and climb the global leaderboard. Free, no account required to start.</p>
+      <div class="compete-tag">{t('compete_tag')}</div>
+      <div class="compete-title">{t('compete_title')}</div>
+      <p class="compete-sub">{t('compete_sub')}</p>
       <div class="compete-btns">
-        <a href="https://numfly.pro/?mode=practice" class="btn-acc" data-lang-key="compete_btn1">Start Practicing →</a>
-        <a href="https://numfly.pro/?mode=compete" class="btn-ghost" data-lang-key="compete_btn2">Find a Match</a>
+        <a href="https://numfly.pro/?mode=practice" class="btn-acc">{t('compete_btn1')}</a>
+        <a href="https://numfly.pro/?mode=compete" class="btn-ghost">{t('compete_btn2')}</a>
       </div>
     </div>
     <div class="compete-right" aria-hidden="true">
       <div class="vs-card">
         <div class="vs-player you">
-          <div class="vs-name" data-lang-key="compete_you">You</div>
+          <div class="vs-name">{t('compete_you')}</div>
           <div class="vs-score">14</div>
           <div class="vs-bar"><div class="vs-fill you-fill"></div></div>
         </div>
@@ -1537,8 +1857,8 @@ p[data-lang].lang-active { display: block; }
 <footer>
   <a href="https://numfly.pro" class="f-logo">NUM<span>FLY</span>.</a>
   <div class="f-links">
-    <a href="https://numfly.pro" data-lang-key="footer_practice">Practice</a>
-    <a href="/?mode=privacy" data-lang-key="footer_privacy">Privacy</a>
+    <a href="https://numfly.pro">{t('footer_practice')}</a>
+    <a href="/?mode=privacy">{t('footer_privacy')}</a>
   </div>
   <div class="f-copy">© 2026 Numfly</div>
 </footer>
@@ -1548,7 +1868,7 @@ p[data-lang].lang-active { display: block; }
 const bar = document.getElementById('reading-bar');
 window.addEventListener('scroll', () => {
   const d = document.documentElement;
-  bar.style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+  if (bar) bar.style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
 }, { passive: true });
 
 // ─── Scroll reveal ─────────────────────────────────────────────
@@ -1557,412 +1877,22 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// ─── Technique accordion (multiple open allowed) ───────────────
-function tog(header) {
+// ─── Technique accordion ───────────────────────────────────────
+function tog(header: HTMLElement) {
   const technique = header.closest('.technique');
+  if (!technique) return;
   technique.classList.toggle('open');
   header.setAttribute('aria-expanded', technique.classList.contains('open') ? 'true' : 'false');
 }
 
 // ─── FAQ accordion ─────────────────────────────────────────────
-function faq(btn) {
+function faq(btn: HTMLElement) {
   const item = btn.closest('.faq-item');
+  if (!item) return;
   const was = item.classList.contains('open');
   document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
   if (!was) item.classList.add('open');
 }
-
-// ─── Translations ──────────────────────────────────────────────
-const translations = {
-  en: {
-    nav_techniques: 'Techniques', nav_routine: 'Routine', nav_cta: 'Practice Free →',
-    hero_tag: 'Complete Guide', hero_meta_techniques: '12 techniques', hero_meta_read: '~8 min read', hero_updated: 'Updated April 2026',
-    stat1: 'weeks to first gains', stat2: 'min/day is enough', stat3: 'operations to master',
-    toc_label: 'In this guide', toc_why: 'Why it matters', toc_addition: 'Addition tricks',
-    toc_mult: 'Multiplication shortcuts', toc_pct: 'Percentage strategies', toc_routine: 'Daily routine',
-    toc_levels: 'Beginner to advanced', toc_mistakes: 'Common mistakes',
-    why_h2: 'Why it matters',
-    cta1_title: 'Train while you read', cta1_sub: 'Free speed rounds and daily challenges — no sign-up needed.', cta1_btn: 'Start Practice Mode →',
-    addition_h2: 'Addition &amp; subtraction', addition_intro: 'These four techniques alone will noticeably speed up your mental math. Work through them in order — each builds on the last.',
-    t1_title: 'Calculate left-to-right, not right-to-left',
-    t1_body: 'School teaches addition right-to-left. This is terrible for mental math — you carry uncertain values into a result you haven\'t formed yet. <strong>Left-to-right means you build the answer progressively</strong>: at every step you hold a real number in your head, not a partial carry.',
-    t1_body2: 'This single change will speed up your addition more than any other technique. It takes 1–2 weeks to feel natural; after that, right-to-left will feel wrong.',
-    t1_ex_comment: '// Each step is a complete number, no uncertain carries',
-    t2_ex1_label: 'Addition — 68 + 47', t2_ex1_step1: 'Round 68 → 70 (+2)',
-    t2_ex2_label: 'Subtraction — 293 − 148', t2_ex2_step1: 'Round 293 → 300 (+7)',
-    t3_ex_label: 'Example — 37 + 53 + 24 + 16 + 45', t3_ex_step1: 'Spot: 37 + 53 = 90 · 24 + 16 = 40', t3_ex_comment: '// Two hard additions become one easy one',
-    t4_ex_label: 'Example — 1000 − 437',
-    t10_ex_label: 'Example — 4% of 75', t10_ex_step1: 'Flip: 75% of 4 = ¾ of 4', t10_ex_comment: '// Far easier than 75 × 0.04',
-    t2_title: 'Round to a friendly number, then adjust',
-    t2_body: 'Instead of working with awkward numbers, <strong>round one number to the nearest 10 or 100, operate, then subtract the difference</strong>. Dramatically reduces cognitive load.',
-    t3_title: 'Spot compatible pairs first',
-    t3_body: 'When adding a list of numbers, <strong>scan for pairs that sum to 10 or 100 first</strong>. Add those together, then handle the rest. Turns hard addition into easy addition.',
-    t4_title: 'Count up instead of subtracting',
-    t4_body: 'For subtraction, ask: <em>"what do I add to reach the target?"</em> <strong>Count up from the smaller number in convenient steps</strong> — eliminates borrowing entirely.',
-    t4_body2: 'This is how shopkeepers made change before electronic tills. For large gaps it\'s significantly faster than direct subtraction.',
-    t5_title: 'Use the distributive property',
-    mult_h2: 'Multiplication', mult_intro: 'Four shortcuts that cover 80% of multiplication you\'ll encounter outside a textbook.',
-    pct_h2: 'Percentages', pct_intro: 'The most practically useful mental math skill for everyday life: tips, discounts, tax, interest. All comes down to these four strategies.',
-    table_technique: 'Technique', table_level: 'Level', table_best: 'Best for', table_impact: 'Daily impact',
-    routine_h2: 'Daily routine',
-    routine_intro1: 'Knowing techniques is not the same as being fast. Speed comes from <strong>automaticity</strong> — where you no longer consciously apply a method, it just happens. Getting there requires structure.',
-    routine_intro2: 'This routine takes <strong>10–15 minutes total</strong> and produces real improvement within 3–4 weeks.',
-    routine_warmup_title: 'Warm-Up', routine_warmup_body: 'Easy addition &amp; subtraction, ~20 problems. Get your brain into number mode.',
-    routine_speed_title: 'Speed Round', routine_speed_body: 'Mixed operations, Medium difficulty, clock running. Track your score and try to beat it every session.',
-    routine_drill_title: 'Weak-Spot Drill', routine_drill_body: 'Whichever operation you missed most — drill that specifically. This is where real gains come from.',
-    mockup_label: 'Numfly — Lightning Mode in action', mockup_mode: '⚡ Lightning Mode · Round 3 of 5',
-    mockup_score: 'Score', mockup_accuracy: 'Accuracy', mockup_streak: 'Streak',
-    callout_key_principle: 'Key principle',
-    callout_consistency: '<strong>Consistency beats intensity.</strong> 10 minutes every day produces far better results than 90 minutes on a Saturday. Mental math improvement is almost entirely a function of practice time spread out so your brain can consolidate between sessions.',
-    results_h3: 'How long until results?',
-    results_body: '<strong>2–3 weeks:</strong> certain problem types feel noticeably easier. <strong>6–8 weeks:</strong> measurable speed gains on timed tests. <strong>3–6 months:</strong> everyday calculation feels effortless. Expect a plateau around weeks 2–3, then a breakthrough as techniques become automatic.',
-    tl1_when: '2–3 weeks', tl1_what: 'Certain problem types feel noticeably easier.',
-    tl2_when: '6–8 weeks', tl2_what: 'Measurable speed gains on timed tests.',
-    tl3_when: '3–6 months', tl3_what: 'Everyday calculations feel effortless. Expect a plateau around weeks 2–3, then a breakthrough as techniques become automatic.',
-    cta2_title: 'Ready to test yourself?', cta2_sub: 'Numfly tracks score, streak, and accuracy automatically across every session.', cta2_btn: 'Start a Speed Round →',
-    levels_h2: 'Beginner to advanced', levels_intro: 'One of the most common mistakes is practicing at the wrong level. Too easy and you\'re not building capacity; too hard and you\'re reinforcing errors.',
-    callout_calibration: 'Calibration', callout_calibration_body: 'Time yourself on 10 mixed problems. More than 30 seconds per problem → start Easy. 10–20 seconds → Medium. Under 10 seconds → Hard. Pick the difficulty that challenges you without causing errors.',
-    beginner_h3: 'Beginner', beginner_body: 'Addition and subtraction only, left-to-right method and rounding. Don\'t move to multiplication until you answer two-digit addition in under 5 seconds without stress. Most adults underestimate how much their addition can improve — it\'s often the hidden bottleneck.',
-    intermediate_h3: 'Intermediate', intermediate_body: 'Drill multiplication automaticity and percentage fluency. Work through the 12–20× tables until they\'re instant. Practice percentages from real situations (bills, discounts, interest). Use the distributive property for anything above the times tables.',
-    advanced_h3: 'Advanced', advanced_body: 'Your bottleneck is working memory and multi-step calculation. Practice problems requiring you to hold intermediate results while computing the next step — Numfly\'s Lightning mode is designed exactly for this.',
-    mistakes_h2: 'Common mistakes',
-    mistake1_tag: 'Mistake 1', mistake1_body: '<strong>Only practicing when you feel like it.</strong> Sporadic sessions don\'t build automaticity. The brain needs consistent repetition — 10 minutes daily beats 60 minutes twice a week.',
-    mistake2_tag: 'Mistake 2', mistake2_body: '<strong>Practicing only your strong operations.</strong> If multiplication is slow, drilling addition won\'t help. Identify your weakest operation and target it directly.',
-    mistake3_tag: 'Mistake 3', mistake3_body: '<strong>Never practicing under time pressure.</strong> Untimed practice builds accuracy but not speed. Timed sessions train your brain to retrieve answers quickly rather than carefully.',
-    mistake4_tag: 'Mistake 4', mistake4_body: '<strong>Skipping easy levels too fast.</strong> Automaticity comes from repetition at a comfortable level — not a challenging one. If you\'re consciously applying a technique, it isn\'t automatic yet.',
-    faq1_q: 'How long does it take to get better at mental math?',
-    faq1_a: 'Most people notice a real difference within <strong>2–4 weeks of daily practice</strong> (10 minutes/day). Measurable speed gains come at 6–8 weeks. Full automaticity typically takes 3–6 months. Consistency is the key variable, not session length.',
-    faq2_q: 'What is the best way to practice mental math as an adult?',
-    faq2_a: 'Short timed sessions with immediate feedback. Timed practice forces your brain to prioritise speed, not just correctness. Numfly\'s speed round mode — 2 minutes, mixed operations — is specifically built around this principle.',
-    faq3_q: 'Is mental math a talent or a learned skill?',
-    faq3_a: 'Overwhelmingly a <strong>learned skill</strong>. What looks like natural talent is almost always accumulated practice. World-class mental calculators trained to get there. Almost anyone can dramatically improve with consistent, structured practice.',
-    faq4_q: 'Should I practice all operations or focus on one?',
-    faq4_a: 'Identify your weakest operation and <strong>focus there</strong> while maintaining the others. Progress on your weak spot lifts your overall ceiling. Numfly\'s statistics page shows accuracy broken down by operation type.',
-    faq5_q: 'Does mental math training help with other cognitive skills?',
-    faq5_a: 'Yes. Regular arithmetic training exercises <strong>working memory, sustained attention, and processing speed</strong>. Studies have found improvements in reading comprehension and logical reasoning following arithmetic training in both children and adults.',
-    faq6_q: 'What operations should a beginner start with?',
-    faq6_a: 'Addition and subtraction only. Get to the point where two-digit addition takes under 5 seconds before adding multiplication. Fast, automatic addition makes every other operation easier — most beginners underestimate how much improvement is available here.',
-    t5_body: '<strong>Split one number into easy parts, multiply each, then add the results.</strong> The most general multiplication technique — works for any number, any size.',
-    t6_title: 'Multiply by 5: halve, then ×10',
-    t6_body: '5 = 10 ÷ 2. So <strong>any ×5 becomes: halve the number, then shift the decimal.</strong> Always faster than multiplying by 5 directly.',
-    t7_title: 'Multiply by 9: ×10 then subtract the original',
-    t7_body: '9 = 10 − 1, so <strong>n × 9 = (n × 10) − n</strong>. Same logic applies to ×11 (add n), ×19, ×99 — anything near a round number.',
-    t1_ex_label: 'Example — 347 + 285',
-    t5_ex1_label: 'Example — 47 × 8',
-    t5_ex2_label: 'Example — 23 × 14',
-    t7_ex_label: 'Example — 67 × 9',
-    t9_ex_label: 'Example — 13% of 400',
-    t12_ex_label: 'Example — 15% of €80',
-    t8_title: 'Multiply by 11: add the neighbours',
-    t8_body: 'For any two-digit number × 11: <strong>write the first digit, add the two digits together for the middle, write the last digit.</strong> If the middle sum exceeds 9, carry 1 to the left.',
-    t8_ex1_label: 'Example — 43 × 11',
-    t8_ex1_step: '4 _ 3 → middle: 4 + 3 = 7',
-    t8_ex2_label: 'Example — 78 × 11',
-    t8_ex2_step: '7 _ 8 → middle: 7 + 8 = 15, carry 1',
-    t9_title: 'Find 1%, then scale up',
-    t9_body: '1% of any number = move the decimal two places left. <strong>Once you have 1%, build any percentage by scaling.</strong>',
-    t10_title: 'Flip the percentage (x% of y = y% of x)',
-    t10_body: 'Percentage is commutative. <strong>If one direction looks hard, flip it.</strong> 4% of 75 is identical to 75% of 4 — but one is trivial.',
-    t11_title: 'Use fraction equivalents for common percentages',
-    t11_body: 'The fastest percentage work is fraction conversion. <strong>Memorise these and skip decimal multiplication entirely:</strong>',
-    t12_title: 'Tip calculation: start from 10%, then adjust',
-    t12_body: 'For any tip or service charge: <strong>find 10% first (shift the decimal), then scale up or adjust</strong> to your target.',
-    t12_body2: 'In practice: round to the nearest 5% and move on. Speed matters more than precision here.',
-    trow1_name: 'Left-to-right addition', trow1_best: 'All addition',
-    trow2_name: 'Round and adjust', trow2_best: 'Add &amp; subtract',
-    trow3_name: 'Find 1%, scale up', trow3_best: 'Percentages',
-    trow4_name: 'Count up (complement)', trow4_best: 'Subtraction',
-    trow5_name: 'Distributive property', trow5_best: 'Multiplication',
-    trow6_name: 'Flip the percentage', trow6_best: 'Percentages',
-    trow7_name: '×5 (halve then ×10)', trow7_best: '×5 problems',
-    trow8_name: '×9 (×10 minus n)', trow8_best: '×9, ×11, ×19',
-    trow9_name: 'Fraction shortcuts', trow9_best: '25%, 33%, 75%',
-    trow10_name: 'Multiply by 11', trow10_best: '×11 problems',
-    trow_easy: 'Easy', trow_easy2: 'Easy', trow_easy3: 'Easy', trow_easy4: 'Easy',
-    trow_med: 'Medium', trow_med2: 'Medium', trow_med3: 'Medium', trow_med4: 'Medium',
-    trow_hard: 'Hard', trow_hard2: 'Hard',
-    page_title: 'How to Practice Mental Math: 12 Techniques That Actually Work | Numfly',
-    page_description: 'A complete guide to mental math practice. Learn 12 proven techniques for faster mental math — rounding, left-to-right, percentage shortcuts and more. Free practice tool included.',
-    footer_practice: 'Practice', footer_guide: 'Guide', footer_privacy: 'Privacy',
-    compete_tag: 'Challenge Mode',
-    compete_title: 'Practice alone — or race someone.',
-    compete_sub: 'Numfly lets you challenge friends, join live speed rounds, and climb the global leaderboard. Free, no account required to start.',
-    compete_btn1: 'Start Practicing →',
-    compete_btn2: 'Find a Match',
-    compete_you: 'You',
-  },
-
-  es: {
-    nav_techniques: 'Técnicas', nav_routine: 'Rutina', nav_cta: 'Practicar gratis →',
-    hero_tag: 'Guía completa', hero_meta_techniques: '12 técnicas', hero_meta_read: '~8 min de lectura', hero_updated: 'Actualizado abril 2026',
-    stat1: 'semanas hasta las primeras mejoras', stat2: 'min/día es suficiente', stat3: 'operaciones a dominar',
-    toc_label: 'En esta guía', toc_why: 'Por qué importa', toc_addition: 'Trucos de suma',
-    toc_mult: 'Atajos de multiplicación', toc_pct: 'Estrategias con porcentajes', toc_routine: 'Rutina diaria',
-    toc_levels: 'De principiante a avanzado', toc_mistakes: 'Errores habituales',
-    why_h2: 'Por qué importa',
-    cta1_title: 'Entrena mientras lees', cta1_sub: 'Rondas de velocidad y retos diarios gratuitos — sin registro.', cta1_btn: 'Empezar a practicar →',
-    addition_h2: 'Suma y resta', addition_intro: 'Solo estas cuatro técnicas acelerarán notablemente tu cálculo. Trabájalas en orden — cada una se apoya en la anterior.',
-    t1_title: 'Calcula de izquierda a derecha, no al revés',
-    t1_body: 'En el colegio te enseñan a sumar de derecha a izquierda. Para el cálculo mental es terrible. <strong>De izquierda a derecha construyes la respuesta poco a poco</strong>: en cada paso tienes un número real en la cabeza, no un acarreo a medias.',
-    t1_body2: 'Este único cambio mejorará tu velocidad más que cualquier otra técnica. Tarda una o dos semanas en hacerse natural; después, calcular al revés te parecerá extraño.',
-    t1_ex_comment: '// Cada paso es un número completo, sin acarreos inciertos',
-    t2_ex1_label: 'Suma — 68 + 47', t2_ex1_step1: 'Redondea 68 → 70 (+2)',
-    t2_ex2_label: 'Resta — 293 − 148', t2_ex2_step1: 'Redondea 293 → 300 (+7)',
-    t3_ex_label: 'Ejemplo — 37 + 53 + 24 + 16 + 45', t3_ex_step1: 'Pares: 37 + 53 = 90 · 24 + 16 = 40', t3_ex_comment: '// Dos sumas difíciles se convierten en una fácil',
-    t4_ex_label: 'Ejemplo — 1000 − 437',
-    t10_ex_label: 'Ejemplo — 4% de 75', t10_ex_step1: 'Giramos: 75% de 4 = ¾ de 4', t10_ex_comment: '// Mucho más fácil que 75 × 0,04',
-    t2_title: 'Redondea a un número cómodo y ajusta',
-    t2_body: 'En lugar de lidiar con números difíciles, <strong>redondea uno al 10 o 100 más cercano, opera y luego ajusta la diferencia</strong>. Reduce drásticamente el esfuerzo mental.',
-    t3_title: 'Busca primero los pares que se complementan',
-    t3_body: 'Cuando sumas una lista de números, <strong>busca antes los pares que suman 10 o 100</strong>. Súmalos primero y luego maneja el resto. Convierte sumas difíciles en sencillas.',
-    t4_title: 'Cuenta hacia arriba en vez de restar',
-    t4_body: 'Ante una resta, pregúntate: <em>"¿qué tengo que sumar para llegar al número mayor?"</em> <strong>Ve sumando desde el número menor en pasos cómodos</strong> — te libras del concepto de "llevarse" por completo.',
-    t4_body2: 'Así daban el cambio los tenderos antes de las cajas registradoras. Con diferencias grandes es bastante más rápido que restar directamente.',
-    t5_title: 'Usa la propiedad distributiva',
-    t5_body: '<strong>Divide un número en partes manejables, multiplica cada una y suma los resultados.</strong> La técnica de multiplicación más versátil — vale para cualquier número.',
-    t6_title: 'Multiplicar por 5: divide entre 2 y luego por 10',
-    t6_body: '5 = 10 ÷ 2. Por eso <strong>cualquier ×5 se convierte en: divide entre dos y desplaza el decimal una posición.</strong> Siempre más rápido que multiplicar directamente por 5.',
-    t7_title: 'Multiplicar por 9: ×10 y resta el original',
-    t7_body: '9 = 10 − 1, así que <strong>n × 9 = (n × 10) − n</strong>. La misma lógica funciona para ×11 (suma n), ×19, ×99 — cualquier número cerca de una decena.',
-    t1_ex_label: 'Ejemplo — 347 + 285',
-    t5_ex1_label: 'Ejemplo — 47 × 8',
-    t5_ex2_label: 'Ejemplo — 23 × 14',
-    t7_ex_label: 'Ejemplo — 67 × 9',
-    t9_ex_label: 'Ejemplo — 13% de 400',
-    t12_ex_label: 'Ejemplo — 15% de €80',
-    t8_title: 'Multiplicar por 11: suma los vecinos',
-    t8_body: 'Para cualquier número de dos cifras × 11: <strong>escribe la primera cifra, suma ambas cifras para el centro y escribe la última cifra.</strong> Si la suma central supera 9, llévate 1 a la izquierda.',
-    t8_ex1_label: 'Ejemplo — 43 × 11',
-    t8_ex1_step: '4 _ 3 → centro: 4 + 3 = 7',
-    t8_ex2_label: 'Ejemplo — 78 × 11',
-    t8_ex2_step: '7 _ 8 → centro: 7 + 8 = 15, llevo 1',
-    t9_title: 'Calcula el 1% y escala',
-    t9_body: 'El 1% de cualquier número equivale a desplazar el decimal dos posiciones a la izquierda. <strong>Con el 1% como base, construyes cualquier porcentaje escalando.</strong>',
-    t10_title: 'Dale la vuelta al porcentaje (x% de y = y% de x)',
-    t10_body: 'El porcentaje es conmutativo. <strong>Si una dirección te parece complicada, dale la vuelta.</strong> El 4% de 75 es exactamente igual al 75% de 4 — pero uno es trivial.',
-    t11_title: 'Usa equivalencias de fracciones para porcentajes habituales',
-    t11_body: 'La forma más rápida de trabajar con porcentajes es pasarlos a fracciones. <strong>Memoriza estas y olvídate de multiplicar decimales:</strong>',
-    t12_title: 'Calcular propinas: empieza desde el 10% y ajusta',
-    t12_body: 'Para cualquier propina o recargo: <strong>calcula primero el 10% (desplaza el decimal) y luego escala o ajusta</strong> hasta llegar al porcentaje que quieres.',
-    t12_body2: 'En la práctica: redondea al 5% más cercano y ya está. Aquí la velocidad importa más que la exactitud.',
-    mult_h2: 'Multiplicación', mult_intro: 'Cuatro atajos que cubren el 80% de las multiplicaciones que encontrarás fuera de un libro de texto.',
-    pct_h2: 'Porcentajes', pct_intro: 'La habilidad de cálculo mental más útil en el día a día: propinas, descuentos, impuestos, intereses. Todo se reduce a estas cuatro estrategias.',
-    table_technique: 'Técnica', table_level: 'Nivel', table_best: 'Ideal para', table_impact: 'Impacto diario',
-    trow1_name: 'Suma de izquierda a derecha', trow1_best: 'Toda suma',
-    trow2_name: 'Redondear y ajustar', trow2_best: 'Suma y resta',
-    trow3_name: 'Calcular el 1% y escalar', trow3_best: 'Porcentajes',
-    trow4_name: 'Contar hacia arriba', trow4_best: 'Resta',
-    trow5_name: 'Propiedad distributiva', trow5_best: 'Multiplicación',
-    trow6_name: 'Dar la vuelta al porcentaje', trow6_best: 'Porcentajes',
-    trow7_name: '×5 (÷2 y luego ×10)', trow7_best: 'Problemas con ×5',
-    trow8_name: '×9 (×10 menos n)', trow8_best: '×9, ×11, ×19',
-    trow9_name: 'Atajos con fracciones', trow9_best: '25%, 33%, 75%',
-    trow10_name: 'Multiplicar por 11', trow10_best: 'Problemas con ×11',
-    trow_easy: 'Fácil', trow_easy2: 'Fácil', trow_easy3: 'Fácil', trow_easy4: 'Fácil',
-    trow_med: 'Medio', trow_med2: 'Medio', trow_med3: 'Medio', trow_med4: 'Medio',
-    trow_hard: 'Difícil', trow_hard2: 'Difícil',
-    routine_h2: 'Rutina diaria',
-    routine_intro1: 'Conocer las técnicas no es lo mismo que ser rápido. La velocidad viene de la <strong>automaticidad</strong> — cuando ya no aplicas el método conscientemente, simplemente ocurre.',
-    routine_intro2: 'Esta rutina lleva <strong>10–15 minutos en total</strong> y produce mejoras reales en 3–4 semanas.',
-    routine_warmup_title: 'Calentamiento', routine_warmup_body: 'Suma y resta sencillas, unos 20 ejercicios. Pon el cerebro en modo cálculo.',
-    routine_speed_title: 'Ronda de velocidad', routine_speed_body: 'Operaciones mixtas, dificultad media, con el reloj puesto. Apunta tu puntuación e intenta superarla cada sesión.',
-    routine_drill_title: 'Ejercicio de punto débil', routine_drill_body: 'La operación que más hayas fallado — practica esa en concreto. Aquí es donde se producen los verdaderos avances.',
-    callout_key_principle: 'Principio clave',
-    callout_consistency: '<strong>La constancia vence a la intensidad.</strong> 10 minutos cada día da resultados mucho mejores que 90 minutos el sábado. La mejora en cálculo mental depende casi por completo de repartir el tiempo de práctica para que el cerebro pueda consolidar entre sesiones.',
-    results_h3: '¿Cuánto tiempo hasta ver resultados?',
-    results_body: '<strong>2–3 semanas:</strong> ciertos tipos de problemas te parecerán notablemente más fáciles. <strong>6–8 semanas:</strong> ganancias de velocidad medibles en pruebas cronometradas. <strong>3–6 meses:</strong> los cálculos del día a día se vuelven automáticos. Espera un estancamiento hacia las semanas 2–3; después llegará un salto cuando las técnicas se automaticen.',
-    tl1_when: '2–3 semanas', tl1_what: 'Ciertos tipos de problemas te parecerán notablemente más fáciles.',
-    tl2_when: '6–8 semanas', tl2_what: 'Ganancias de velocidad medibles en pruebas cronometradas.',
-    tl3_when: '3–6 meses', tl3_what: 'Los cálculos del día a día se vuelven automáticos. Espera un estancamiento hacia las semanas 2–3; después llegará un salto cuando las técnicas se automaticen.',
-    cta2_title: '¿Listo para ponerte a prueba?', cta2_sub: 'Numfly registra puntuación, racha y precisión automáticamente en cada sesión.', cta2_btn: 'Empezar una ronda de velocidad →',
-    levels_h2: 'De principiante a avanzado', levels_intro: 'Uno de los errores más habituales es practicar en el nivel equivocado. Demasiado fácil y no desarrollas capacidad; demasiado difícil y estás consolidando errores.',
-    callout_calibration: 'Cómo elegir tu nivel', callout_calibration_body: 'Cronométrate con 10 problemas mixtos. Más de 30 segundos por problema → empieza en Fácil. Entre 10 y 20 segundos → Medio. Menos de 10 → Difícil. Elige la dificultad que te suponga un reto sin que cometas errores.',
-    beginner_h3: 'Principiante', beginner_body: 'Solo suma y resta, con el método de izquierda a derecha y redondeo. No pases a la multiplicación hasta que respondas sumas de dos cifras en menos de 5 segundos sin esfuerzo. La mayoría de los adultos subestima cuánto puede mejorar su suma — suele ser el cuello de botella oculto.',
-    intermediate_h3: 'Intermedio', intermediate_body: 'Trabaja la automaticidad de la multiplicación y la fluidez con porcentajes. Repasa las tablas del 12 al 20 hasta que salgan sin pensar. Practica los porcentajes con situaciones reales: facturas, descuentos, intereses.',
-    advanced_h3: 'Avanzado', advanced_body: 'Tu cuello de botella es la memoria de trabajo y el cálculo en varios pasos. Practica problemas en los que tengas que retener resultados intermedios mientras calculas el siguiente paso.',
-    mistakes_h2: 'Errores habituales',
-    mistake1_tag: 'Error 1', mistake1_body: '<strong>Practicar solo cuando te apetece.</strong> Las sesiones irregulares no generan automaticidad. El cerebro necesita repetición constante — 10 minutos diarios superan a 60 minutos dos veces por semana.',
-    mistake2_tag: 'Error 2', mistake2_body: '<strong>Practicar solo las operaciones que ya dominas.</strong> Si la multiplicación te cuesta, entrenar la suma no ayudará. Identifica tu operación más débil y atácala directamente.',
-    mistake3_tag: 'Error 3', mistake3_body: '<strong>No practicar nunca con presión de tiempo.</strong> La práctica sin límite de tiempo mejora la precisión, pero no la velocidad. Las sesiones cronometradas obligan al cerebro a recuperar respuestas rápido.',
-    mistake4_tag: 'Error 4', mistake4_body: '<strong>Pasar demasiado rápido a niveles más difíciles.</strong> La automaticidad viene de la repetición en un nivel cómodo, no en uno desafiante. Si todavía aplicas la técnica de forma consciente, aún no es automática.',
-    faq1_q: '¿Cuánto tiempo tarda en mejorar el cálculo mental?',
-    faq1_a: 'La mayoría de las personas nota una diferencia real en <strong>2–4 semanas de práctica diaria</strong> (10 minutos al día). Las ganancias de velocidad medibles llegan a las 6–8 semanas. La automaticidad completa suele tardar entre 3 y 6 meses. La constancia es la variable clave, no la duración de cada sesión.',
-    faq2_q: '¿Cuál es la mejor manera de practicar el cálculo mental siendo adulto?',
-    faq2_a: 'Sesiones cortas y cronometradas con retroalimentación inmediata. El entrenamiento con tiempo obliga al cerebro a priorizar la velocidad, no solo la exactitud.',
-    faq3_q: '¿El cálculo mental es un talento o una habilidad que se aprende?',
-    faq3_a: 'Es, de forma aplastante, una <strong>habilidad aprendida</strong>. Lo que parece talento natural casi siempre es práctica acumulada.',
-    faq4_q: '¿Debo practicar todas las operaciones o centrarme en una?',
-    faq4_a: 'Identifica tu operación más floja y <strong>céntrate en ella</strong> sin descuidar las demás. Mejorar en tu punto débil sube tu techo general.',
-    faq5_q: '¿Entrenar el cálculo mental ayuda en otras habilidades cognitivas?',
-    faq5_a: 'Sí. El entrenamiento aritmético regular ejercita la <strong>memoria de trabajo, la atención sostenida y la velocidad de procesamiento</strong>.',
-    faq6_q: '¿Por dónde debe empezar alguien que quiere mejorar su cálculo mental?',
-    faq6_a: 'Por suma y resta. Consigue hacer sumas de dos cifras en menos de 5 segundos antes de pasar a la multiplicación. Una suma rápida y automatizada facilita todas las demás operaciones.',
-    page_title: 'Cómo practicar el cálculo mental: 12 técnicas que de verdad funcionan | Numfly',
-    page_description: 'Guía completa de cálculo mental. Aprende 12 técnicas probadas para calcular más rápido: redondeo, cálculo de izquierda a derecha, atajos de porcentaje y más.',
-    footer_practice: 'Practicar', footer_guide: 'Guía', footer_privacy: 'Privacidad',
-    compete_tag: 'Modo reto',
-    compete_title: 'Practica solo — o compite contra alguien.',
-    compete_sub: 'Numfly te permite retar a amigos, unirte a rondas de velocidad en vivo y escalar la clasificación global. Gratis, sin cuenta para empezar.',
-    compete_btn1: 'Empezar a practicar →',
-    compete_btn2: 'Buscar rival',
-    compete_you: 'Tú',
-  },
-
-  nl: {
-    nav_techniques: 'Technieken', nav_routine: 'Routine', nav_cta: 'Gratis oefenen →',
-    hero_tag: 'Complete gids', hero_meta_techniques: '12 technieken', hero_meta_read: '~8 min lezen', hero_updated: 'Bijgewerkt april 2026',
-    stat1: 'weken tot de eerste verbeteringen', stat2: 'min/dag is genoeg', stat3: 'bewerkingen om te beheersen',
-    toc_label: 'In deze gids', toc_why: 'Waarom het loont', toc_addition: 'Optellen en aftrekken',
-    toc_mult: 'Vermenigvuldigingstrucs', toc_pct: 'Percentagestrategieën', toc_routine: 'Dagelijkse routine',
-    toc_levels: 'Van beginner tot gevorderd', toc_mistakes: 'Veelgemaakte fouten',
-    why_h2: 'Waarom het loont',
-    cta1_title: 'Oefen terwijl je leest', cta1_sub: 'Gratis snelheidsrondes en dagelijkse uitdagingen — geen account nodig.', cta1_btn: 'Start met oefenen →',
-    addition_h2: 'Optellen &amp; aftrekken', addition_intro: 'Deze vier technieken alleen al versnellen je rekensnelheid merkbaar. Werk ze op volgorde door — elke techniek bouwt voort op de vorige.',
-    t1_title: 'Reken van links naar rechts, niet andersom',
-    t1_body: 'Op school leer je optellen van rechts naar links. Voor hoofdrekenen werkt dat slecht. <strong>Van links naar rechts bouw je het antwoord stap voor stap op</strong>: bij elke stap houd je een echt getal in je hoofd, geen onzeker restgetal.',
-    t1_body2: 'Deze ene verandering versnelt je optelling meer dan welke andere techniek ook. Na een week of twee voelt het vanzelfsprekend; daarna zal rekenen van rechts naar links raar aanvoelen.',
-    t1_ex_comment: '// Elke stap is een volledig getal, geen onzekere restgetallen',
-    t2_ex1_label: 'Optellen — 68 + 47', t2_ex1_step1: 'Rond 68 → 70 (+2) af',
-    t2_ex2_label: 'Aftrekken — 293 − 148', t2_ex2_step1: 'Rond 293 → 300 (+7) af',
-    t3_ex_label: 'Voorbeeld — 37 + 53 + 24 + 16 + 45', t3_ex_step1: 'Paren: 37 + 53 = 90 · 24 + 16 = 40', t3_ex_comment: '// Twee moeilijke optellingen worden één makkelijke',
-    t4_ex_label: 'Voorbeeld — 1000 − 437',
-    t10_ex_label: 'Voorbeeld — 4% van 75', t10_ex_step1: 'Omdraaien: 75% van 4 = ¾ van 4', t10_ex_comment: '// Veel makkelijker dan 75 × 0,04',
-    t2_title: 'Rond af naar een handig getal en corrigeer',
-    t2_body: 'In plaats van worstelen met lastige getallen, <strong>rond je één getal af naar het dichtstbijzijnde tiental of honderdtal, reken en trek dan het verschil eraf</strong>. Dit verlaagt de mentale belasting flink.',
-    t3_title: 'Zoek eerst de paren die samen 10 of 100 geven',
-    t3_body: 'Als je een rij getallen optelt, <strong>zoek dan eerst naar paren die samen 10 of 100 geven</strong>. Tel die eerst bij elkaar op en verwerk daarna de rest. Zo maak je moeilijk optellen makkelijk.',
-    t4_title: 'Tel op in plaats van aftrekken',
-    t4_body: 'Vraag je bij aftrekken af: <em>"Wat moet ik erbij optellen om het doel te bereiken?"</em> <strong>Tel op van het kleinste getal in handige stappen</strong> — lenen is dan nooit meer nodig.',
-    t4_body2: 'Zo gaven winkeliers vroeger wisselgeld terug. Bij grote verschillen is dit stukken sneller dan rechtstreeks aftrekken.',
-    t5_title: 'Gebruik de distributieve eigenschap',
-    t5_body: '<strong>Splits één getal op in makkelijke delen, vermenigvuldig elk deel en tel de resultaten op.</strong> De meest veelzijdige vermenigvuldigingstechniek — werkt voor elk getal.',
-    t6_title: 'Vermenigvuldigen met 5: halveer en dan ×10',
-    t6_body: '5 = 10 ÷ 2. Daardoor wordt elke ×5-som: <strong>halveer het getal en verschuif het decimaalteken één positie.</strong> Altijd sneller dan rechtstreeks met 5 vermenigvuldigen.',
-    t7_title: 'Vermenigvuldigen met 9: ×10 en trek het origineel eraf',
-    t7_body: '9 = 10 − 1, dus <strong>n × 9 = (n × 10) − n</strong>. Dezelfde redenering werkt voor ×11 (tel n op), ×19 en ×99 — alles wat dicht bij een rond getal ligt.',
-    t1_ex_label: 'Voorbeeld — 347 + 285',
-    t5_ex1_label: 'Voorbeeld — 47 × 8',
-    t5_ex2_label: 'Voorbeeld — 23 × 14',
-    t7_ex_label: 'Voorbeeld — 67 × 9',
-    t9_ex_label: 'Voorbeeld — 13% van 400',
-    t12_ex_label: 'Voorbeeld — 15% van €80',
-    t8_title: 'Vermenigvuldigen met 11: tel de buren op',
-    t8_body: 'Voor elk tweecijferig getal × 11: <strong>schrijf het eerste cijfer, tel de twee cijfers bij elkaar op voor het midden en schrijf het laatste cijfer.</strong> Is de middelste som groter dan 9, draag dan 1 over naar links.',
-    t8_ex1_label: 'Voorbeeld — 43 × 11',
-    t8_ex1_step: '4 _ 3 → midden: 4 + 3 = 7',
-    t8_ex2_label: 'Voorbeeld — 78 × 11',
-    t8_ex2_step: '7 _ 8 → midden: 7 + 8 = 15, onthoud 1',
-    t9_title: 'Bereken 1% en schaal omhoog',
-    t9_body: '1% van een getal: verschuif het decimaalteken twee plaatsen naar links. <strong>Met dat 1% als basis bouw je elk percentage op door te schalen.</strong>',
-    t10_title: 'Draai het percentage om (x% van y = y% van x)',
-    t10_body: 'Percentage is commutatief. <strong>Als één richting lastig lijkt, draai hem gewoon om.</strong> 4% van 75 is precies hetzelfde als 75% van 4 — maar één ervan is een stuk makkelijker.',
-    t11_title: 'Gebruik breukequivalenten voor veelvoorkomende percentages',
-    t11_body: 'De snelste manier om met percentages te werken is ze omzetten naar breuken. <strong>Ken deze uit je hoofd en je hoeft nooit meer met decimalen te rekenen:</strong>',
-    t12_title: 'Fooi berekenen: begin bij 10% en pas aan',
-    t12_body: 'Voor elke fooi of toeslag: <strong>bereken eerst 10% (verschuif het decimaalteken) en schaal daarna op of bij</strong> naar het gewenste percentage.',
-    t12_body2: 'In de praktijk: rond af op het dichtstbijzijnde 5% en ga verder. Snelheid telt hier meer dan precisie.',
-    mult_h2: 'Vermenigvuldigen', mult_intro: 'Vier trucs die 80% dekken van de vermenigvuldigingen die je buiten een schoolboek tegenkomt.',
-    pct_h2: 'Percentages', pct_intro: 'De nuttigste hoofdrekenvaardigheid voor het dagelijks leven: fooien, kortingen, belasting, rente. Alles komt neer op deze vier strategieën.',
-    table_technique: 'Techniek', table_level: 'Niveau', table_best: 'Beste voor', table_impact: 'Dagelijks effect',
-    trow1_name: 'Optellen van links naar rechts', trow1_best: 'Al het optellen',
-    trow2_name: 'Afronden en corrigeren', trow2_best: 'Optellen en aftrekken',
-    trow3_name: '1% berekenen en schalen', trow3_best: 'Percentages',
-    trow4_name: 'Optellen in plaats van aftrekken', trow4_best: 'Aftrekken',
-    trow5_name: 'Distributieve eigenschap', trow5_best: 'Vermenigvuldigen',
-    trow6_name: 'Percentage omdraaien', trow6_best: 'Percentages',
-    trow7_name: '×5 (halveer dan ×10)', trow7_best: '×5-sommen',
-    trow8_name: '×9 (×10 min n)', trow8_best: '×9, ×11, ×19',
-    trow9_name: 'Breukequivalenten', trow9_best: '25%, 33%, 75%',
-    trow10_name: 'Vermenigvuldigen met 11', trow10_best: '×11-sommen',
-    trow_easy: 'Makkelijk', trow_easy2: 'Makkelijk', trow_easy3: 'Makkelijk', trow_easy4: 'Makkelijk',
-    trow_med: 'Gemiddeld', trow_med2: 'Gemiddeld', trow_med3: 'Gemiddeld', trow_med4: 'Gemiddeld',
-    trow_hard: 'Moeilijk', trow_hard2: 'Moeilijk',
-    routine_h2: 'Dagelijkse routine',
-    routine_intro1: 'Technieken kennen is niet hetzelfde als snel zijn. Snelheid komt van <strong>automaticiteit</strong> — wanneer je een methode niet meer bewust toepast maar het gewoon gebeurt.',
-    routine_intro2: 'Deze routine duurt <strong>10–15 minuten in totaal</strong> en levert echte verbetering op binnen 3–4 weken.',
-    routine_warmup_title: 'Warming-up', routine_warmup_body: 'Makkelijk optellen en aftrekken, zo\'n 20 sommen. Zet je hersenen in de rekenstand.',
-    routine_speed_title: 'Snelheidsronde', routine_speed_body: 'Gemengde bewerkingen, gemiddeld niveau, klok loopt. Noteer je score en probeer hem elke sessie te verbeteren.',
-    routine_drill_title: 'Zwakke-plek-oefening', routine_drill_body: 'De bewerking die je het vaakst fout had — oefen die gericht. Hier haal je de echte winst vandaan.',
-    callout_key_principle: 'Kernprincipe',
-    callout_consistency: '<strong>Regelmaat wint van intensiteit.</strong> 10 minuten per dag geeft veel betere resultaten dan 90 minuten op zaterdag. Verbetering in hoofdrekenen hangt bijna volledig af van gespreide oefening, zodat je hersenen tussen sessies kunnen consolideren.',
-    results_h3: 'Hoe lang duurt het voor je resultaat ziet?',
-    results_body: '<strong>2–3 weken:</strong> bepaalde soorten sommen voelen merkbaar makkelijker. <strong>6–8 weken:</strong> meetbare snelheidswinst op getimede tests. <strong>3–6 maanden:</strong> dagelijkse berekeningen gaan vanzelf. Verwacht een plateau rond week 2–3, gevolgd door een doorbraak zodra de technieken automatisch worden.',
-    tl1_when: '2–3 weken', tl1_what: 'Bepaalde soorten sommen voelen merkbaar makkelijker.',
-    tl2_when: '6–8 weken', tl2_what: 'Meetbare snelheidswinst op getimede tests.',
-    tl3_when: '3–6 maanden', tl3_what: 'Dagelijkse berekeningen gaan vanzelf. Verwacht een plateau rond week 2–3, gevolgd door een doorbraak zodra de technieken automatisch worden.',
-    cta2_title: 'Klaar om jezelf te testen?', cta2_sub: 'Numfly houdt je score, reeks en nauwkeurigheid automatisch bij — sessie na sessie.', cta2_btn: 'Start een snelheidsronde →',
-    levels_h2: 'Van beginner tot gevorderd', levels_intro: 'Een van de meest voorkomende fouten is oefenen op het verkeerde niveau. Te makkelijk en je bouwt geen capaciteit op; te moeilijk en je verankert fouten.',
-    callout_calibration: 'Hoe kies je je niveau', callout_calibration_body: 'Doe 10 gemengde sommen en meet hoe lang je erover doet. Meer dan 30 seconden per som → begin met Makkelijk. 10–20 seconden → Gemiddeld. Onder de 10 seconden → Moeilijk. Kies het niveau dat je uitdaagt zonder fouten te veroorzaken.',
-    beginner_h3: 'Beginner', beginner_body: 'Alleen optellen en aftrekken, van links naar rechts en afronden. Ga pas naar vermenigvuldigen als je tweecijferige sommen in minder dan 5 seconden kunt beantwoorden. De meeste volwassenen onderschatten hoeveel hun optelling nog kan verbeteren — dat is vaak het verborgen knelpunt.',
-    intermediate_h3: 'Gemiddeld', intermediate_body: 'Oefen de automaticiteit van vermenigvuldigen en vloeiendheid met percentages. Werk de tafels van 12 tot en met 20 door totdat ze direct komen. Oefen percentages aan de hand van echte situaties: rekeningen, kortingen, rente.',
-    advanced_h3: 'Gevorderd', advanced_body: 'Je knelpunt is werkgeheugen en berekening in meerdere stappen. Oefen sommen waarbij je tussenresultaten moet onthouden terwijl je de volgende stap berekent.',
-    mistakes_h2: 'Veelgemaakte fouten',
-    mistake1_tag: 'Fout 1', mistake1_body: '<strong>Alleen oefenen als je er zin in hebt.</strong> Sporadische sessies bouwen geen automaticiteit op. Het brein heeft vaste herhaling nodig — 10 minuten per dag wint van 60 minuten twee keer per week.',
-    mistake2_tag: 'Fout 2', mistake2_body: '<strong>Alleen je sterke bewerkingen oefenen.</strong> Als vermenigvuldigen langzaam gaat, helpt optellen oefenen niet. Zoek je zwakste bewerking op en werk daar gericht aan.',
-    mistake3_tag: 'Fout 3', mistake3_body: '<strong>Nooit oefenen onder tijdsdruk.</strong> Ongetimed oefenen bouwt nauwkeurigheid op, maar geen snelheid. Getimede sessies trainen je brein om snel te antwoorden.',
-    mistake4_tag: 'Fout 4', mistake4_body: '<strong>Te snel naar een moeilijker niveau overstappen.</strong> Automaticiteit ontstaat door herhaling op een comfortabel niveau, niet op een uitdagend niveau. Als je een techniek nog bewust toepast, is hij nog niet automatisch.',
-    faq1_q: 'Hoe lang duurt het voor ik beter word in hoofdrekenen?',
-    faq1_a: 'De meeste mensen merken een echt verschil binnen <strong>2–4 weken dagelijks oefenen</strong> (10 minuten per dag). Meetbare snelheidswinst komt na 6–8 weken. Volledige automaticiteit duurt doorgaans 3–6 maanden. Regelmaat is de sleutelvariabele, niet de duur van elke sessie.',
-    faq2_q: 'Wat is de beste manier om als volwassene hoofdrekenen te oefenen?',
-    faq2_a: 'Korte, getimede sessies met directe feedback. Getimed oefenen dwingt je brein snelheid te prioriteren, niet alleen nauwkeurigheid.',
-    faq3_q: 'Is hoofdrekenen een talent of een aangeleerde vaardigheid?',
-    faq3_a: 'Overweldigend een <strong>aangeleerde vaardigheid</strong>. Wat eruitziet als natuurlijk talent is vrijwel altijd opgebouwde oefening.',
-    faq4_q: 'Moet ik alle bewerkingen oefenen of me op één richten?',
-    faq4_a: 'Zoek je zwakste bewerking en <strong>richt je daarop</strong> terwijl je de andere bewerkingen op peil houdt. Verbetering op je zwakste punt verhoogt je totaalplafond.',
-    faq5_q: 'Helpt hoofdrekenen bij andere cognitieve vaardigheden?',
-    faq5_a: 'Ja. Regelmatig rekenen traint <strong>werkgeheugen, volgehouden aandacht en verwerkingssnelheid</strong>.',
-    faq6_q: 'Met welke bewerkingen moet een beginner beginnen?',
-    faq6_a: 'Alleen optellen en aftrekken. Zorg dat tweecijferig optellen minder dan 5 seconden kost voordat je vermenigvuldigen toevoegt. Snel en automatisch optellen maakt elke andere bewerking makkelijker.',
-    page_title: 'Hoofdrekenen oefenen: 12 technieken die écht werken | Numfly',
-    page_description: 'Een complete gids voor hoofdrekenen. Leer 12 bewezen technieken om sneller te rekenen — afronden, van links naar rechts, percentagestrategieën en meer.',
-    footer_practice: 'Oefenen', footer_guide: 'Gids', footer_privacy: 'Privacy',
-    compete_tag: 'Uitdagingsmodus',
-    compete_title: 'Oefen alleen — of strijd tegen iemand.',
-    compete_sub: 'Met Numfly kun je vrienden uitdagen, meedoen aan live snelheidsrondes en de wereldranglijst beklimmen. Gratis, geen account nodig om te beginnen.',
-    compete_btn1: 'Begin met oefenen →',
-    compete_btn2: 'Zoek een tegenstander',
-    compete_you: 'Jij',
-  }
-
-};
-
-let currentLang = 'en';
-
-function setLang(lang) {
-  currentLang = lang;
-  try { localStorage.setItem('numfly_lang', lang); } catch(e) {}
-  
-  // Update button states (voorkom crash als de elementen <a> links zijn zonder onclick)
-  const buttons = document.querySelectorAll('.lang-btn');
-  if (buttons.length > 0 && buttons[0].tagName === 'BUTTON') {
-    buttons.forEach(b => b.classList.remove('active'));
-    const activeBtn = document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`);
-    if (activeBtn) activeBtn.classList.add('active');
-  }
-
-  // Show/hide lang blocks
-  document.querySelectorAll('[data-lang]').forEach(el => {
-    el.classList.toggle('lang-active', el.dataset.lang === lang);
-  });
-
-  // Update keyed text
-  const t = translations[lang];
-  document.querySelectorAll('[data-lang-key]').forEach(el => {
-    const key = el.dataset.langKey;
-    if (t[key] !== undefined) el.innerHTML = t[key];
-  });
-
-  // Update page title and meta description
-  if (t.page_title) document.title = t.page_title;
-  const metaDesc = document.querySelector('meta[name="description"]');
-  if (metaDesc && t.page_description) metaDesc.setAttribute('content', t.page_description);
-
-  // Update html lang attribute
-  document.documentElement.lang = lang;
-}
-
-// Init: show English
-setLang('en');
 </script>
 </body>
 </html>

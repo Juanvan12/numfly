@@ -1,26 +1,43 @@
+---
+import { STRINGS } from '../../public/scripts/i18n.js';
+
+type Lang = keyof typeof STRINGS;
+const lang = (Astro.params.lang as Lang) || 'en';
+const t = (key: string): string =>
+  (STRINGS[lang] as Record<string, string>)?.[key] ??
+  (STRINGS['en'] as Record<string, string>)[key] ??
+  key;
+
+const guideHref =
+  lang === 'nl' ? '/nl/hoofdrekenen-oefenen' :
+  lang === 'es' ? '/es/como-practicar-calculo-mental' :
+  '/how-to-practice-mental-math';
+---
+
 <!-- ══ TIPS PAGE ═════════════════════════════════════════════════════ -->
 <div id="screen-tips" class="screen">
-  <a href="/" class="back-link" style="text-decoration: none;">← <span data-i18n="back"></span></a>
+  <a href="/" class="back-link" style="text-decoration: none;">← <span>{t('back')}</span></a>
   <div class="tips-hero">
-    <div class="tips-hero-title" data-i18n="nav_tips"></div>
-    <div class="tips-hero-sub" data-i18n="tips_hero_sub"></div>
+    <div class="tips-hero-title">{t('nav_tips')}</div>
+    <div class="tips-hero-sub">{t('tips_hero_sub')}</div>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-    <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px" data-i18n="tips_filter_hint"></span>
+    <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">{t('tips_filter_hint')}</span>
     <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)" id="tips-count-badge"></span>
   </div>
   <div class="tips-filter" id="tips-filter-row"></div>
   <div class="tips-list" id="tips-list"></div>
 
   <div style="margin-top: 32px; margin-bottom: 24px; text-align: center;">
-    <a id="tips-guide-link" href="/how-to-practice-mental-math" data-i18n="tips_to_guide" style="color: var(--accent); text-decoration: none; font-weight: 500; font-size: 14px; padding: 14px 20px; border: 1px solid var(--border); border-radius: 12px; display: inline-block; background: var(--surface); transition: border-color 0.2s;">
-      </a>
+    <a id="tips-guide-link" href={guideHref} style="color: var(--accent); text-decoration: none; font-weight: 500; font-size: 14px; padding: 14px 20px; border: 1px solid var(--border); border-radius: 12px; display: inline-block; background: var(--surface); transition: border-color 0.2s;">
+      {t('tips_to_guide')}
+    </a>
   </div>
 </div>
 
 <!-- ══ TIP PRACTICE SCREEN ═══════════════════════════════════════════ -->
 <div id="screen-tip-practice" class="screen">
-  <button class="back-link" onclick="showTips()">← <span data-i18n="back_to_tips"></span></button>
+  <button class="back-link" onclick="showTips()">← <span>{t('back_to_tips')}</span></button>
   <div class="tip-practice-header">
     <div class="tip-tag" id="tp-tag"></div>
     <div class="tip-practice-name" id="tp-name"></div>
@@ -33,7 +50,7 @@
     <div class="q-text" id="tp-question">—</div>
   </div>
   <div class="answer-row">
-    <input type="text" inputmode="numeric" pattern="[0-9-]*" id="tp-answer" data-i18n-placeholder="answer_placeholder" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+    <input type="text" inputmode="numeric" pattern="[0-9-]*" id="tp-answer" placeholder={t('answer_placeholder')} autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
     <button class="submit-btn" onmousedown="event.preventDefault()" onclick="checkTipAnswer()">→</button>
   </div>
   <div class="feedback" id="tp-feedback"></div>

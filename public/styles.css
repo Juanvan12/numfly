@@ -337,18 +337,19 @@ input[type=number]::-webkit-inner-spin-button{opacity:.4;}
 .title-learner{color:var(--text);}
 .title-scholar{color:var(--info);}
 .title-theorist{color:var(--success);}
-.title-master{color:var(--accent);}
-.title-polymath{color:var(--orange);}
-.title-pythagoras{color:var(--purple);}
-.title-euler{color:#ff6b9d;}
-.title-gauss{background:linear-gradient(90deg,var(--accent),var(--info),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.title-arithmetician{color:var(--success);}
-.title-analyst{color:#4dffb4;}
-.title-prodigy{color:var(--accent);}
-.title-logician{color:var(--orange);}
-.title-archimedes{color:var(--purple);}
-.title-newton{color:#c084fc;}
-.title-ramanujan{color:#ff6b9d;}
+.title-arithmetician{color:#e8ff47;}
+.title-analyst{color:#ffa532;}
+.title-master{color:#ff6b9d;}
+.title-prodigy{color:#00e5ff;}
+.title-polymath{color:#da22ff;}
+.title-logician{color:#a8ff78;}
+.title-pythagoras{color:#ff4d6b;}
+.title-archimedes{color:#47b3ff;}
+.title-newton{color:#ff9f43;}
+.title-euler{color:#ee0979;}
+.title-ramanujan{color:#c084fc;}
+.title-gauss{background:linear-gradient(90deg,#e8ff47,#4dffb4,#47b3ff,#c084fc,#ff6b9d,#ffa532,#e8ff47);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:gauss-rainbow 4s linear infinite;}
+@keyframes gauss-rainbow{0%{background-position:0%}100%{background-position:200%}}
 
 /* ════ BURGER / SIDEBAR ════ */
 #burger-fixed{

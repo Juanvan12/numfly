@@ -1,7 +1,7 @@
 // ══════════════════════════════════════════════════════════════════════════════
 // i18n
 // ══════════════════════════════════════════════════════════════════════════════
-const STRINGS={
+export const STRINGS={
 en:{
   tagline:"Train your brain. Beat your score. Beat your friends.",
   hs_title:"High Scores",nav_stats:"Statistics",nav_tips:"Tips & Tricks",
@@ -740,6 +740,9 @@ es:{
   err_interval_range: "Introduce un número entre 1 y 20.",
 },
 };
+// Make STRINGS available on the client when loaded as a script
+if (typeof window !== 'undefined') { window.STRINGS = STRINGS; }
+
 let lang='en';
 
 // ── Globale Challenge Variabelen (Voorkomt crashes tijdens inladen) ──

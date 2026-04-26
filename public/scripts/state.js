@@ -209,7 +209,7 @@ const TITLE_THRESHOLDS=[
 
 function getTitleRingColor(lvl){
   const title=getTitleForLevel(lvl);
-  const colors={'title-novice':'var(--muted)','title-learner':'var(--text)','title-scholar':'var(--info)','title-theorist':'var(--success)','title-master':'var(--accent)','title-polymath':'var(--orange)','title-pythagoras':'var(--purple)','title-euler':'#ff6b9d','title-gauss':'var(--accent)'};
+  const colors={'title-novice':'var(--muted)','title-learner':'var(--text)','title-scholar':'var(--info)','title-theorist':'var(--success)','title-arithmetician':'#e8ff47','title-analyst':'#ffa532','title-master':'#ff6b9d','title-prodigy':'#00e5ff','title-polymath':'#da22ff','title-logician':'#a8ff78','title-pythagoras':'#ff4d6b','title-archimedes':'#47b3ff','title-newton':'#ff9f43','title-euler':'#ee0979','title-ramanujan':'#c084fc','title-gauss':'#e8ff47'};
   return colors[title.css]||'var(--accent)';
 }
 function getTitleForLevel(lvl){
