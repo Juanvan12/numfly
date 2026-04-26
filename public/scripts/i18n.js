@@ -742,11 +742,6 @@ es:{
 };
 // Make STRINGS available on the client when loaded as a script
 if (typeof window !== 'undefined') { window.STRINGS = STRINGS; }
-// ─── Astro Build-Time Export ───────────────────────────────
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { STRINGS };
-}
 
 let lang='en';
 
@@ -760,6 +755,7 @@ let _activeCompId = null;
 let _challengeDiff = 'easy';
 
 function t(k){return(STRINGS[lang]||{})[k]||STRINGS.en[k]||k;}
+
 function setLang(l,btn){
   lang=l;
   // Re-render countdown in new language after translations apply

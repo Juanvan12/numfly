@@ -1,8 +1,11 @@
 ---
-import { STRINGS } from '../../public/scripts/i18n.js';
+import i18nRaw from '../../public/scripts/i18n.js?raw';
+
+const STRINGS = new Function(`${i18nRaw}; return STRINGS;`)();
 
 type Lang = keyof typeof STRINGS;
 const lang = (Astro.params.lang as Lang) || 'en';
+
 const t = (key: string): string =>
   (STRINGS[lang] as Record<string, string>)?.[key] ??
   (STRINGS['en'] as Record<string, string>)[key] ??
