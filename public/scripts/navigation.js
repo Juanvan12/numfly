@@ -3,6 +3,7 @@
 // ══════════════════════════════════════════════════════════════════════════════
 let currentStatsFilter='all';
 let currentDiffFilter='all'; // 'all'|'easy'|'medium'|'hard' — for accuracy section
+
 function clearGameTimers(){
   if(speed&&speed.timer){clearInterval(speed.timer);speed.timer=null;}
   if(speed&&speed.countdownTimer){clearInterval(speed.countdownTimer);speed.countdownTimer=null;}
@@ -14,50 +15,41 @@ function clearGameTimers(){
   if(campaignState&&campaignState.playTimeTimer){clearInterval(campaignState.playTimeTimer);campaignState.playTimeTimer=null;}
   if(campaignState&&campaignState.questionTimer){cancelAnimationFrame(campaignState.questionTimer);campaignState.questionTimer=null;}
 }
+
 function showScreen(id){
   const targetEl = document.getElementById(id);
+  
+  // ─── ASTRO MULTI-PAGE FIX ──────────────────────────────
+  // If the target screen doesn't exist on this page, redirect to home!
   if (!targetEl) {
-    const routes = {
-      'screen-menu': '/',
-      'screen-friends': '/friends',
-      'screen-leaderboard': '/leaderboard',
-      'screen-stats': '/stats',
-      'screen-tips': '/tips',
-      'screen-achievements': '/achievements'
-    };
-    if (routes[id]) {
-      const targetUrl = typeof getLocalizedUrl === 'function' ? getLocalizedUrl(routes[id]) : routes[id];
-      // Forceer een 'klik' zodat Astro View Transitions de animatie oppakt
-      const a = document.createElement('a');
-      a.href = targetUrl;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      return;
+    const path = window.location.pathname;
+    const isHome = path === '/' || path === '/nl' || path === '/nl/' || path === '/es' || path === '/es/';
+    
+    if (!isHome) {
+      console.warn(`[Numfly] Screen '${id}' not found on this page. Redirecting to game board...`);
+      // Use your existing i18n logic to stay in the right language
+      let url = typeof window.getLocalizedUrl === 'function' ? window.getLocalizedUrl('/') : '/';
+      
+      // If they accepted a challenge, attach it to the URL so it auto-starts!
+      if (typeof activeChallengeId !== 'undefined' && activeChallengeId) {
+        url += '?challenge=' + activeChallengeId;
+      }
+      window.location.href = url;
+    } else {
+      console.error(`[Numfly] FATAL: Screen '${id}' is missing from the home page HTML!`);
     }
+    return;
   }
-  
-  // Clear game timers ...
-  const _gameScreens=['screen-speed-game','screen-practice-game','screen-lightning-game','screen-daily-game','screen-campaign-game'];
-  const _curId=document.querySelector('.screen.active')?.id;
-  if(_curId&&_gameScreens.includes(_curId)&&!_gameScreens.includes(id)){clearGameTimers();}
-  
-  const cur=document.querySelector('.screen.active')?.id;
-  const leavingLightning=cur&&(cur==='screen-lightning-game'||cur==='screen-lightning-setup'||cur==='screen-lightning-result');
-  const goingToLightning=id==='screen-lightning-game'||id==='screen-lightning-setup'||id==='screen-lightning-result';
-  if(leavingLightning&&!goingToLightning){
-    if(lightning)lightning.abandoned=true;
-    if(id==='screen-menu'){lightning.score=0;lightning.sessionScore=0;}
-  }
-  
-  const PROTECTED=['screen-friends','screen-leaderboard','screen-competition','screen-group-comp'];
+  // ────────────────────────────────────────────────────────
+
+  const PROTECTED=['screen-stats','screen-friends','screen-1v1','screen-achievements','screen-competition','screen-group-comp'];
   if(PROTECTED.includes(id)&&!currentUser){
     if(typeof openAuthModal==='function')openAuthModal('login');
     return;
   }
   
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  targetEl.classList.add('active');
   window.scrollTo(0,0);
   document.body.classList.toggle('on-menu', id==='screen-menu');
   
@@ -79,13 +71,11 @@ function showScreen(id){
     else loadLeaderboard(_lbKey || 'xp'); 
   }
   
-  const scrollable=['screen-tips','screen-achievements'];
-  if(scrollable.includes(id)){attachScrollTopListener();}
-  else{detachScrollTopListener();}
-  if(id==='screen-privacy'){renderPrivacy();requestAnimationFrame(()=>{window.scrollTo(0,0);document.getElementById('screen-privacy').scrollTop=0;});}
+  const scrollable=['screen-tips','screen-stats','screen-achievements','screen-leaderboard','screen-friends','screen-1v1'];
+  if(scrollable.includes(id)){
+    setTimeout(()=>{
+      const c=targetEl.querySelector('.content-container')||targetEl;
+      c.scrollTop=0;
+    },10);
+  }
 }
-
-function showTips(){
-  showScreen('screen-tips');
-}
-
