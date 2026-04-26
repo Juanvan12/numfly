@@ -773,17 +773,19 @@ function setLang(l,btn){
   if(document.getElementById('modal-levelup').classList.contains('open')) showLevelUpModal(xp.level);
 }
 
-window.getLocalizedUrl = function(basePath) {
-  if (lang === 'nl') {
-    const dictNl = { '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', '/achievements':'/prestaties', '/tips':'/tips', '/campaign':'/campagne', '/daily':'/dagelijks', '/lightning':'/bliksem', '/speed':'/snelheid', '/practice':'/oefenen', '/1v1':'/1v1' };
-    return '/nl' + (dictNl[basePath] || basePath);
-  }
-  if (lang === 'es') {
-    const dictEs = { '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', '/achievements':'/logros', '/tips':'/consejos', '/campaign':'/campana', '/daily':'/diario', '/lightning':'/rayo', '/speed':'/velocidad', '/practice':'/practica', '/1v1':'/1v1' };
-    return '/es' + (dictEs[basePath] || basePath);
-  }
-  return basePath;
-};
+if (typeof window !== 'undefined') {
+  window.getLocalizedUrl = function(basePath) {
+    if (lang === 'nl') {
+      const dictNl = { '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', '/achievements':'/prestaties', '/tips':'/tips', '/campaign':'/campagne', '/daily':'/dagelijks', '/lightning':'/bliksem', '/speed':'/snelheid', '/practice':'/oefenen', '/1v1':'/1v1' };
+      return '/nl' + (dictNl[basePath] || basePath);
+    }
+    if (lang === 'es') {
+      const dictEs = { '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', '/achievements':'/logros', '/tips':'/consejos', '/campaign':'/campana', '/daily':'/diario', '/lightning':'/rayo', '/speed':'/velocidad', '/practice':'/practica', '/1v1':'/1v1' };
+      return '/es' + (dictEs[basePath] || basePath);
+    }
+    return basePath;
+  };
+}
 
 function applyTranslations(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
