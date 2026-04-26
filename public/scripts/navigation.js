@@ -23,20 +23,24 @@ function showScreen(id){
       'screen-leaderboard': '/leaderboard',
       'screen-stats': '/stats',
       'screen-tips': '/tips',
-      'screen-achievements': '/achievements'
+      'screen-achievements': '/achievements',
+      'screen-speed-game': '/1v1'   // ← restore the original redirect
     };
-    if (routes[id]) {
-      const targetUrl = typeof getLocalizedUrl === 'function' ? getLocalizedUrl(routes[id]) : routes[id];
-      // Forceer een 'klik' zodat Astro View Transitions de animatie oppakt
-      const a = document.createElement('a');
-      a.href = targetUrl;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      return;
-    }
-  }
-  
+if (routes[id]) {
+  const targetUrl = typeof getLocalizedUrl === 'function' ? getLocalizedUrl(routes[id]) : routes[id];
+  const a = document.createElement('a');
+  a.href = targetUrl;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  return;
+}
+
+// Guard: if the element still doesn't exist, bail gracefully instead of crashing
+if (!targetEl) {
+  console.warn('[Numfly] showScreen: no element found for', id);
+  return;
+}
   // Clear game timers ...
   const _gameScreens=['screen-speed-game','screen-practice-game','screen-lightning-game','screen-daily-game','screen-campaign-game'];
   const _curId=document.querySelector('.screen.active')?.id;
@@ -88,4 +92,4 @@ function showScreen(id){
 function showTips(){
   showScreen('screen-tips');
 }
-
+}
