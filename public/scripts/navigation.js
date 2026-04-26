@@ -3,94 +3,104 @@
 // ══════════════════════════════════════════════════════════════════════════════
 let currentStatsFilter='all';
 let currentDiffFilter='all'; // 'all'|'easy'|'medium'|'hard' — for accuracy section
+
 function clearGameTimers(){
-  if(speed&&speed.timer){clearInterval(speed.timer);speed.timer=null;}
-  if(speed&&speed.countdownTimer){clearInterval(speed.countdownTimer);speed.countdownTimer=null;}
-  if(practice&&practice.timer){clearInterval(practice.timer);practice.timer=null;}
-  if(dailyState&&dailyState.timer){clearInterval(dailyState.timer);dailyState.timer=null;}
-  if(dailyState&&dailyState.playTimeTimer){clearInterval(dailyState.playTimeTimer);dailyState.playTimeTimer=null;}
-  if(dailyState&&dailyState.countdownTimer){clearInterval(dailyState.countdownTimer);dailyState.countdownTimer=null;}
-  if(campaignState&&campaignState.timer){clearInterval(campaignState.timer);campaignState.timer=null;}
-  if(campaignState&&campaignState.playTimeTimer){clearInterval(campaignState.playTimeTimer);campaignState.playTimeTimer=null;}
-  if(campaignState&&campaignState.questionTimer){cancelAnimationFrame(campaignState.questionTimer);campaignState.questionTimer=null;}
+  // Upgrade: Using 'typeof' and '?.' safely checks for variables even if game scripts aren't loaded on this specific Astro page.
+  if(typeof speed !== 'undefined' && speed?.timer){clearInterval(speed.timer);speed.timer=null;}
+  if(typeof speed !== 'undefined' && speed?.countdownTimer){clearInterval(speed.countdownTimer);speed.countdownTimer=null;}
+  if(typeof practice !== 'undefined' && practice?.timer){clearInterval(practice.timer);practice.timer=null;}
+  if(typeof dailyState !== 'undefined' && dailyState?.timer){clearInterval(dailyState.timer);dailyState.timer=null;}
+  if(typeof dailyState !== 'undefined' && dailyState?.playTimeTimer){clearInterval(dailyState.playTimeTimer);dailyState.playTimeTimer=null;}
+  if(typeof dailyState !== 'undefined' && dailyState?.countdownTimer){clearInterval(dailyState.countdownTimer);dailyState.countdownTimer=null;}
+  if(typeof campaignState !== 'undefined' && campaignState?.timer){clearInterval(campaignState.timer);campaignState.timer=null;}
+  if(typeof campaignState !== 'undefined' && campaignState?.playTimeTimer){clearInterval(campaignState.playTimeTimer);campaignState.playTimeTimer=null;}
+  if(typeof campaignState !== 'undefined' && campaignState?.questionTimer){cancelAnimationFrame(campaignState.questionTimer);campaignState.questionTimer=null;}
 }
+
 function showScreen(id){
   const targetEl = document.getElementById(id);
+  
+  // ─── ASTRO MULTI-PAGE FIX ──────────────────────────────
   if (!targetEl) {
-    const routes = {
-      'screen-menu': '/',
-      'screen-friends': '/friends',
-      'screen-leaderboard': '/leaderboard',
-      'screen-stats': '/stats',
-      'screen-tips': '/tips',
-      'screen-achievements': '/achievements',
-      'screen-speed-game': '/1v1',
-      'screen-daily-game': '/daily',
-      'screen-daily-result': '/daily'
-    };
-    if (routes[id]) {
-      const targetUrl = typeof getLocalizedUrl === 'function' ? getLocalizedUrl(routes[id]) : routes[id];
-      // Forceer een 'klik' zodat Astro View Transitions de animatie oppakt
-      const a = document.createElement('a');
-      a.href = targetUrl;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      return;
+    const path = window.location.pathname;
+    const isHome = path === '/' || path === '/nl' || path === '/nl/' || path === '/es' || path === '/es/';
+    
+    if (!isHome) {
+      const isChallenge = typeof activeChallengeId !== 'undefined' && activeChallengeId;
+      const targetRoute = isChallenge ? '/1v1' : '/';
+      
+      let url = typeof window.getLocalizedUrl === 'function' ? window.getLocalizedUrl(targetRoute) : targetRoute;
+      
+      if (isChallenge) {
+        url += '?challenge=' + activeChallengeId;
+      }
+      
+      console.warn(`[Numfly] Screen missing on this route. Redirecting to ${url}...`);
+      window.location.href = url;
+    } else {
+      console.error(`[Numfly] FATAL: Screen '${id}' is missing from the home page HTML!`);
     }
-    // No route found — bail gracefully instead of crashing
-    console.warn('[Numfly] showScreen: no element found for', id);
     return;
   }
+  // ────────────────────────────────────────────────────────
+
+  const PROTECTED=['screen-stats','screen-friends','screen-1v1','screen-achievements','screen-competition','screen-group-comp'];
   
-  // Clear game timers when leaving a game screen
-  const _gameScreens=['screen-speed-game','screen-practice-game','screen-lightning-game','screen-daily-game','screen-campaign-game'];
-  const _curId=document.querySelector('.screen.active')?.id;
-  if(_curId&&_gameScreens.includes(_curId)&&!_gameScreens.includes(id)){clearGameTimers();}
-  
-  const cur=document.querySelector('.screen.active')?.id;
-  const leavingLightning=cur&&(cur==='screen-lightning-game'||cur==='screen-lightning-setup'||cur==='screen-lightning-result');
-  const goingToLightning=id==='screen-lightning-game'||id==='screen-lightning-setup'||id==='screen-lightning-result';
-  if(leavingLightning&&!goingToLightning){
-    if(lightning)lightning.abandoned=true;
-    if(id==='screen-menu'){lightning.score=0;lightning.sessionScore=0;}
-  }
-  
-  const PROTECTED=['screen-friends','screen-leaderboard','screen-competition','screen-group-comp'];
-  if(PROTECTED.includes(id)&&!currentUser){
-    if(typeof openAuthModal==='function')openAuthModal('login');
+  // Upgrade: Safe currentUser check
+  const isUserLoggedIn = typeof currentUser !== 'undefined' && currentUser;
+  if(PROTECTED.includes(id) && !isUserLoggedIn){
+    if(typeof openAuthModal==='function') openAuthModal('login');
     return;
   }
   
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  targetEl.classList.add('active');
   window.scrollTo(0,0);
   document.body.classList.toggle('on-menu', id==='screen-menu');
   
-  applyTranslations();
-  if(id==='screen-menu'){renderHSPanel();renderXPPanel();updateDailyCard();}
-  if(id==='screen-stats') renderStatsContent();
+  // Upgrade: Always clear background game timers when changing screens so a game doesn't secretly run in the background!
+  clearGameTimers();
+  
+  if (typeof applyTranslations === 'function') applyTranslations();
+  
+  if(id==='screen-menu'){
+    if(typeof renderHSPanel==='function') renderHSPanel();
+    if(typeof renderXPPanel==='function') renderXPPanel();
+    if(typeof updateDailyCard==='function') updateDailyCard();
+  }
+  if(id==='screen-stats' && typeof renderStatsContent==='function') renderStatsContent();
+  
   if(id!=='screen-friends'){
     const sr=document.getElementById('friend-search-result');
     if(sr)sr.innerHTML='';
     const si=document.getElementById('friend-search-input');
     if(si)si.value='';
   }
-  if(id==='screen-friends'){loadFriends();startFriendPoller();}
-  else{stopFriendPoller();}
-  if(id==='screen-tips'){renderTipsFilterBtns();renderTipsList();}
-  if(id==='screen-achievements') renderAchievements();
-  if(id==='screen-leaderboard') { 
-    if(typeof setLbScope === 'function') setLbScope(_lbScope); 
-    else loadLeaderboard(_lbKey || 'xp'); 
+  
+  if(id==='screen-friends'){
+    if(typeof loadFriends==='function') loadFriends();
+    if(typeof startFriendPoller==='function') startFriendPoller();
+  } else {
+    if(typeof stopFriendPoller==='function') stopFriendPoller();
   }
   
-  const scrollable=['screen-tips','screen-achievements'];
-  if(scrollable.includes(id)){attachScrollTopListener();}
-  else{detachScrollTopListener();}
-  if(id==='screen-privacy'){renderPrivacy();requestAnimationFrame(()=>{window.scrollTo(0,0);document.getElementById('screen-privacy').scrollTop=0;});}
-}
-
-function showTips(){
-  showScreen('screen-tips');
+  if(id==='screen-tips'){
+    if(typeof renderTipsFilterBtns==='function') renderTipsFilterBtns();
+    if(typeof renderTipsList==='function') renderTipsList();
+  }
+  if(id==='screen-achievements' && typeof renderAchievements==='function') renderAchievements();
+  
+  if(id==='screen-leaderboard') { 
+    if(typeof setLbScope === 'function' && typeof _lbScope !== 'undefined') setLbScope(_lbScope); 
+    else if(typeof loadLeaderboard === 'function') loadLeaderboard(typeof _lbKey !== 'undefined' ? _lbKey : 'xp'); 
+  }
+  
+  const scrollable=['screen-tips','screen-stats','screen-achievements','screen-leaderboard','screen-friends','screen-1v1'];
+  if(scrollable.includes(id)){
+    // Upgrade: requestAnimationFrame is much smoother than setTimeout for DOM paints
+    requestAnimationFrame(() => {
+      const c = targetEl.querySelector('.content-container') || targetEl;
+      c.scrollTop = 0;
+    });
+  }
 }

@@ -769,6 +769,11 @@ document.getElementById('google-confirm-btn').onclick = async () => {
 }
 
 async function doSignOut(){
+  currentUser = null;
+  if (syncTimer) clearTimeout(syncTimer);
+
+  try { if (sb) await sb.auth.signOut(); } catch(e) {}
+
   try {
     localStorage.removeItem(GUEST_SAVE_KEY);
     localStorage.removeItem('numfly_op_stats');

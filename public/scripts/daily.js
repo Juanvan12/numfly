@@ -309,6 +309,7 @@ function checkDailyAnswer(){
     }
     dailyState.recordedWrong=false; // reset for next question
     dailyState.current++;
+    saveDailyLocalState();
     if(dailyState.current>=DAILY_TOTAL){
       finishDailyChallenge();
     } else {
@@ -601,6 +602,19 @@ async function setDcTab(tab,btn){
   if(el)el.innerHTML='<div style="padding:12px 0;text-align:center"><span class="spinner"></span></div>';
   await loadDailyLeaderboard(tab);
 }
+
+function saveDailyLocalState() {
+  if (!dailyState || dailyState.done || dailyState.current === 0) return;
+  const elapsed = dailyState.startTime > 0 ? Date.now() - dailyState.startTime : 0;
+  try {
+    localStorage.setItem('numfly_daily_progress', JSON.stringify({
+      dateStr: getDailyDateStr(),
+      current: dailyState.current,
+      elapsedMs: elapsed
+    }));
+  } catch(e) {}
+}
+
 async function loadDailyLeaderboard(tab){
   const el=document.getElementById('dc-leaderboard');
   if(!el)return;
@@ -660,7 +674,11 @@ async function loadDailyLeaderboard(tab){
         <div class="dc-lb-time">${formatDailyTime(r.time_ms)}</div>
       </div>`;
     }
-    let html=rows.map((r,i)=>buildDcRow(r,i+1,r.user_id===uid)).join('');
+  let currentRank = 1;
+  let html = rows.map((r, i) => {
+  if (i > 0 && r.time_ms > rows[i-1].time_ms) currentRank = i + 1;
+  return buildDcRow(r, currentRank, r.user_id === uid);
+}).join('');
     if(dcSelfRow&&dcSelfRank){
       html+=`<div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center;padding:4px 0;letter-spacing:1px">· · ·</div>`;
       html+=buildDcRow(dcSelfRow,dcSelfRank,true);

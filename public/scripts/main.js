@@ -115,6 +115,12 @@ function copyDailyLink(){
 window.addEventListener('beforeunload',()=>{
   if(syncTimer&&currentUser){clearTimeout(syncTimer);pushToSupabase();}
   saveOpStats();
+  if(typeof saveDailyLocalState === 'function') saveDailyLocalState();
+});
+
+// Astro View Transitions safety net for browser back button
+document.addEventListener('astro:before-preparation', () => {
+  if(typeof saveDailyLocalState === 'function') saveDailyLocalState();
 });
 
 // ── GDPR ──────────────────────────────────────────────────────────────────────
