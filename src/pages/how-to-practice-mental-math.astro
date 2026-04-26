@@ -1864,36 +1864,43 @@ footer {
   <div class="f-copy">© 2026 Numfly</div>
 </footer>
 
-<script>
-// ─── Reading bar ───────────────────────────────────────────────
-const bar = document.getElementById('reading-bar');
-window.addEventListener('scroll', () => {
-  const d = document.documentElement;
-  if (bar) bar.style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
-}, { passive: true });
+<script is:inline>
+function initLanding() {
+  const bar = document.getElementById('reading-bar');
+  window.addEventListener('scroll', () => {
+    const d = document.documentElement;
+    if (bar) bar.style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+  }, { passive: true });
 
-// ─── Scroll reveal ─────────────────────────────────────────────
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { 
+      if (e.isIntersecting) { 
+        e.target.classList.add('visible'); 
+        io.unobserve(e.target); 
+      } 
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+  
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+}
 
-// ─── Technique accordion ───────────────────────────────────────
-function tog(header: HTMLElement) {
+initLanding();
+document.addEventListener('astro:page-load', initLanding);
+
+window.tog = function(header) {
   const technique = header.closest('.technique');
   if (!technique) return;
   technique.classList.toggle('open');
   header.setAttribute('aria-expanded', technique.classList.contains('open') ? 'true' : 'false');
-}
+};
 
-// ─── FAQ accordion ─────────────────────────────────────────────
-function faq(btn: HTMLElement) {
+window.faq = function(btn) {
   const item = btn.closest('.faq-item');
   if (!item) return;
   const was = item.classList.contains('open');
   document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
   if (!was) item.classList.add('open');
-}
+};
 </script>
 </body>
 </html>
