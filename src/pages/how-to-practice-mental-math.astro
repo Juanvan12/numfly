@@ -1315,20 +1315,21 @@ footer {
 <main>
 <div class="page" id="main-content">
 
-  <header class="hero">
+<header class="hero">
     <div class="hero-tag">{t('hero_tag')}</div>
 
-    <!-- English -->
-    <h1 data-lang="en">How to practice<br><span class="ac">mental math</span><br>and get faster</h1>
-    <p class="hero-sub lang-active" data-lang="en">Mental math is a trainable skill. This guide covers 12 techniques that produce the fastest results, how to structure daily practice, and the mistakes that keep most people stuck.</p>
-
-    <!-- Spanish -->
-    <h1 data-lang="es">Cómo practicar<br><span class="ac">cálculo mental</span><br>y ser más rápido</h1>
-    <p class="hero-sub" data-lang="es">El cálculo mental es una habilidad entrenable. Esta guía cubre 12 técnicas que producen los resultados más rápidos, cómo estructurar la práctica diaria y los errores que frenan a la mayoría.</p>
-
-    <!-- Dutch -->
-    <h1 data-lang="nl">Hoe je<br><span class="ac">hoofdrekenen</span><br>snel verbetert</h1>
-    <p class="hero-sub" data-lang="nl">Hoofdrekenen is een trainbare vaardigheid. Deze gids behandelt 12 technieken die de snelste resultaten opleveren, hoe je dagelijkse oefening structureert en de valkuilen waar de meeste mensen op stuiten.</p>
+    {lang === 'en' && <>
+      <h1>How to practice<br><span class="ac">mental math</span><br>and get faster</h1>
+      <p class="hero-sub">Mental math is a trainable skill. This guide covers 12 techniques that produce the fastest results, how to structure daily practice, and the mistakes that keep most people stuck.</p>
+    </>}
+    {lang === 'es' && <>
+      <h1>Cómo practicar<br><span class="ac">cálculo mental</span><br>y ser más rápido</h1>
+      <p class="hero-sub">El cálculo mental es una habilidad entrenable. Esta guía cubre 12 técnicas que producen los resultados más rápidos, cómo estructurar la práctica diaria y los errores que frenan a la mayoría.</p>
+    </>}
+    {lang === 'nl' && <>
+      <h1>Hoe je<br><span class="ac">hoofdrekenen</span><br>snel verbetert</h1>
+      <p class="hero-sub">Hoofdrekenen is een trainbare vaardigheid. Deze gids behandelt 12 technieken die de snelste resultaten opleveren, hoe je dagelijkse oefening structureert en de valkuilen waar de meeste mensen op stuiten.</p>
+    </>}
 
     <div class="hero-meta">
       <span>{t('hero_meta_techniques')}</span>

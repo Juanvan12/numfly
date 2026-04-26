@@ -317,3 +317,37 @@ function showLevelUpModal(lvl){
   document.getElementById('lu-title-flavor').textContent=t('title_flavor_'+title.key);
   document.getElementById('modal-levelup').classList.add('open');
 }
+
+// ─── iOS Audio Unlocker ───────────────────────────────────────
+let iosAudioUnlocked = false;
+
+function unlockiOSAudio() {
+  if (iosAudioUnlocked) return;
+  
+  // 1. Put ALL your sound variables in this array.
+  // Replace these example names with the actual variable names you used in state.js!
+  // (For example: if you wrote "const correctSound = new Audio(...)", put "correctSound" here)
+  const allSounds = [ 
+    correctSound, wrongSound, clickSound, levelUpSound 
+  ];
+  
+  // 2. Quickly play and pause them to satisfy Apple's security block
+  allSounds.forEach(sound => {
+    if (sound && typeof sound.play === 'function') {
+      sound.play().catch(() => {}); // Catch prevents console errors
+      sound.pause();
+      sound.currentTime = 0;
+    }
+  });
+
+  iosAudioUnlocked = true;
+  
+  // 3. Remove the listeners so this only runs once
+  document.removeEventListener('touchstart', unlockiOSAudio);
+  document.removeEventListener('click', unlockiOSAudio);
+}
+
+// Listen for the very first tap anywhere on the screen
+document.addEventListener('touchstart', unlockiOSAudio, { once: true });
+document.addEventListener('click', unlockiOSAudio, { once: true });
+// ──────────────────────────────────────────────────────────────
