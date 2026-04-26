@@ -1,7 +1,7 @@
 // ══════════════════════════════════════════════════════════════════════════════
 // i18n
 // ══════════════════════════════════════════════════════════════════════════════
-export const STRINGS={
+const STRINGS={
 en:{
   tagline:"Train your brain. Beat your score. Beat your friends.",
   hs_title:"High Scores",nav_stats:"Statistics",nav_tips:"Tips & Tricks",
@@ -742,6 +742,11 @@ es:{
 };
 // Make STRINGS available on the client when loaded as a script
 if (typeof window !== 'undefined') { window.STRINGS = STRINGS; }
+// ─── Astro Build-Time Export ───────────────────────────────
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { STRINGS };
+}
 
 let lang='en';
 
