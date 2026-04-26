@@ -320,16 +320,25 @@ async function acceptChallengeInvite(code,difficulty){
   speed.remaining=ch.duration_seconds||120;
   if(ch.is_competition){
     await withTimeout(sb.from('challenge_attempts').update({invited:false}).eq('challenge_id',code).eq('player_id',currentUser.id));
-    // Mark as accepted (invited:false) so others see them as a participant
     _activeCompId=code;
     activeChallengeId=code;
-    // Go straight to the game — don't show scoreboard before playing
-    startSpeedWithCountdown();
   } else {
-    // 1v1 race: clear comp ID so back button goes to Friends
     _activeCompId=null;
-    startSpeedWithCountdown();
   }
+
+  // Save all challenge state so checkPendingStart can restore it after the /1v1 page loads
+  localStorage.setItem('numfly_pending_start', JSON.stringify({
+    id: code,
+    mode: 'challenge',
+    diff: ch.difficulty || 'easy',
+    dur: ch.duration_seconds || 120,
+    origDur: ch.duration_seconds || 120,
+    seed: ch.seed,
+    compId: ch.is_competition ? code : null
+  }));
+
+  // Navigate to /1v1 — the page will call checkPendingStart() which reads localStorage and starts the game
+  if (typeof showScreen === 'function') showScreen('screen-speed-game');
   checkPendingRequests();
 }
 async function declineChallengeInvite(code){
