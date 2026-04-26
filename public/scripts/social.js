@@ -1576,7 +1576,11 @@ async function loadLeaderboard(key){
         <div style="text-align:right"><div class="lb-val">${val}</div></div>
       </div>`;
     }
-    let html=rows.map((r,i)=>buildLbRow(r,i+1,r.user_id===uid)).join('');
+    let currentRank = 1;
+    let html = rows.map((r, i) => {
+  if (i > 0 && (r[col] || 0) < (rows[i-1][col] || 0)) currentRank = i + 1;
+  return buildLbRow(r, currentRank, r.user_id === uid);
+  }).join('');
     if(selfRow&&selfRank){
       html+=`<div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center;padding:4px 0;letter-spacing:1px">· · ·</div>`;
       html+=buildLbRow({...selfRow,xp_level:(selfRow.xp_level||1)},selfRank,true);
