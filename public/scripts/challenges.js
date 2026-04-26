@@ -168,7 +168,7 @@ function startSpeedWithCountdown() {
   
   if(speed.timer) clearInterval(speed.timer);
   const _cdDur = speed.remaining || 120;
-  speed.score=0; speed.remaining=_cdDur; speed.wrongStreak=0; speed.waiting=false;
+  speed.score=0; speed.remaining=_cdDur; speed.wrongStreak=0; speed.waiting=false; speed.answered=false;
   speed.opBag=[]; speed.originalDur=_cdDur; 
   if (typeof stats !== 'undefined') stats.currentSpeedStreak=0;
   if (typeof recentQs !== 'undefined') recentQs.speed=new Set();
