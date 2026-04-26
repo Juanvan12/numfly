@@ -55,10 +55,11 @@ export function getStaticPaths() {
 }
 
 const { page } = Astro.props;
+const currentLang = Astro.params.lang;
 ---
 
-{page === 'guide' ? <GuidePage /> : 
- page === 'trainer' ? <TrainerPage /> : 
+{page === 'guide' ? <GuidePage lang={currentLang} /> : 
+ page === 'trainer' ? <TrainerPage lang={currentLang} /> : 
  <Layout>
    {page === 'home' && <MainMenu />}
    {page === 'friends' && (
