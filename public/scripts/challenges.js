@@ -202,11 +202,7 @@ function startSpeedWithCountdown() {
     _lbl.textContent = backText;
   }
   
-  try {
-    if (typeof nextSpeedQ === 'function') nextSpeedQ(); 
-  } catch(e) { console.error("nextSpeedQ crash", e); }
-
-  const ansEl=document.getElementById('s-answer');
+ const ansEl=document.getElementById('s-answer');
   if(ansEl){ansEl.disabled=true;ansEl.blur();}
   
   let count=3;
@@ -222,11 +218,14 @@ function startSpeedWithCountdown() {
       return;
     }
 
-    count--;
     if(count<=0){
       clearInterval(speed.countdownTimer);
       speed.countdownTimer=null;
       liveOverlay.remove();
+
+      try {
+        if (typeof nextSpeedQ === 'function') nextSpeedQ();
+      } catch(e) { console.error("nextSpeedQ crash", e); }
 
       speed.startedAt=Date.now();
 
@@ -260,6 +259,7 @@ function startSpeedWithCountdown() {
         liveNum.style.transform='scale(1.2)';
         setTimeout(()=>{ const n=document.getElementById('race-countdown-num'); if(n)n.style.transform='scale(1)'; },150);
       }
+      count--;
     }
   },1000);
 }
