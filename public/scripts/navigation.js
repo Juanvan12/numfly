@@ -23,11 +23,12 @@ function showScreen(id){
   // ─── ASTRO MULTI-PAGE FIX ──────────────────────────────
   if (!targetEl) {
     const path = window.location.pathname;
-    const isHome = path === '/' || path === '/nl' || path === '/nl/' || path === '/es' || path === '/es/';
+    const isHome = ['/', '/nl', '/nl/', '/es', '/es/', '/daily', '/1v1', '/speed', '/practice', '/lightning', '/campaign'].some(p => path === p || path.startsWith('/nl/') || path.startsWith('/es/'));
     
     if (!isHome) {
       const isChallenge = typeof activeChallengeId !== 'undefined' && activeChallengeId;
-      const targetRoute = isChallenge ? '/1v1' : '/';
+      const dailyScreens = ['screen-daily-game', 'screen-daily-result'];
+      const targetRoute = isChallenge ? '/1v1' : dailyScreens.includes(id) ? '/daily' : '/';
       
       let url = typeof window.getLocalizedUrl === 'function' ? window.getLocalizedUrl(targetRoute) : targetRoute;
       

@@ -321,6 +321,7 @@ const translations = {
 };
 
 type Lang = keyof typeof translations;
+interface Props { lang?: string; }
 const propLang = Astro.props.lang;
 const lang = (propLang || Astro.params.lang || 'en') as Lang;
 const t = (key: string): string =>
