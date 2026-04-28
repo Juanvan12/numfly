@@ -314,20 +314,12 @@ function detectAndSetLang() {
   setLang(targetLang);
 }
 
-// Patch setLang to also persist choice
-// Patch setLang to also persist choice and handle translated URLs
 const _origSetLang=setLang;
-const TITLE_BY_LANG={
-  en:'Numfly - Free Math Games & Mental Math Practice',
-  nl:'Numfly - Gratis Rekenspelletjes & Hoofdrekenen Oefenen',
-  es:'Numfly - Juegos de Matemáticas y Práctica de Cálculo Mental',
-};
 
 setLang=function(l,btn){
   document.documentElement.lang=l;
   localStorage.setItem('numfly_lang',l);
   _origSetLang(l,btn);
-  document.title=TITLE_BY_LANG[l]||TITLE_BY_LANG.en;
   
   // Update sidebar links dynamically so they never show English
   try {

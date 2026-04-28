@@ -18,9 +18,7 @@ function genTipProblem(tipIdx){
   if(key==='Multiply by 5'){return mkMul(rv2(10,40),5);}
   if(key==='Multiply by 9'){return mkMul(rv2(10,20),9);}
   if(key==='Multiply by 11 (two digits)'){
-    // Pick a 2-digit number where digit sum < 10 (so result is clean)
-    let a;do{a=rv(11,81);}while(Math.floor(a/10)+(a%10)>=10);
-    return mkMul(a,11);
+    return mkMul(rv(11, 99), 11);
   }
   if(key==='Multiply by 25'){return mkMul(rv2(10,40)*2,25);}
   if(key==='Multiply by 4'){return mkMul(rv2(12,50),4);}
@@ -29,8 +27,12 @@ function genTipProblem(tipIdx){
   if(key==='Difference of squares'){const mid=rv(11,30),d=rv(1,4);return mkMul(mid-d,mid+d);}
   if(key==='Break numbers apart'){return mkMul(rv2(11,25),rv2(11,25));}
   if(key==='Multiply two numbers near 100'){return mkMul(rv2(90,110),rv2(90,110));}
+  if(key==='Double and halve'){
+    const a=rv(3,15)*2; 
+    const b=rv(1,9)*10 + 5; 
+    return mkMul(a,b);
+  }
 
-  // Addition tips — all operands ≥10
   if(key==='Left-to-right addition'||key==='Chunking large sums'){
     return mkAdd(rv2(100,500),rv2(100,500));
   }
@@ -45,11 +47,7 @@ function genTipProblem(tipIdx){
     const a=rv(11,89),b=100-a,c=rv(1,8)*10,d=rv2(11,50);
     return{q:`${a}+${c}+${b}+${d}`,ans:a+b+c+d,type:t('op_type_add'),op:'add'};
   }
-  if(key==='Double and halve'){
-    // Pick a×25 + even number so doubling gives round hundreds
-    const a=pick([75,125,175,225,275]);const b=rv(2,12)*2;
-    return mkAdd(a,b*10);
-  }
+
   if(key==='Work with complements'){return mkAdd(rv2(51,90),rv2(51,90));}
 
   // Subtraction tips — all operands ≥10
@@ -88,13 +86,16 @@ function genTipProblem(tipIdx){
   if(key==='Flip the percentage'){
     return mkPct(...pick([[4,75],[8,25],[12,25],[4,50],[6,50],[2,50]]));
   }
-  if(key==='Percentages via fractions'){
-    // All combos guaranteed integer: 25%→×4, 50%→×2, 33%→×3 (rounded is ok for 33)
-    const opts=[[25,rv(4,20)*4],[50,rv(2,20)*2],[20,rv(5,25)*5],[10,rv(1,20)*10],[75,rv(1,8)*4]];
-    const[p,base]=pick(opts);
+if(key==='Percentages via fractions'){
+    const opts=[
+      [25, rv(4,20)*4], [50, rv(2,20)*2], [75, rv(1,8)*4], 
+      [12.5, rv(2,10)*8], [37.5, rv(2,10)*8], [33, rv(3,20)*3]
+    ];
+    const [p,base]=pick(opts);
     const ans=Math.round(p*base/100);
     return{q:`${p}% of ${base}`,ans,type:t('op_type_pct'),op:'pct'};
   }
+
   if(key==='10% as a building block'){
     return mkPct(pick([30,40,60,70,80,90,110,120,130]),pick([20,40,50,60,80,100,120,200]));
   }

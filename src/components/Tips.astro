@@ -57,4 +57,39 @@ const guideHref =
     <button class="submit-btn" onmousedown="event.preventDefault()" onclick="checkTipAnswer()">→</button>
   </div>
   <div class="feedback" id="tp-feedback"></div>
+  
+  <button id="tips-scroll-top" class="scroll-top-btn" title="Scroll to top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 100; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--bg); border: none; font-size: 20px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: opacity 0.3s, transform 0.3s; opacity: 0; transform: translateY(20px); align-items: center; justify-content: center;">
+    ↑
+  </button>
+
+  <script is:inline>
+    document.addEventListener('astro:page-load', () => {
+      const btn = document.getElementById('tips-scroll-top');
+      const screenTips = document.getElementById('screen-tips');
+      
+      if (!btn || !screenTips) return;
+
+      const scrollContainer = screenTips.querySelector('.content-container') || screenTips;
+
+      scrollContainer.addEventListener('scroll', () => {
+        if (scrollContainer.scrollTop > 300) {
+          btn.style.display = 'flex';
+          requestAnimationFrame(() => {
+            btn.style.opacity = '1';
+            btn.style.transform = 'translateY(0)';
+          });
+        } else {
+          btn.style.opacity = '0';
+          btn.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            if (scrollContainer.scrollTop <= 300) btn.style.display = 'none';
+          }, 300);
+        }
+      }, { passive: true });
+
+      btn.addEventListener('click', () => {
+        scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
 </div>
