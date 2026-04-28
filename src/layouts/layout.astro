@@ -4,22 +4,35 @@ import Sidebar from '../components/Sidebar.astro';
 import Modals from '../components/Modals.astro';
 import SocialScreens from '../components/SocialScreens.astro';
 
-// ── SEO & Hreflang URL Generation ──
 const { pathname } = Astro.url;
+const lang = pathname.startsWith('/nl') ? 'nl' : pathname.startsWith('/es') ? 'es' : 'en';
 
-// Pages that have a back button — burger should be hidden on mobile for these
+const metaDescriptions = {
+  en: "Numfly is a free mental math trainer and game. Improve your calculation speed, track your statistics, climb the leaderboard, and challenge your friends.",
+  es: "Numfly es un entrenador y juego de cálculo mental gratuito. Mejora tu velocidad de cálculo, sigue tus estadísticas, sube en la clasificación y desafía a tus amigos.",
+  nl: "Numfly is een gratis hoofdrekenentrainer en spel. Verbeter je rekensnelheid, houd je statistieken bij, klim in het klassement en daag je vrienden uit."
+};
+
+const currentMetaDesc = metaDescriptions[lang];
+
+const pageTitles = {
+  en:'Numfly - Free Math Games & Mental Math Practice',
+  nl:'Numfly - Gratis Rekenspelletjes & Hoofdrekenen Oefenen',
+  es:'Numfly - Juegos de Matemáticas y Práctica de Cálculo Mental'
+};
+
+const currentTitle = pageTitles[lang as keyof typeof pageTitles];
+
 const noMenuPages = ['/campaign', '/lightning', '/speed', '/practice', '/daily',
   '/stats', '/achievements', '/friends', '/leaderboard', '/tips', '/1v1'];
 const strippedPath = pathname.replace(/^\/(nl|es)/, '').replace(/\/$/, '') || '/';
 const isBackButtonPage = noMenuPages.some(p => strippedPath === p);
 
-// 1. Added ": string" to the path parameter
 function getBasePage(path: string) {
   let p = path.replace(/\/$/, ""); 
   p = p.replace(/^\/(nl|es)/, "");
   if (p === "") p = "/";
 
-  // 2. Added ": Record<string, string>" to tell TS this object maps strings to strings
   const reverseMap: Record<string, string> = {
     "/vrienden": "/friends", "/amigos": "/friends",
     "/statistieken": "/stats", "/estadisticas": "/stats",
@@ -39,7 +52,6 @@ function getBasePage(path: string) {
 
 const basePage = getBasePage(pathname);
 
-// 3. Added ": Record<string, string>" to the translation maps
 const enToNl: Record<string, string> = { "/friends":"/vrienden", "/stats":"/statistieken", "/leaderboard":"/klassement", "/achievements":"/prestaties", "/how-to-practice-mental-math":"/hoofdrekenen-oefenen", "/campaign":"/campagne", "/daily":"/dagelijks", "/lightning":"/bliksem", "/speed":"/snelheid", "/practice":"/oefenen", "/tips":"/tips" };
 const enToEs: Record<string, string> = { "/friends":"/amigos", "/stats":"/estadisticas", "/leaderboard":"/clasificacion", "/achievements":"/logros", "/how-to-practice-mental-math":"/como-practicar-calculo-mental", "/campaign":"/campana", "/daily":"/diario", "/lightning":"/rayo", "/speed":"/velocidad", "/practice":"/practica", "/tips":"/consejos" };
 
@@ -51,7 +63,8 @@ const esPath = enToEs[basePage] || basePage;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Numfly - Free Math Games & Mental Math Practice</title>
+  <title>{currentTitle}</title>
+  <meta name="description" content={currentMetaDesc} />
 
   <ClientRouter />
   

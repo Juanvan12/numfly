@@ -1566,9 +1566,9 @@ footer {
 </div>
 
 <footer>
-  <a href="https://numfly.pro" class="f-logo">NUM<span>FLY</span>.</a>
+  <a href={lang === 'nl' ? '/nl' : lang === 'es' ? '/es' : '/'} class="f-logo">NUM<span>FLY</span>.</a>
   <div class="f-links">
-    <a href="https://numfly.pro">{t('footer_practice')}</a>
+    <a href={lang === 'nl' ? '/nl' : lang === 'es' ? '/es' : '/'}>{t('footer_practice')}</a>
     <a href={lang === 'nl' ? '/nl/hoofdrekenen-oefenen' : lang === 'es' ? '/es/como-practicar-calculo-mental' : '/how-to-practice-mental-math'}>{t('footer_guide')}</a>
     <a href="/?mode=privacy">{t('footer_privacy')}</a>
   </div>
