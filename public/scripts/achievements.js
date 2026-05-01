@@ -12,7 +12,7 @@ const ACHIEVEMENTS=[
   {id:'answers_3',   sec:'general', icon:'💯', tier:'silver',   nameKey:'ach_answers_3_name',   descKey:'ach_answers_3_desc',   check:(s)=>s.totalCorrect>=250},
   {id:'answers_4',   sec:'general', icon:'⚡', tier:'gold',     nameKey:'ach_answers_4_name',   descKey:'ach_answers_4_desc',   check:(s)=>s.totalCorrect>=1000},
   {id:'answers_5',   sec:'general', icon:'🤖', tier:'platinum', nameKey:'ach_answers_5_name',   descKey:'ach_answers_5_desc',   check:(s)=>s.totalCorrect>=2500},
-  {id:'answers_6',   sec:'general', icon:'🌌', tier:'diamond',  nameKey:'ach_answers_6_name',   descKey:'ach_answers_6_desc',   check:(s)=>s.totalCorrect>=10000},
+  {id:'answers_6',   sec:'general', icon:'💎', tier:'diamond',  nameKey:'ach_answers_6_name',   descKey:'ach_answers_6_desc',   check:(s)=>s.totalCorrect>=10000},
   {id:'time_1',      sec:'general', icon:'⏱️', tier:'bronze',   nameKey:'ach_time_1_name',      descKey:'ach_time_1_desc',      check:(s)=>s.totalPlayTime>=300},
   {id:'time_2',      sec:'general', icon:'📅', tier:'silver',   nameKey:'ach_time_2_name',      descKey:'ach_time_2_desc',      check:(s)=>s.totalPlayTime>=1800},
   {id:'time_3',      sec:'general', icon:'🕰️', tier:'gold',     nameKey:'ach_time_3_name',      descKey:'ach_time_3_desc',      check:(s)=>s.totalPlayTime>=7200},
@@ -62,6 +62,9 @@ const ACHIEVEMENTS=[
   {id:'level_3', sec:'mastery', icon:'🌳', tier:'gold',     nameKey:'ach_level_3_name', descKey:'ach_level_3_desc', check:(s,h,x)=>x.level>=25},
   {id:'level_4', sec:'mastery', icon:'🔮', tier:'platinum', nameKey:'ach_level_4_name', descKey:'ach_level_4_desc', check:(s,h,x)=>x.level>=50},
   {id:'level_5', sec:'mastery', icon:'👑', tier:'diamond',  nameKey:'ach_level_5_name', descKey:'ach_level_5_desc', check:(s,h,x)=>x.level>=100},
+  {id:'level_7', sec:'mastery', icon:'🔱', tier:'diamond',  nameKey:'ach_level_7_name', descKey:'ach_level_7_desc', check:(s,h,x)=>x.level>=200},
+  {id:'level_8', sec:'mastery', icon:'⚜️', tier:'diamond',  nameKey:'ach_level_8_name', descKey:'ach_level_8_desc', check:(s,h,x)=>x.level>=300},
+  {id:'level_9', sec:'mastery', icon:'🌟', tier:'diamond',  nameKey:'ach_level_9_name', descKey:'ach_level_9_desc', check:(s,h,x)=>x.level>=500},
   {id:'level_6', sec:'mastery', icon:'🌌', tier:'diamond',  nameKey:'ach_level_6_name', descKey:'ach_level_6_desc', check:(s,h,x)=>x.level>=1000},
   // ── DAILY CHALLENGE ──────────────────────────────────────────────────────────
   {id:'daily_1',      sec:'daily', icon:'📅', tier:'bronze',   nameKey:'ach_daily_1_name',      descKey:'ach_daily_1_desc',      check:(s)=>(s.dailyCompleted||0)>=1},
@@ -279,6 +282,9 @@ function getAchProgress(a){
   if(id==='level_3')return{cur:xp.level,max:25};
   if(id==='level_4')return{cur:xp.level,max:50};
   if(id==='level_5')return{cur:xp.level,max:100};
+  if(id==='level_7')return{cur:xp.level,max:200};
+  if(id==='level_8')return{cur:xp.level,max:300};
+  if(id==='level_9')return{cur:xp.level,max:500};
   if(id==='level_6')return{cur:xp.level,max:1000};
   if(id==='cmp_1')return{cur:stats.campaignCompleted||0,max:1};
   if(id==='cmp_5')return{cur:stats.campaignCompleted||0,max:5};
