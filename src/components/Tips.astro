@@ -36,20 +36,20 @@ const guideHref =
       {t('tips_to_guide')}
     </a>
   </div>
-  <button id="tips-scroll-top" class="scroll-top-btn" title="Scroll to top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 100; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--bg); border: none; font-size: 20px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: opacity 0.3s, transform 0.3s; opacity: 0; transform: translateY(20px); align-items: center; justify-content: center;">
+  <!-- SCROLL TO TOP BUTTON -->
+  <button id="tips-scroll-top" class="scroll-top-btn" title="Scroll to top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--bg); border: none; font-size: 20px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: opacity 0.3s, transform 0.3s; opacity: 0; transform: translateY(20px); align-items: center; justify-content: center;">
     ↑
   </button>
 
   <script is:inline>
     document.addEventListener('astro:page-load', () => {
       const btn = document.getElementById('tips-scroll-top');
+      const tipsScreen = document.getElementById('screen-tips');
       if (!btn) return;
-      
-      window.addEventListener('scroll', (e) => {
-        const target = e.target;
-        if (!target.scrollTop && target.scrollTop !== 0) return; 
 
-        if (target.scrollTop > 300) {
+      // Logic to fade the button in and out
+      const checkScroll = (scrollPos) => {
+        if (scrollPos > 300) {
           btn.style.display = 'flex';
           requestAnimationFrame(() => {
             btn.style.opacity = '1';
@@ -59,14 +59,27 @@ const guideHref =
           btn.style.opacity = '0';
           btn.style.transform = 'translateY(20px)';
           setTimeout(() => {
-            if (target.scrollTop <= 300) btn.style.display = 'none';
+            // Only hide it if BOTH containers are truly at the top
+            const screenTop = tipsScreen ? tipsScreen.scrollTop : 0;
+            if (screenTop <= 300 && window.scrollY <= 300) {
+              btn.style.display = 'none';
+            }
           }, 300);
         }
-      }, true); 
+      };
 
+      // 1. Listen to the internal screen container (SPA mode)
+      if (tipsScreen) {
+        tipsScreen.addEventListener('scroll', (e) => checkScroll(e.target.scrollTop));
+      }
+
+      // 2. Listen to the main browser window (Standard mode)
+      window.addEventListener('scroll', () => checkScroll(window.scrollY));
+
+      // 3. When clicked, blast BOTH containers back to the top!
       btn.addEventListener('click', () => {
-        const scrolledEls = Array.from(document.querySelectorAll('.screen, .app, body, html')).filter(el => el.scrollTop > 0);
-        scrolledEls.forEach(el => el.scrollTo({ top: 0, behavior: 'smooth' }));
+        if (tipsScreen) tipsScreen.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
   </script>
