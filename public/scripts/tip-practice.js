@@ -206,6 +206,7 @@ async function doReset(){
     totalAnswers:0,totalCorrect:0,totalWrong:0,totalPlayTime:0,speedScoreHistory:[],
     longestSpeedStreak:0,currentSpeedStreak:0,
     lightningStreakHistory:[],longestLightningStreak:0,longestCorrectSequence:0,
+    longestLightningSeq_medium:0,longestLightningSeq_hard:0,
     practiceCorrect:0,practiceWrong:0,
     currentPracticeStreak:0,longestPracticeStreak:0,
     opCorrect:{add:0,sub:0,mul:0,div:0,pct:0},opWrong:{add:0,sub:0,mul:0,div:0,pct:0},

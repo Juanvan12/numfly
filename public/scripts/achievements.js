@@ -25,8 +25,8 @@ const ACHIEVEMENTS=[
   {id:'lightning_games_1',  sec:'lightning', icon:'🎮', tier:'bronze',   nameKey:'ach_lightning_games_1_name',  descKey:'ach_lightning_games_1_desc',  check:(s,h)=>['easy','medium','hard'].reduce((a,d)=>a+h.lightning[d].plays,0)>=1},
   {id:'lightning_seq_1',    sec:'lightning', icon:'💧', tier:'bronze',   nameKey:'ach_lightning_seq_1_name',    descKey:'ach_lightning_seq_1_desc',    check:(s)=>s.longestCorrectSequence>=5},
   {id:'lightning_seq_2',    sec:'lightning', icon:'⚡', tier:'silver',   nameKey:'ach_lightning_seq_2_name',    descKey:'ach_lightning_seq_2_desc',    check:(s)=>s.longestCorrectSequence>=10},
-  {id:'lightning_seq_3',    sec:'lightning', icon:'🌩️', tier:'platinum', nameKey:'ach_lightning_seq_3_name',    descKey:'ach_lightning_seq_3_desc',    check:(s)=>(s.longestCorrectSequenceMedHard||0)>=15},
-  {id:'lightning_seq_4',    sec:'lightning', icon:'👑', tier:'diamond',  nameKey:'ach_lightning_seq_4_name',    descKey:'ach_lightning_seq_4_desc',    check:(s)=>(s.longestCorrectSequenceMedHard||0)>=20},
+  {id:'lightning_seq_3',    sec:'lightning', icon:'🌩️', tier:'platinum', nameKey:'ach_lightning_seq_3_name',    descKey:'ach_lightning_seq_3_desc',    check:(s)=>(s.longestLightningSeq_medium||0)>=15},
+  {id:'lightning_seq_4',    sec:'lightning', icon:'👑', tier:'diamond',  nameKey:'ach_lightning_seq_4_name',    descKey:'ach_lightning_seq_4_desc',    check:(s)=>(s.longestLightningSeq_hard||0)>=20},
   {id:'lightning_streak_1', sec:'lightning', icon:'✨', tier:'bronze',   nameKey:'ach_lightning_streak_1_name', descKey:'ach_lightning_streak_1_desc', check:(s)=>s.longestLightningStreak>=3},
   {id:'lightning_streak_2', sec:'lightning', icon:'🔆', tier:'silver',   nameKey:'ach_lightning_streak_2_name', descKey:'ach_lightning_streak_2_desc', check:(s)=>s.longestLightningStreak>=10},
   {id:'lightning_streak_3', sec:'lightning', icon:'🏆', tier:'platinum', nameKey:'ach_lightning_streak_3_name', descKey:'ach_lightning_streak_3_desc', check:(s)=>s.longestLightningStreak>=25},
@@ -72,8 +72,8 @@ const ACHIEVEMENTS=[
   {id:'daily_3',      sec:'daily', icon:'📆', tier:'gold',     nameKey:'ach_daily_3_name',      descKey:'ach_daily_3_desc',      check:(s)=>(s.dailyCompleted||0)>=30},
   {id:'daily_streak_1',sec:'daily',icon:'🔥', tier:'silver',   nameKey:'ach_daily_streak_1_name',descKey:'ach_daily_streak_1_desc',check:(s)=>(s.dailyBestStreak||0)>=3},
   {id:'daily_streak_2',sec:'daily',icon:'🔥', tier:'gold',     nameKey:'ach_daily_streak_2_name',descKey:'ach_daily_streak_2_desc',check:(s)=>(s.dailyBestStreak||0)>=7},
-  {id:'daily_streak_3',sec:'daily',icon:'🌋', tier:'platinum', nameKey:'ach_daily_streak_3_name',descKey:'ach_daily_streak_3_desc',check:(s)=>(s.dailyBestStreak||0)>=30},
-  {id:'daily_streak_4',sec:'daily',icon:'💎', tier:'diamond',  nameKey:'ach_daily_streak_4_name',descKey:'ach_daily_streak_4_desc',check:(s)=>(s.dailyBestStreak||0)>=365},
+  {id:'daily_streak_3',sec:'daily',icon:'💎', tier:'platinum', nameKey:'ach_daily_streak_3_name',descKey:'ach_daily_streak_3_desc',check:(s)=>(s.dailyBestStreak||0)>=30},
+  {id:'daily_streak_4',sec:'daily',icon:'🌌', tier:'diamond',  nameKey:'ach_daily_streak_4_name',descKey:'ach_daily_streak_4_desc',check:(s)=>(s.dailyBestStreak||0)>=365},
   {id:'daily_speed_1', sec:'daily',icon:'⚡', tier:'silver',   nameKey:'ach_daily_speed_1_name', descKey:'ach_daily_speed_1_desc', check:(s)=>(s.dailyBestTime||Infinity)<=30000},
   {id:'daily_speed_2', sec:'daily',icon:'🚀', tier:'gold',     nameKey:'ach_daily_speed_2_name', descKey:'ach_daily_speed_2_desc', check:(s)=>(s.dailyBestTime||Infinity)<=25000},
   {id:'daily_speed_3', sec:'daily',icon:'💫', tier:'platinum', nameKey:'ach_daily_speed_3_name', descKey:'ach_daily_speed_3_desc', check:(s)=>(s.dailyBestTime||Infinity)<=20000},
@@ -197,7 +197,7 @@ function renderAchievements(){
         // Mini progress for numeric achievements (show current vs target)
         const prog=getAchProgress(a);
         return`<div class="ach-card ${earned?'unlocked':'locked'}">
-          <div class="ach-badge">${earned?(a.id==='daily_streak_3'?'🔵':a.icon):'🔒'}</div>
+          <div class="ach-badge">${earned ? a.icon : '🔒'}</div>
           <div class="ach-info">
             <div class="ach-name">${t(a.nameKey)}</div>
             <div class="ach-desc">${t(a.descKey)}</div>

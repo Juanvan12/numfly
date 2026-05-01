@@ -64,21 +64,26 @@ function checkLightningAnswer(){
   if(isRight){
     sfxCorrect();
     lightning.score++;
-    // Streak tracking
+
     if(lightning.score>stats.longestLightningStreak)stats.longestLightningStreak=lightning.score;
     lightning.sessionScore=precisionScore;
     lightning.cumulativeScore=Math.max(0,(lightning.cumulativeScore||0)+precisionScore);
-    // Also keep legacy streak-based score in sync as a fallback
+
     if(lightning.score>hs.lightning[d].score)hs.lightning[d].score=lightning.score;
-    // Track longest correctly-answered sequence (for achievements)
     if(lightning.count>stats.longestCorrectSequence)stats.longestCorrectSequence=lightning.count;
-    if((d==='medium'||d==='hard')&&lightning.count>stats.longestCorrectSequenceMedHard)stats.longestCorrectSequenceMedHard=lightning.count;
-    // XP: based on precision score
+    
+    if(d==='medium' && lightning.count>(stats.longestLightningSeq_medium||0)) {
+        stats.longestLightningSeq_medium=lightning.count;
+    }
+    if(d==='hard' && lightning.count>(stats.longestLightningSeq_hard||0)) {
+        stats.longestLightningSeq_hard=lightning.count;
+    }
+
     const xpEarned=Math.max(1,Math.round(precisionScore*(GAME_CONFIG.XP_EVENT_MULTIPLIER||1)/3));
     gainXP(xpEarned);
   }else{
     sfxWrong();
-    // Record streak in history before resetting
+
     stats.lightningStreakHistory.push(lightning.score);
     if(stats.lightningStreakHistory.length>50)stats.lightningStreakHistory.shift();
     lightning.score=0;
