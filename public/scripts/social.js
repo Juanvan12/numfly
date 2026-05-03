@@ -1451,10 +1451,6 @@ async function openDirectChallenge(friendId,friendName){
 let _lbScope='global';
 let _lbKey='xp';
 function setLbScope(scope,btn){
-
-  if(!btn && scope === 'global') {
-    scope = _lbScope; 
-  }
   _lbScope=scope;
   // Update inline-styled toggle buttons
   ['friends','global'].forEach(s=>{

@@ -40,5 +40,5 @@
   <button id="sr-challenge-btn" class="btn" style="background:linear-gradient(135deg,var(--orange),#e8a000);color:#000;display:none" onclick="openDareFriendModal()" data-i18n="challenge_dare_friend"></button>
   <button class="btn btn-primary" onclick="startSpeed()"><span data-i18n="play_again"></span> 🚀</button>
   <button class="btn btn-secondary" onclick="showScreen('screen-speed-setup')" data-i18n="change_difficulty"></button>
-  <button class="btn btn-secondary" onclick="showScreen('screen-menu')" data-i18n="main_menu"></button>
+  <button class="btn btn-secondary" onclick="if(currentUser)scheduleSync();saveOpStats();saveGuestState();checkAchievements();showScreen('screen-menu')" data-i18n="main_menu"></button>
 </div>

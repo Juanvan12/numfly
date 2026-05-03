@@ -744,7 +744,7 @@ es:{
   google_notice_body:"Serás redirigido a Google para iniciar sesión. Durante este proceso puede que veas brevemente una página llamada <span style=\"color:var(--accent);word-break:break-all;font-size:11px;\">pwqklvedbydxmnhocaqp.supabase.co</span> — este es nuestro proveedor de autenticación (Supabase). Esta redirección es normal y segura. Estamos trabajando en un dominio propio para una experiencia más limpia en el futuro.",
   google_notice_continue:"Continuar",
   google_notice_cancel:"Cancelar",
-  tips_to_guide: "¿Cuál es la mejor forma de entrenar? Lee nuestra guía para una rutina diaria fija →",
+  tips_to_guide: "¿Cómo entrenar mejor? Lee nuestra guía de rutina diaria →",
   err_count_range: "Introduce un número entre 2 y 20.",
   err_interval_range: "Introduce un número entre 1 y 20.",
 },

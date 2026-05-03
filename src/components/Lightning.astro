@@ -48,5 +48,5 @@
   </div>
   <button class="btn btn-primary" onclick="lightningKeepGoing()"><span data-i18n="keep_going"></span> ⚡</button>
   <button class="btn btn-secondary" onclick="showScreen('screen-lightning-setup')" data-i18n="change_settings"></button>
-  <button class="btn btn-secondary" onclick="showScreen('screen-menu');flushPendingLevelUps();" data-i18n="main_menu"></button>
+  <button class="btn btn-secondary" onclick="lightning.abandoned=true;if(currentUser)scheduleSync();saveOpStats();saveGuestState();checkAchievements();flushPendingLevelUps();showScreen('screen-menu')" data-i18n="main_menu"></button>
 </div>

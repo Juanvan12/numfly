@@ -123,14 +123,19 @@ function _unlockAudio() {
 
 function playTone(freq, duration, type='sine', gainVal=0.12, freqEnd=null) {
   try {
-    if (!_audioUnlocked) return;
     const ctx = _audioCtx;
     if (!ctx) return;
+    // On iOS, context may exist but be suspended; resume and play regardless of _audioUnlocked flag
     if (ctx.state === 'suspended') {
-      ctx.resume().then(() => _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd)).catch(()=>{});
-    } else {
+      ctx.resume().then(() => {
+        _audioUnlocked = true;
+        _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
+      }).catch(()=>{});
+    } else if (ctx.state === 'running') {
+      _audioUnlocked = true;
       _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
     }
+    // state === 'closed': do nothing
   } catch(e) {}
 }
 
@@ -317,37 +322,3 @@ function showLevelUpModal(lvl){
   document.getElementById('lu-title-flavor').textContent=t('title_flavor_'+title.key);
   document.getElementById('modal-levelup').classList.add('open');
 }
-
-// ─── iOS Audio Unlocker ───────────────────────────────────────
-let iosAudioUnlocked = false;
-
-function unlockiOSAudio() {
-  if (iosAudioUnlocked) return;
-  
-  // 1. Put ALL your sound variables in this array.
-  // Replace these example names with the actual variable names you used in state.js!
-  // (For example: if you wrote "const correctSound = new Audio(...)", put "correctSound" here)
-  const allSounds = [ 
-    correctSound, wrongSound, clickSound, levelUpSound 
-  ];
-  
-  // 2. Quickly play and pause them to satisfy Apple's security block
-  allSounds.forEach(sound => {
-    if (sound && typeof sound.play === 'function') {
-      sound.play().catch(() => {}); // Catch prevents console errors
-      sound.pause();
-      sound.currentTime = 0;
-    }
-  });
-
-  iosAudioUnlocked = true;
-  
-  // 3. Remove the listeners so this only runs once
-  document.removeEventListener('touchstart', unlockiOSAudio);
-  document.removeEventListener('click', unlockiOSAudio);
-}
-
-// Listen for the very first tap anywhere on the screen
-document.addEventListener('touchstart', unlockiOSAudio, { once: true });
-document.addEventListener('click', unlockiOSAudio, { once: true });
-// ──────────────────────────────────────────────────────────────

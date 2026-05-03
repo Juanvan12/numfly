@@ -314,11 +314,18 @@ function detectAndSetLang() {
   setLang(targetLang);
 }
 
+const PAGE_TITLES = {
+  en: 'Numfly - Free Math Games & Mental Math Practice',
+  nl: 'Numfly - Gratis Rekenspelletjes & Hoofdrekenen Oefenen',
+  es: 'Numfly - Juegos de Matemáticas y Práctica de Cálculo Mental'
+};
+
 const _origSetLang=setLang;
 
 setLang=function(l,btn){
   document.documentElement.lang=l;
   localStorage.setItem('numfly_lang',l);
+  document.title = PAGE_TITLES[l] || PAGE_TITLES.en;
   _origSetLang(l,btn);
   
   // Update sidebar links dynamically so they never show English
@@ -387,8 +394,21 @@ showScreen = function(id) {
     if (typeof saveDailyLocalState === 'function') saveDailyLocalState();
   }
   
-  if (currentId === 'screen-speed-game' && id !== 'screen-speed-game' && activeChallengeMode === 'challenge' && activeChallengeId) {
-    if (typeof saveCompResumeState === 'function') saveCompResumeState();
+  if (currentId === 'screen-speed-game' && id !== 'screen-speed-game') {
+    if (typeof endSpeed === 'function' && speed && speed.timer) {
+      clearInterval(speed.timer);
+      speed.timer = null;
+    }
+    if (activeChallengeMode === 'challenge' && activeChallengeId) {
+      if (typeof saveCompResumeState === 'function') saveCompResumeState();
+    }
+  }
+  if (currentId === 'screen-practice-game' && id !== 'screen-practice-game') {
+    if (typeof practice !== 'undefined' && practice.timer) {
+      clearInterval(practice.timer);
+      practice.timer = null;
+    }
+    if (typeof practice !== 'undefined') practice.waiting = true;
   }
 
   _origShowScreen_withHistory(id);
