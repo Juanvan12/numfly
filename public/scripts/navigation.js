@@ -23,19 +23,19 @@ function showScreen(id){
   // ─── ASTRO MULTI-PAGE FIX ──────────────────────────────
   if (!targetEl) {
     const path = window.location.pathname;
-    const isHome = ['/', '/nl', '/nl/', '/es', '/es/', '/daily', '/1v1', '/speed', '/practice', '/lightning', '/campaign'].some(p => path === p || path.startsWith('/nl/') || path.startsWith('/es/'));
-    
-    if (!isHome) {
+    const isRootPage = ['/', '/nl', '/nl/', '/es', '/es/'].some(p => path === p) || path.startsWith('/nl/') || path.startsWith('/es/');
+
+    if (!isRootPage) {
       const isChallenge = typeof activeChallengeId !== 'undefined' && activeChallengeId;
       const dailyScreens = ['screen-daily-game', 'screen-daily-result'];
       const targetRoute = isChallenge ? '/1v1' : dailyScreens.includes(id) ? '/daily' : '/';
-      
+
       let url = typeof window.getLocalizedUrl === 'function' ? window.getLocalizedUrl(targetRoute) : targetRoute;
-      
+
       if (isChallenge) {
         url += '?challenge=' + activeChallengeId;
       }
-      
+
       console.warn(`[Numfly] Screen missing on this route. Redirecting to ${url}...`);
       window.location.href = url;
     } else {
@@ -104,4 +104,12 @@ function showScreen(id){
       c.scrollTop = 0;
     });
   }
+}
+
+function goToMainMenu(){
+  if(typeof currentUser!=='undefined'&&currentUser&&typeof scheduleSync==='function')scheduleSync();
+  if(typeof saveOpStats==='function')saveOpStats();
+  if(typeof saveGuestState==='function')saveGuestState();
+  if(typeof checkAchievements==='function')checkAchievements();
+  showScreen('screen-menu');
 }

@@ -10,6 +10,7 @@ try{
       persistSession:true,
       autoRefreshToken:true,
       detectSessionInUrl:true,
+      flowType:'pkce',
       storageKey:'numfly_sb',
       storage:window.localStorage,
     }
@@ -781,10 +782,7 @@ async function doSignOut(){
     localStorage.removeItem('numfly_campaign');
     localStorage.removeItem('numfly_daily_progress');
     localStorage.removeItem('numfly_pending_daily');
-    localStorage.removeItem('numfly_sb');
   } catch(e) {}
-
-  try { if (sb) await sb.auth.signOut(); } catch(e) {}
 
   window.location.href = '/';
 }

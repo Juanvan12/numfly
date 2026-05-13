@@ -110,15 +110,20 @@ function _unlockAudio() {
     } catch(e) {}
   };
 
-  if (ctx.state === 'suspended') {
-    ctx.resume().then(_doUnlock).catch(_doUnlock);
+ if (ctx.state === 'suspended') {
+    const _resumePromise = ctx.resume();
+    if (_resumePromise && _resumePromise.then) {
+      _resumePromise.then(_doUnlock).catch(_doUnlock);
+    } else {
+      _doUnlock();
+    }
   } else {
     _doUnlock();
   }
 }
 
 ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
-  document.addEventListener(evt, _unlockAudio, { passive: true, capture: true });
+  document.addEventListener(evt, _unlockAudio, { capture: true });
 });
 
 function playTone(freq, duration, type='sine', gainVal=0.12, freqEnd=null) {
