@@ -141,13 +141,36 @@ sb.auth.onAuthStateChange((event,session)=>{
       if(isFreshLogin)showLoginOverlay(false);
     });
 
-  } else {
-    currentProfile=null;
-    _profileLoadPromise=null;
-    _currentLoginUserId=null;
-    showLoginOverlay(false);
-    clearDailyLocalState();
-    updateSocialUI();
+} else {
+    if(event==='SIGNED_OUT'){
+      sb.auth.getSession().then(({data})=>{
+        if(data&&data.session){
+          currentUser=data.session.user;
+          handleLogin(currentUser,false).catch(()=>{});
+        } else {
+          currentProfile=null;
+          _profileLoadPromise=null;
+          _currentLoginUserId=null;
+          showLoginOverlay(false);
+          clearDailyLocalState();
+          updateSocialUI();
+        }
+      }).catch(()=>{
+        currentProfile=null;
+        _profileLoadPromise=null;
+        _currentLoginUserId=null;
+        showLoginOverlay(false);
+        clearDailyLocalState();
+        updateSocialUI();
+      });
+    } else {
+      currentProfile=null;
+      _profileLoadPromise=null;
+      _currentLoginUserId=null;
+      showLoginOverlay(false);
+      clearDailyLocalState();
+      updateSocialUI();
+    }
   }
 
   if(event==='SIGNED_IN'||event==='INITIAL_SESSION'){

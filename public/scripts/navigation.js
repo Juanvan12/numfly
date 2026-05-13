@@ -20,30 +20,31 @@ function clearGameTimers(){
 function showScreen(id){
   const targetEl = document.getElementById(id);
   
-  // ─── ASTRO MULTI-PAGE FIX ──────────────────────────────
-  if (!targetEl) {
-    const path = window.location.pathname;
-    const isRootPage = ['/', '/nl', '/nl/', '/es', '/es/'].some(p => path === p) || path.startsWith('/nl/') || path.startsWith('/es/');
+// ─── ASTRO MULTI-PAGE FIX ──────────────────────────────
+if (!targetEl) {
+  const path = window.location.pathname;
+  // FIX: Exact match only. Remove startsWith() so localized game routes don't get trapped.
+  const isRootPage = ['/', '/nl', '/nl/', '/es', '/es/'].includes(path);
 
-    if (!isRootPage) {
-      const isChallenge = typeof activeChallengeId !== 'undefined' && activeChallengeId;
-      const dailyScreens = ['screen-daily-game', 'screen-daily-result'];
-      const targetRoute = isChallenge ? '/1v1' : dailyScreens.includes(id) ? '/daily' : '/';
+  if (!isRootPage) {
+    const isChallenge = typeof activeChallengeId !== 'undefined' && activeChallengeId;
+    const dailyScreens = ['screen-daily-game', 'screen-daily-result'];
+    const targetRoute = isChallenge ? '/1v1' : dailyScreens.includes(id) ? '/daily' : '/';
 
-      let url = typeof window.getLocalizedUrl === 'function' ? window.getLocalizedUrl(targetRoute) : targetRoute;
+    let url = typeof window.getLocalizedUrl === 'function' ? window.getLocalizedUrl(targetRoute) : targetRoute;
 
-      if (isChallenge) {
-        url += '?challenge=' + activeChallengeId;
-      }
-
-      console.warn(`[Numfly] Screen missing on this route. Redirecting to ${url}...`);
-      window.location.href = url;
-    } else {
-      console.error(`[Numfly] FATAL: Screen '${id}' is missing from the home page HTML!`);
+    if (isChallenge) {
+      url += '?challenge=' + activeChallengeId;
     }
-    return;
+
+    console.warn(`[Numfly] Screen missing on this route. Redirecting to ${url}...`);
+    window.location.href = url;
+  } else {
+    console.error(`[Numfly] FATAL: Screen '${id}' is missing from the home page HTML!`);
   }
-  // ────────────────────────────────────────────────────────
+  return;
+}
+// ────────────────────────────────────────────────────────
 
   const PROTECTED=['screen-stats','screen-friends','screen-1v1','screen-achievements','screen-competition','screen-group-comp'];
   

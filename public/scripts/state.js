@@ -81,22 +81,32 @@ function getAudioCtx() {
   return _audioCtx;
 }
 
-// Mobile Safari/Chrome requires a silent buffer to be played on first interaction
-function _unlockAudio() {
-  if (_audioUnlocked) return;
+// ── Sound effects (Web Audio API) ───────────────────────────────────
+let _audioCtx = null;
+let _audioUnlocked = false;
 
-  // Create the context HERE, synchronously inside the gesture handler.
-  // Safari marks the context as trusted only if new AudioContext() is called
-  // in the same call stack as the user touch/click event.
+function getAudioCtx() {
+  return _audioCtx;
+}
+
+function _unlockAudio() {
+  // 1. Create context if missing
   if (!_audioCtx) {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       _audioCtx = new AudioContext();
     } catch(e) { return; }
   }
+  
   const ctx = _audioCtx;
 
-  const _doUnlock = () => {
+  // 2. iOS aggressively suspends contexts. Force resume on interaction.
+  if (ctx.state === 'suspended') {
+    ctx.resume();
+  }
+
+  // 3. Play a silent buffer only once to formally unlock the Web Audio API
+  if (!_audioUnlocked) {
     try {
       const buffer = ctx.createBuffer(1, 1, 22050);
       const source = ctx.createBufferSource();
@@ -104,11 +114,27 @@ function _unlockAudio() {
       source.connect(ctx.destination);
       source.start(0);
       _audioUnlocked = true;
-      ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
-        document.removeEventListener(evt, _unlockAudio, { capture: true });
-      });
     } catch(e) {}
-  };
+  }
+}
+
+// FIX: Do NOT remove these listeners. iOS requires constant resuming.
+// Added passive: true for scroll performance.
+['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
+  document.addEventListener(evt, _unlockAudio, { capture: true, passive: true });
+});
+
+function playTone(freq, duration, type='sine', gainVal=0.12, freqEnd=null) {
+  try {
+    const ctx = _audioCtx;
+    if (!ctx) return;
+    
+    // Resume context if suspended before playing
+    if (ctx.state === 'suspended') ctx.resume();
+    
+    _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
+  } catch(e) {}
+}
 
  if (ctx.state === 'suspended') {
     const _resumePromise = ctx.resume();
@@ -120,7 +146,6 @@ function _unlockAudio() {
   } else {
     _doUnlock();
   }
-}
 
 ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
   document.addEventListener(evt, _unlockAudio, { capture: true });
@@ -132,10 +157,8 @@ function playTone(freq, duration, type='sine', gainVal=0.12, freqEnd=null) {
     if (!ctx) return;
     // On iOS, context may exist but be suspended; resume and play regardless of _audioUnlocked flag
     if (ctx.state === 'suspended') {
-      ctx.resume().then(() => {
-        _audioUnlocked = true;
-        _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
-      }).catch(()=>{});
+      ctx.resume();
+      _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
     } else if (ctx.state === 'running') {
       _audioUnlocked = true;
       _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
