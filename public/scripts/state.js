@@ -81,16 +81,7 @@ function getAudioCtx() {
   return _audioCtx;
 }
 
-// ── Sound effects (Web Audio API) ───────────────────────────────────
-let _audioCtx = null;
-let _audioUnlocked = false;
-
-function getAudioCtx() {
-  return _audioCtx;
-}
-
 function _unlockAudio() {
-  // 1. Create context if missing
   if (!_audioCtx) {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -100,12 +91,10 @@ function _unlockAudio() {
   
   const ctx = _audioCtx;
 
-  // 2. iOS aggressively suspends contexts. Force resume on interaction.
   if (ctx.state === 'suspended') {
     ctx.resume();
   }
 
-  // 3. Play a silent buffer only once to formally unlock the Web Audio API
   if (!_audioUnlocked) {
     try {
       const buffer = ctx.createBuffer(1, 1, 22050);
@@ -118,8 +107,6 @@ function _unlockAudio() {
   }
 }
 
-// FIX: Do NOT remove these listeners. iOS requires constant resuming.
-// Added passive: true for scroll performance.
 ['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
   document.addEventListener(evt, _unlockAudio, { capture: true, passive: true });
 });
@@ -129,41 +116,9 @@ function playTone(freq, duration, type='sine', gainVal=0.12, freqEnd=null) {
     const ctx = _audioCtx;
     if (!ctx) return;
     
-    // Resume context if suspended before playing
     if (ctx.state === 'suspended') ctx.resume();
     
     _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
-  } catch(e) {}
-}
-
- if (ctx.state === 'suspended') {
-    const _resumePromise = ctx.resume();
-    if (_resumePromise && _resumePromise.then) {
-      _resumePromise.then(_doUnlock).catch(_doUnlock);
-    } else {
-      _doUnlock();
-    }
-  } else {
-    _doUnlock();
-  }
-
-['touchstart', 'touchend', 'pointerdown', 'click', 'keydown'].forEach(evt => {
-  document.addEventListener(evt, _unlockAudio, { capture: true });
-});
-
-function playTone(freq, duration, type='sine', gainVal=0.12, freqEnd=null) {
-  try {
-    const ctx = _audioCtx;
-    if (!ctx) return;
-    // On iOS, context may exist but be suspended; resume and play regardless of _audioUnlocked flag
-    if (ctx.state === 'suspended') {
-      ctx.resume();
-      _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
-    } else if (ctx.state === 'running') {
-      _audioUnlocked = true;
-      _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd);
-    }
-    // state === 'closed': do nothing
   } catch(e) {}
 }
 
@@ -183,7 +138,6 @@ function _doPlayTone(ctx, freq, duration, type, gainVal, freqEnd) {
 }
 
 function sfxCorrect() {
-  // High-pitched "Coin/Money" sound (B6 -> E7)
   playTone(1975, 0.05, 'sine', 0.1); 
   setTimeout(() => playTone(2637, 0.25, 'sine', 0.1), 50); 
 }
