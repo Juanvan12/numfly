@@ -255,6 +255,7 @@ en:{
   tips_to_guide: "How do you train this best? Read our guide for a fixed daily routine →",
   err_count_range: "Please enter a number between 2 and 20.",
   err_interval_range: "Please enter a number between 1 and 20.",
+  loading: "Loading…",
 },
 nl:{
   tagline:"Train je brein. Verbeter je score. Versla je vrienden.",
@@ -501,6 +502,7 @@ nl:{
   tips_to_guide: "Hoe train je dit het best? Lees onze gids voor een vaste dagelijkse routine →",
   err_count_range: "Voer een getal in tussen 2 en 20.",
   err_interval_range: "Voer een getal in tussen 1 en 20.",
+  loading: "Aan het laden…",
 },
 es:{
   tagline:"Entrena tu mente. Supera tu marca. Vence a tus amigos.",
@@ -747,6 +749,7 @@ es:{
   tips_to_guide: "¿Cómo entrenar mejor? Lee nuestra guía de rutina diaria →",
   err_count_range: "Introduce un número entre 2 y 20.",
   err_interval_range: "Introduce un número entre 1 y 20.",
+  loading: "Cargando…",
 },
 };
 // Make STRINGS available on the client when loaded as a script
