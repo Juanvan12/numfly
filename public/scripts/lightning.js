@@ -21,6 +21,7 @@ function startLightning(){
   lightning.count=count;lightning.interval=interval;lightning.abandoned=false;
   showScreen('screen-lightning-game');
   document.getElementById('l-score').textContent=lightning.score||0;
+  document.getElementById('l-hs-display').textContent=fmtN(hs.lightning[diff.lightning].bestPrecision||0);
   document.getElementById('l-cumulative-display').textContent=fmtN(lightning.cumulativeScore||0);
   document.getElementById('l-answer-section').style.display='none';
   document.getElementById('l-feedback').textContent='';
@@ -94,8 +95,8 @@ function checkLightningAnswer(){
   if(lightning.cumulativeScore>(hs.lightning[d].bestPrecision||0)){
     hs.lightning[d].bestPrecision=lightning.cumulativeScore;
   }
-  document.getElementById('l-score').textContent = lightning.score || 0;
-  document.getElementById('l-hs-display').textContent = (hs.lightning[diff.lightning] && hs.lightning[diff.lightning].score) || 0;
+  document.getElementById('l-score').textContent=lightning.score||0;
+  document.getElementById('l-hs-display').textContent=fmtN(hs.lightning[diff.lightning].bestPrecision||0);
   document.getElementById('l-cumulative-display').textContent=fmtN(lightning.cumulativeScore||0);
   document.getElementById('lr-emoji').textContent=isRight?'🎉':'😔';
   document.getElementById('lr-title').textContent=isRight?t('correct'):t('not_quite');
