@@ -91,9 +91,14 @@
     function updateLink(id, base) {
       const el = document.getElementById(id);
       if (!el) return;
-      if (activeLang === 'nl') el.href = '/nl' + (dictNl[base] || base);
-      else if (activeLang === 'es') el.href = '/es' + (dictEs[base] || base);
-      else el.href = base;
+      
+      let p = base;
+      if (activeLang === 'nl') p = '/nl' + (dictNl[base] || base);
+      else if (activeLang === 'es') p = '/es' + (dictEs[base] || base);
+      
+      if (!p.endsWith('/')) p += '/';
+      
+      el.href = p;
     }
 
     updateLink('nav-home', '/');

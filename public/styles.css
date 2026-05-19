@@ -7,6 +7,8 @@
   --success:#4dffb4;--error:#ff4d6b;--info:#47b3ff;--orange:#ffa532;--purple:#c084fc;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+/* ── Capacitor / mobile: remove 300ms tap delay on all interactive elements ── */
+button,a,[onclick],[role="button"],.mode-card,.nav-btn,.btn,.diff-btn,.op-btn,.lang-btn,.back-link,.tip-card,.submit-btn,.tips-filter-btn,.stats-filter-btn,.diff-filter-btn,.reset-danger-btn,.tip-practice-btn,.daily-card,.xp-panel,.streak-badge,.titles-modal-close,.modal-overlay{touch-action:manipulation;}
 html{scroll-behavior:smooth;height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;justify-content:center;position:relative;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 15% 15%,rgba(232,255,71,.05) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 85% 80%,rgba(71,179,255,.06) 0%,transparent 55%),radial-gradient(ellipse 40% 30% at 50% 50%,rgba(192,132,252,.03) 0%,transparent 50%);pointer-events:none;transform:translateZ(0);will-change:transform;}

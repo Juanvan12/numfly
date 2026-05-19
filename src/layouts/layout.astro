@@ -4,6 +4,8 @@ import Sidebar from '../components/Sidebar.astro';
 import Modals from '../components/Modals.astro';
 import SocialScreens from '../components/SocialScreens.astro';
 
+const isWeb = import.meta.env.VERCEL === '1';
+
 const { pathname } = Astro.url;
 const lang = pathname.startsWith('/nl') ? 'nl' : pathname.startsWith('/es') ? 'es' : 'en';
 
@@ -62,11 +64,11 @@ const esPath = enToEs[basePage] || basePage;
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>{currentTitle}</title>
   <meta name="description" content={currentMetaDesc} />
 
-  <ClientRouter />
+  {isWeb && <ClientRouter />}
   
   <link rel="alternate" hreflang="x-default" href={`https://numfly.pro${basePage}`} />
   <link rel="alternate" hreflang="en" href={`https://numfly.pro${basePage}`} />

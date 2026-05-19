@@ -785,16 +785,19 @@ function setLang(l,btn){
 
 if (typeof window !== 'undefined') {
   window.getLocalizedUrl = function(basePath) {
-    if (lang === 'nl') {
-      const dictNl = { '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', '/achievements':'/prestaties', '/tips':'/tips', '/campaign':'/campagne', '/daily':'/dagelijks', '/lightning':'/bliksem', '/speed':'/snelheid', '/practice':'/oefenen', '/1v1':'/1v1' };
-      return '/nl' + (dictNl[basePath] || basePath);
-    }
-    if (lang === 'es') {
-      const dictEs = { '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', '/achievements':'/logros', '/tips':'/consejos', '/campaign':'/campana', '/daily':'/diario', '/lightning':'/rayo', '/speed':'/velocidad', '/practice':'/practica', '/1v1':'/1v1' };
-      return '/es' + (dictEs[basePath] || basePath);
-    }
-    return basePath;
-  };
+  let p = basePath;
+  if (lang === 'nl') {
+    const dictNl = { '/friends':'/vrienden', '/stats':'/statistieken', '/leaderboard':'/klassement', '/achievements':'/prestaties', '/tips':'/tips', '/campaign':'/campagne', '/daily':'/dagelijks', '/lightning':'/bliksem', '/speed':'/snelheid', '/practice':'/oefenen', '/1v1':'/1v1', '/how-to-practice-mental-math':'/hoofdrekenen-oefenen' };
+    p = '/nl' + (dictNl[basePath] || basePath);
+  } else if (lang === 'es') {
+    const dictEs = { '/friends':'/amigos', '/stats':'/estadisticas', '/leaderboard':'/clasificacion', '/logros':'/achievements', '/tips':'/consejos', '/campaign':'/campana', '/daily':'/diario', '/lightning':'/rayo', '/speed':'/velocidad', '/practice':'/practica', '/1v1':'/1v1', '/how-to-practice-mental-math':'/como-practicar-calculo-mental' };
+    p = '/es' + (dictEs[basePath] || basePath);
+  }
+  
+  if (!p.endsWith('/')) p += '/';
+  
+  return p;
+};
 }
 
 function applyTranslations(){

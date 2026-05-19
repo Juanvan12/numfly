@@ -1,3 +1,7 @@
+---
+const isWeb = process.env.VERCEL === '1' || import.meta.env.VERCEL === '1';
+---
+
 <!-- ══ LIGHTNING SETUP ════════════════════════════════════════════════ -->
 <div id="screen-lightning-setup" class="screen">
   <button class="back-link" onclick="window.location.href=typeof window.getLocalizedUrl==='function'?window.getLocalizedUrl('/'):'/'">← <span data-i18n="back"></span></button>
