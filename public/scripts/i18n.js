@@ -837,8 +837,6 @@ if (typeof window !== 'undefined') {
     p = '/es' + (dictEs[basePath] || basePath);
   }
   
-  if (!p.endsWith('/')) p += '/';
-  
   return p;
 };
 }

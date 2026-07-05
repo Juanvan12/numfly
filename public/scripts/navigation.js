@@ -92,6 +92,7 @@ if (!targetEl) {
     if(typeof renderTipsList==='function') renderTipsList();
   }
   if(id==='screen-achievements' && typeof renderAchievements==='function') renderAchievements();
+  if(id==='screen-privacy' && typeof renderPrivacy==='function') renderPrivacy();
   
   if(id==='screen-leaderboard') { 
     if(typeof setLbScope === 'function' && typeof _lbScope !== 'undefined') setLbScope(_lbScope); 
