@@ -8,14 +8,22 @@ import FriendsComponent from '../components/Friends.astro';
 </Layout>
 
 <script is:inline>
-  function initFriendsPage() {
+  function initFriendsPage(retries = 0) {
+    // 1. Controleer of alles beschikbaar is
     if (typeof loadFriends === 'function' && typeof startFriendPoller === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
       document.getElementById('screen-friends').classList.add('active');
       if (typeof applyTranslations === 'function') applyTranslations();
       loadFriends();
       startFriendPoller();
     } else {
-      setTimeout(initFriendsPage, 50);
+      // 2. Als we onder de limiet zitten (bijv. 100 pogingen = 5 seconden), probeer het opnieuw
+      if (retries < 100) {
+        setTimeout(() => initFriendsPage(retries + 1), 50);
+      } else {
+        // 3. Geef op en log de fout, zodat de pagina niet oneindig blijft loopen
+        console.error('[Numfly Error] Timeout bij laden van friends.astro functionaliteit.');
+        // Optioneel: Hier zou je een laad-spinner kunnen verbergen of een error kunnen tonen.
+      }
     }
   }
   initFriendsPage();

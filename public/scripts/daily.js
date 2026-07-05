@@ -210,7 +210,7 @@ async function openDailyChallenge(){
   dcOverlay.id='daily-countdown-overlay';
   dcOverlay.style.cssText='position:fixed;inset:0;background:var(--bg,#0d0d0d);z-index:9999;display:flex;align-items:center;justify-content:center;';
   dcOverlay.innerHTML=`<div style="text-align:center">
-    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">📅 ${t('mode_daily')}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">📅 ${t('daily_title')}</div>
     <div id="daily-countdown-num" style="font-family:'Bebas Neue',sans-serif;font-size:140px;color:var(--accent);line-height:1;letter-spacing:2px">3</div>
   </div>`;
   document.body.appendChild(dcOverlay);

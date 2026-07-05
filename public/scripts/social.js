@@ -1478,10 +1478,16 @@ async function loadLeaderboard(key){
   el.innerHTML='<span class="spinner"></span>';
   try{
     const uid=currentUser.id;
-    const colMap={xp:'xp_total',speed_easy:'hs_speed_easy',speed_medium:'hs_speed_medium',speed_hard:'hs_speed_hard',lightning_easy:'hs_lightning_easy_score',lightning_medium:'hs_lightning_medium_score',lightning_hard:'hs_lightning_hard_score',time:'total_play_time',daily_streak:'daily_streak_count'};
+    const colMap={xp:'xp_total',speed_easy:'hs_speed_easy',speed_medium:'hs_speed_medium',speed_hard:'hs_speed_hard',lightning_easy:'hs_lightning_easy_score',lightning_medium:'hs_lightning_medium_score',lightning_hard:'hs_lightning_hard_score',time:'total_play_time',daily_streak:'daily_streak_count',circuit_streak:'circuit_streak_count'};
     const col=colMap[key]||'xp_total';
-    // For streak leaderboard, also fetch last_date so we can filter expired streaks
-    const selectCols=key==='daily_streak'?`user_id,${col},xp_level,daily_streak_last_date`:`user_id,${col},xp_level`;
+    // Streak tabs (Turbo/Circuit) share the same layout: date-gated "active streak only" filtering + tier icons + a streak badge instead of the xp title.
+    const STREAK_CFG={
+      daily_streak:{dateCol:'daily_streak_last_date'},
+      circuit_streak:{dateCol:'circuit_streak_last_date'},
+    };
+    const streakCfg=STREAK_CFG[key];
+    // For streak leaderboards, also fetch last_date so we can filter expired streaks
+    const selectCols=streakCfg?`user_id,${col},xp_level,${streakCfg.dateCol}`:`user_id,${col},xp_level`;
     let rows=[];
     if(_lbScope==='friends'){
       const{data:fs}=await withTimeout(sb.from('friendships').select('requester_id,addressee_id').eq('status','accepted').or(`requester_id.eq.${uid},addressee_id.eq.${uid}`));
@@ -1493,12 +1499,12 @@ async function loadLeaderboard(key){
       const{data:gr}=await withTimeout(sb.from('user_progress').select(selectCols).order(col,{ascending:false}).limit(10));
       rows=gr||[];
     }
-    // For streak tab: zero out anyone whose streak has expired (last_date not today or yesterday)
-    if(key==='daily_streak'){
+    // For streak tabs: zero out anyone whose streak has expired (last_date not today or yesterday), and hide inactive/short streaks
+    if(streakCfg){
       const todayStr=getDailyDateStr();
       const yestStr=getPrevDateStr(todayStr);
       rows=rows.map(r=>{
-        const lastDate=r.daily_streak_last_date?String(r.daily_streak_last_date):'';
+        const lastDate=r[streakCfg.dateCol]?String(r[streakCfg.dateCol]):'';
         const active=lastDate===todayStr||lastDate===yestStr;
         return active?r:{...r,[col]:0};
       }).filter(r=>(r[col]||0)>1); // hide users with <2 active streak
@@ -1507,14 +1513,14 @@ async function loadLeaderboard(key){
     let selfRank=null;
     let selfRow=null;
     if(_lbScope==='global'&&!rows.find(r=>r.user_id===uid)){
-      const selfSelectCols=key==='daily_streak'?`user_id,${col},daily_streak_last_date`:`user_id,${col}`;
+      const selfSelectCols=streakCfg?`user_id,${col},${streakCfg.dateCol}`:`user_id,${col}`;
       const{data:self}=await withTimeout(sb.from('user_progress').select(selfSelectCols).eq('user_id',uid).maybeSingle());
       if(self){
         let selfValid=true;
-        if(key==='daily_streak'){
+        if(streakCfg){
           const todayStr=getDailyDateStr();
           const yestStr=getPrevDateStr(todayStr);
-          const lastDate=self.daily_streak_last_date?String(self.daily_streak_last_date):'';
+          const lastDate=self[streakCfg.dateCol]?String(self[streakCfg.dateCol]):'';
           selfValid=(lastDate===todayStr||lastDate===yestStr)&&(self[col]||0)>1;
         }
         if(selfValid){
@@ -1525,13 +1531,13 @@ async function loadLeaderboard(key){
         }
       }
     } else if(_lbScope==='friends'&&!rows.find(r=>r.user_id===uid)){
-      const selfSelectCols=key==='daily_streak'?`user_id,${col},daily_streak_last_date`:`user_id,${col}`;
+      const selfSelectCols=streakCfg?`user_id,${col},${streakCfg.dateCol}`:`user_id,${col}`;
       const{data:self}=await withTimeout(sb.from('user_progress').select(selfSelectCols).eq('user_id',uid).maybeSingle());
       if(self){
-        if(key==='daily_streak'){
+        if(streakCfg){
           const todayStr=getDailyDateStr();
           const yestStr=getPrevDateStr(todayStr);
-          const lastDate=self.daily_streak_last_date?String(self.daily_streak_last_date):'';
+          const lastDate=self[streakCfg.dateCol]?String(self[streakCfg.dateCol]):'';
           const active=lastDate===todayStr||lastDate===yestStr;
           if(active&&(self[col]||0)>1)rows.push(self);
         } else {
@@ -1555,7 +1561,7 @@ async function loadLeaderboard(key){
       if(key==='time'){
         const totalMins=Math.floor((r[col]||0)/60);
         val=totalMins>=60?Math.floor(totalMins/60)+'H'+(totalMins%60>0?(totalMins%60)+'M':''):totalMins+'M';
-      } else if(key==='daily_streak'){
+      } else if(streakCfg){
         const sc=r[col]||0;
         const streakIcon=sc>=365?'👑':sc>=90?'🔮':sc>=30?'💎':'🔥';
         val=sc+' '+streakIcon;
@@ -1563,8 +1569,7 @@ async function loadLeaderboard(key){
         val=fmtN(r[col]||0);
       }
       const rankCls=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
-      const rowLvl=r.xp_level||1;
-      const rowTitle=getTitleForLevel(rowLvl);
+      const rowTitle=getTitleForLevel(r.xp_level||1);
       return`<div class="lb-row${isMe?' me':''}">
         <div class="lb-rank ${rankCls}">${rank}</div>
         <div class="lb-avatar" style="background:${avatarColor(prof||r.user_id)}">${initials(name)}</div>

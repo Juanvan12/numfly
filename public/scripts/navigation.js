@@ -29,7 +29,7 @@ if (!targetEl) {
   if (!isRootPage) {
     const isChallenge = typeof activeChallengeId !== 'undefined' && activeChallengeId;
     const dailyScreens = ['screen-daily-game', 'screen-daily-result'];
-    const targetRoute = isChallenge ? '/1v1' : dailyScreens.includes(id) ? '/daily' : '/';
+    const targetRoute = isChallenge ? '/1v1' : dailyScreens.includes(id) ? '/turbo' : '/';
 
     let url = typeof window.getLocalizedUrl === 'function' ? window.getLocalizedUrl(targetRoute) : targetRoute;
 
@@ -69,6 +69,7 @@ if (!targetEl) {
     if(typeof renderHSPanel==='function') renderHSPanel();
     if(typeof renderXPPanel==='function') renderXPPanel();
     if(typeof updateDailyCard==='function') updateDailyCard();
+    if(typeof updateCircuitCard==='function') updateCircuitCard();
   }
   if(id==='screen-stats' && typeof renderStatsContent==='function') renderStatsContent();
   

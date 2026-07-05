@@ -4,7 +4,8 @@ import Sidebar from '../components/Sidebar.astro';
 import Modals from '../components/Modals.astro';
 import SocialScreens from '../components/SocialScreens.astro';
 
-const isWeb = import.meta.env.VERCEL === '1';
+const isCapacitor = import.meta.env.PUBLIC_CAPACITOR === '1';
+const isWeb = !isCapacitor;
 
 const { pathname } = Astro.url;
 const lang = pathname.startsWith('/nl') ? 'nl' : pathname.startsWith('/es') ? 'es' : 'en';
@@ -25,8 +26,8 @@ const pageTitles = {
 
 const currentTitle = pageTitles[lang as keyof typeof pageTitles];
 
-const noMenuPages = ['/campaign', '/lightning', '/speed', '/practice', '/daily',
-  '/stats', '/achievements', '/friends', '/leaderboard', '/tips', '/1v1'];
+const noMenuPages = ['/campaign', '/lightning', '/speed', '/practice', '/daily', '/turbo',
+  '/stats', '/achievements', '/friends', '/leaderboard', '/tips', '/1v1', '/circuit'];
 const strippedPath = pathname.replace(/^\/(nl|es)/, '').replace(/\/$/, '') || '/';
 const isBackButtonPage = noMenuPages.some(p => strippedPath === p);
 
@@ -47,15 +48,16 @@ function getBasePage(path: string) {
     "/bliksem": "/lightning", "/rayo": "/lightning",
     "/snelheid": "/speed", "/velocidad": "/speed",
     "/oefenen": "/practice", "/practica": "/practice",
-    "/tips": "/tips", "/consejos": "/tips"
+    "/tips": "/tips", "/consejos": "/tips",
+    "/circuito": "/circuit"
   };
   return reverseMap[p] || p;
 }
 
 const basePage = getBasePage(pathname);
 
-const enToNl: Record<string, string> = { "/friends":"/vrienden", "/stats":"/statistieken", "/leaderboard":"/klassement", "/achievements":"/prestaties", "/how-to-practice-mental-math":"/hoofdrekenen-oefenen", "/campaign":"/campagne", "/daily":"/dagelijks", "/lightning":"/bliksem", "/speed":"/snelheid", "/practice":"/oefenen", "/tips":"/tips" };
-const enToEs: Record<string, string> = { "/friends":"/amigos", "/stats":"/estadisticas", "/leaderboard":"/clasificacion", "/achievements":"/logros", "/how-to-practice-mental-math":"/como-practicar-calculo-mental", "/campaign":"/campana", "/daily":"/diario", "/lightning":"/rayo", "/speed":"/velocidad", "/practice":"/practica", "/tips":"/consejos" };
+const enToNl: Record<string, string> = { "/friends":"/vrienden", "/stats":"/statistieken", "/leaderboard":"/klassement", "/achievements":"/prestaties", "/how-to-practice-mental-math":"/hoofdrekenen-oefenen", "/campaign":"/campagne", "/daily":"/dagelijks", "/lightning":"/bliksem", "/speed":"/snelheid", "/practice":"/oefenen", "/tips":"/tips", "/circuit":"/circuit" };
+const enToEs: Record<string, string> = { "/friends":"/amigos", "/stats":"/estadisticas", "/leaderboard":"/clasificacion", "/achievements":"/logros", "/how-to-practice-mental-math":"/como-practicar-calculo-mental", "/campaign":"/campana", "/daily":"/diario", "/lightning":"/rayo", "/speed":"/velocidad", "/practice":"/practica", "/tips":"/consejos", "/circuit":"/circuito" };
 
 const nlPath = enToNl[basePage] || basePage;
 const esPath = enToEs[basePage] || basePage;
@@ -64,7 +66,7 @@ const esPath = enToEs[basePage] || basePage;
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>{currentTitle}</title>
   <meta name="description" content={currentMetaDesc} />
 
@@ -81,6 +83,7 @@ const esPath = enToEs[basePage] || basePage;
   <link rel="preconnect" href="https://pwqklvedbydxmnhocaqp.supabase.co">
   <link rel="dns-prefetch" href="https://pwqklvedbydxmnhocaqp.supabase.co">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="cd564c8c-72a1-4276-a04e-42ba9479d067"></script>
+  
 
 </head>
 <body>
@@ -136,6 +139,31 @@ const esPath = enToEs[basePage] || basePage;
     <Modals />
   </div>
 
+  <script>
+  import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
+  import { open } from '@tauri-apps/plugin-shell';
+
+  // Maak de externe browser opener beschikbaar voor je auth.js
+  (window as any).tauriOpenUrl = open;
+
+  try {
+    onOpenUrl(async (urls) => {
+      for (const url of urls) {
+         if (url.includes('access_token')) {
+            const paramString = url.includes('#') ? url.split('#')[1] : url.split('?')[1] || '';
+            const params = new URLSearchParams(paramString);
+            const accessToken = params.get('access_token');
+            const refreshToken = params.get('refresh_token');
+            
+            if (accessToken && (window as any).supabase) {
+              await (window as any).supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+          }
+         }
+      }
+    });
+  } catch(e) {}
+</script>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js" defer></script>
 
   <!-- ── Numfly split scripts — load in dependency order ── -->
@@ -154,6 +182,7 @@ const esPath = enToEs[basePage] || basePage;
   <script src="/scripts/auth.js" defer></script>        <!-- Supabase init, auth, login pipeline, sync -->
   <script src="/scripts/social.js" defer></script>      <!-- friends, leaderboard, group comp, H2H -->
   <script src="/scripts/daily.js" defer></script>       <!-- daily challenge, streak, seededRand() -->
+  <script src="/scripts/circuit.js" defer></script>     <!-- Circuit daily puzzle: generation + drag logic -->
   <script src="/scripts/challenges.js" defer></script>  <!-- challenge mode, speed overrides, 1v1 -->
   <script src="/scripts/main.js" defer></script>        <!-- GDPR, guest state, lang, astro:page-load -->
  

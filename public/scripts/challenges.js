@@ -1,4 +1,4 @@
-activeChallengeId=null,activeChallengeMode='normal',challengeSeed=0,challengeRng=null,_myJustPlayedScore=null;
+let activeChallengeId=null,activeChallengeMode='normal',challengeSeed=0,challengeRng=null,_myJustPlayedScore=null;
 
 async function createChallenge(){
   if(!currentUser){openAuthModal();return;}

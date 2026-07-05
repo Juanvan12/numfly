@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/layout.astro';
+import CircuitComponent from '../components/Circuit.astro';
+---
+
+<Layout>
+  <CircuitComponent />
+</Layout>
+
+<script is:inline>
+  function initCircuitPage() {
+    if (typeof initCircuit === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+      document.getElementById('screen-circuit-game').classList.add('active');
+      if (typeof applyTranslations === 'function') applyTranslations();
+      initCircuit();
+    } else {
+      setTimeout(initCircuitPage, 50);
+    }
+  }
+  initCircuitPage();
+</script>

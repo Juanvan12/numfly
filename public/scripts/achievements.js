@@ -69,14 +69,19 @@ const ACHIEVEMENTS=[
   // ── DAILY CHALLENGE ──────────────────────────────────────────────────────────
   {id:'daily_1',      sec:'daily', icon:'📅', tier:'bronze',   nameKey:'ach_daily_1_name',      descKey:'ach_daily_1_desc',      check:(s)=>(s.dailyCompleted||0)>=1},
   {id:'daily_2',      sec:'daily', icon:'🗓️', tier:'silver',   nameKey:'ach_daily_2_name',      descKey:'ach_daily_2_desc',      check:(s)=>(s.dailyCompleted||0)>=7},
-  {id:'daily_3',      sec:'daily', icon:'📆', tier:'gold',     nameKey:'ach_daily_3_name',      descKey:'ach_daily_3_desc',      check:(s)=>(s.dailyCompleted||0)>=30},
-  {id:'daily_streak_1',sec:'daily',icon:'🔥', tier:'silver',   nameKey:'ach_daily_streak_1_name',descKey:'ach_daily_streak_1_desc',check:(s)=>(s.dailyBestStreak||0)>=3},
-  {id:'daily_streak_2',sec:'daily',icon:'🔥', tier:'gold',     nameKey:'ach_daily_streak_2_name',descKey:'ach_daily_streak_2_desc',check:(s)=>(s.dailyBestStreak||0)>=7},
-  {id:'daily_streak_3',sec:'daily',icon:'💎', tier:'platinum', nameKey:'ach_daily_streak_3_name',descKey:'ach_daily_streak_3_desc',check:(s)=>(s.dailyBestStreak||0)>=30},
-  {id:'daily_streak_4',sec:'daily',icon:'🌌', tier:'diamond',  nameKey:'ach_daily_streak_4_name',descKey:'ach_daily_streak_4_desc',check:(s)=>(s.dailyBestStreak||0)>=365},
+// Streak achievements — both Turbo AND Circuit count (combinedBestStreak = max of either)
+  {id:'daily_streak_1',sec:'daily',icon:'🔥', tier:'silver',   nameKey:'ach_daily_streak_1_name',descKey:'ach_daily_streak_1_desc',check:(s)=>Math.max(s.dailyBestStreak||0,s.circuitBestStreak||0)>=3},
+  {id:'daily_streak_2',sec:'daily',icon:'🔥', tier:'gold',     nameKey:'ach_daily_streak_2_name',descKey:'ach_daily_streak_2_desc',check:(s)=>Math.max(s.dailyBestStreak||0,s.circuitBestStreak||0)>=7},
+  {id:'daily_streak_3',sec:'daily',icon:'💎', tier:'platinum', nameKey:'ach_daily_streak_3_name',descKey:'ach_daily_streak_3_desc',check:(s)=>Math.max(s.dailyBestStreak||0,s.circuitBestStreak||0)>=30},
+  {id:'daily_streak_4',sec:'daily',icon:'🌌', tier:'diamond',  nameKey:'ach_daily_streak_4_name',descKey:'ach_daily_streak_4_desc',check:(s)=>Math.max(s.dailyBestStreak||0,s.circuitBestStreak||0)>=365},
+  // Turbo speed achievements (explicit — Turbo only)
   {id:'daily_speed_1', sec:'daily',icon:'⚡', tier:'silver',   nameKey:'ach_daily_speed_1_name', descKey:'ach_daily_speed_1_desc', check:(s)=>(s.dailyBestTime||Infinity)<=30000},
   {id:'daily_speed_2', sec:'daily',icon:'🚀', tier:'gold',     nameKey:'ach_daily_speed_2_name', descKey:'ach_daily_speed_2_desc', check:(s)=>(s.dailyBestTime||Infinity)<=25000},
   {id:'daily_speed_3', sec:'daily',icon:'💫', tier:'platinum', nameKey:'ach_daily_speed_3_name', descKey:'ach_daily_speed_3_desc', check:(s)=>(s.dailyBestTime||Infinity)<=20000},
+  // Circuit speed achievements (new)
+  {id:'circuit_speed_1',sec:'daily',icon:'🔀', tier:'silver',   nameKey:'ach_circuit_speed_1_name',descKey:'ach_circuit_speed_1_desc',check:(s)=>(s.circuitBestTime||Infinity)<=30000},
+  {id:'circuit_speed_2',sec:'daily',icon:'🔀', tier:'gold',     nameKey:'ach_circuit_speed_2_name',descKey:'ach_circuit_speed_2_desc',check:(s)=>(s.circuitBestTime||Infinity)<=15000},
+  {id:'circuit_speed_3',sec:'daily',icon:'🔀', tier:'platinum', nameKey:'ach_circuit_speed_3_name',descKey:'ach_circuit_speed_3_desc',check:(s)=>(s.circuitBestTime||Infinity)<=5000},
   // ── CAMPAIGN ─────────────────────────────────────────────────────────────────
   {id:'cmp_1',       sec:'campaign', icon:'🗺️', tier:'bronze',   nameKey:'ach_cmp_1_name',       descKey:'ach_cmp_1_desc',       check:(s)=>(s.campaignCompleted||0)>=1},
   {id:'cmp_5',       sec:'campaign', icon:'⚔️',  tier:'bronze',   nameKey:'ach_cmp_5_name',       descKey:'ach_cmp_5_desc',       check:(s)=>(s.campaignCompleted||0)>=5},
@@ -85,6 +90,7 @@ const ACHIEVEMENTS=[
   {id:'cmp_50',      sec:'campaign', icon:'🔥',  tier:'gold',     nameKey:'ach_cmp_50_name',      descKey:'ach_cmp_50_desc',      check:(s)=>(s.campaignCompleted||0)>=50},
   {id:'cmp_75',      sec:'campaign', icon:'💪',  tier:'platinum', nameKey:'ach_cmp_75_name',      descKey:'ach_cmp_75_desc',      check:(s)=>(s.campaignCompleted||0)>=75},
   {id:'cmp_100',     sec:'campaign', icon:'💎',  tier:'diamond',  nameKey:'ach_cmp_100_name',     descKey:'ach_cmp_100_desc',     check:(s)=>(s.campaignCompleted||0)>=100},
+  {id:'cmp_120',     sec:'campaign', icon:'👑',  tier:'diamond',  nameKey:'ach_cmp_120_name',     descKey:'ach_cmp_120_desc',     check:(s)=>(s.campaignCompleted||0)>=120},
   {id:'cmp_boss_1',  sec:'campaign', icon:'👊',  tier:'silver',   nameKey:'ach_cmp_boss_1_name',  descKey:'ach_cmp_boss_1_desc',  check:(s)=>(s.campaignBossesBeaten||0)>=1},
   {id:'cmp_boss_5',  sec:'campaign', icon:'👑',  tier:'gold',     nameKey:'ach_cmp_boss_5_name',  descKey:'ach_cmp_boss_5_desc',  check:(s)=>(s.campaignBossesBeaten||0)>=5},
   {id:'cmp_boss_10', sec:'campaign', icon:'🏆',  tier:'platinum', nameKey:'ach_cmp_boss_10_name', descKey:'ach_cmp_boss_10_desc', check:(s)=>(s.campaignBossesBeaten||0)>=10},
@@ -293,6 +299,7 @@ function getAchProgress(a){
   if(id==='cmp_50')return{cur:stats.campaignCompleted||0,max:50};
   if(id==='cmp_75')return{cur:stats.campaignCompleted||0,max:75};
   if(id==='cmp_100')return{cur:stats.campaignCompleted||0,max:100};
+  if(id==='cmp_120')return{cur:stats.campaignCompleted||0,max:120};
   if(id==='cmp_boss_1')return{cur:stats.campaignBossesBeaten||0,max:1};
   if(id==='cmp_boss_5')return{cur:stats.campaignBossesBeaten||0,max:5};
   if(id==='cmp_boss_10')return{cur:stats.campaignBossesBeaten||0,max:10};
@@ -301,13 +308,12 @@ function getAchProgress(a){
   if(id==='cmp_perfect_25')return{cur:stats.campaignPerfectLevels||0,max:25};
   if(id==='daily_1')return{cur:stats.dailyCompleted||0,max:1};
   if(id==='daily_2')return{cur:stats.dailyCompleted||0,max:7};
-  if(id==='daily_3')return{cur:stats.dailyCompleted||0,max:30};
   // Use live current streak so progress bar matches the badge
   const _liveStreak=getDailyStreak().count||0;
-  if(id==='daily_streak_1')return{cur:_liveStreak,max:3};
-  if(id==='daily_streak_2')return{cur:_liveStreak,max:7};
-  if(id==='daily_streak_3')return{cur:_liveStreak,max:30};
-  if(id==='daily_streak_4')return{cur:_liveStreak,max:365};
+  if(id==='daily_streak_1')return{cur:Math.max(_liveStreak,stats.circuitBestStreak||0),max:3};
+  if(id==='daily_streak_2')return{cur:Math.max(_liveStreak,stats.circuitBestStreak||0),max:7};
+  if(id==='daily_streak_3')return{cur:Math.max(_liveStreak,stats.circuitBestStreak||0),max:30};
+  if(id==='daily_streak_4')return{cur:Math.max(_liveStreak,stats.circuitBestStreak||0),max:365};
   return null;
 }
 

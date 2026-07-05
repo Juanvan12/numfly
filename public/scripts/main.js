@@ -443,13 +443,13 @@ function checkPendingStart() {
 try{localStorage.removeItem('numfly_auth');}catch(e){}
 initApp();
 
-document.addEventListener('astro:page-load', () => {
+function _onPageLoad() {
   if (typeof applyTranslations === 'function') applyTranslations();
   if (typeof updateSidebarLangBtns === 'function') updateSidebarLangBtns();
   if (typeof updateSocialUI === 'function') updateSocialUI();
-  
+
   let p = window.location.pathname.replace(/^\/(nl|es)/, '').replace(/\/$/, '') || '/';
-  
+
   const reverseMap = {
     "/vrienden": "/friends", "/amigos": "/friends",
     "/statistieken": "/stats", "/estadisticas": "/stats",
@@ -462,9 +462,10 @@ document.addEventListener('astro:page-load', () => {
     "/bliksem": "/lightning", "/rayo": "/lightning",
     "/snelheid": "/speed", "/velocidad": "/speed",
     "/oefenen": "/practice", "/practica": "/practice",
-    "/tips": "/tips", "/consejos": "/tips"
+    "/tips": "/tips", "/consejos": "/tips",
+    "/circuito": "/circuit"
   };
-  
+
   p = reverseMap[p] || p;
 
   let activeId = 'screen-menu';
@@ -478,11 +479,16 @@ document.addEventListener('astro:page-load', () => {
   else if (p === '/speed') activeId = 'screen-speed-setup';
   else if (p === '/practice') activeId = 'screen-practice-setup';
   else if (p === '/1v1') activeId = 'screen-speed-game';
+  else if (p === '/circuit') activeId = 'screen-circuit-game';
 
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  
+
   if (p === '/daily') {
     if (typeof openDailyChallenge === 'function') openDailyChallenge();
+  } else if (p === '/circuit') {
+    const targetScreen = document.getElementById('screen-circuit-game');
+    if (targetScreen) targetScreen.classList.add('active');
+    if (typeof initCircuit === 'function') initCircuit();
   } else {
     const targetScreen = document.getElementById(activeId);
     if (targetScreen) targetScreen.classList.add('active');
@@ -490,7 +496,7 @@ document.addEventListener('astro:page-load', () => {
 
   const currentScreen = document.querySelector('.screen.active')?.id;
   document.body.classList.toggle('on-menu', currentScreen === 'screen-menu');
-  
+
   if (currentScreen === 'screen-menu') {
     if (typeof renderHSPanel === 'function') renderHSPanel();
     if (typeof renderXPPanel === 'function') renderXPPanel();
@@ -512,8 +518,21 @@ document.addEventListener('astro:page-load', () => {
   } else if (currentScreen === 'screen-speed-game' && p === '/1v1') {
     if (typeof checkPendingStart === 'function') checkPendingStart();
   }
-  
+
   if (currentScreen !== 'screen-friends' && typeof stopFriendPoller === 'function') {
     stopFriendPoller();
   }
-});
+}
+
+if (!window.__isCapacitor) {
+  document.addEventListener('astro:page-load', _onPageLoad);
+
+  if (!document.documentElement.dataset.capInit) {
+    document.documentElement.dataset.capInit = '1';
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', _onPageLoad);
+    } else {
+      _onPageLoad();
+    }
+  }
+}

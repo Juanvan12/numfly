@@ -8,13 +8,17 @@ import AchievementsComponent from '../components/Achievements.astro';
 </Layout>
 
 <script is:inline>
-  function initAchievementsPage() {
+  function initAchievementsPage(retries = 0) {
     if (typeof renderAchievements === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
       document.getElementById('screen-achievements').classList.add('active');
       if (typeof applyTranslations === 'function') applyTranslations();
       renderAchievements();
     } else {
-      setTimeout(initAchievementsPage, 50);
+      if (retries < 100) {
+        setTimeout(() => initAchievementsPage(retries + 1), 50);
+      } else {
+        console.error('[Numfly Error] Timeout bij laden van achievements.astro functionaliteit.');
+      }
     }
   }
   initAchievementsPage();

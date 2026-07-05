@@ -57,21 +57,36 @@
     <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div></div>
     <div class="xp-bar-label"><span id="xp-bar-cur">0</span><span id="xp-bar-next">100 XP</span></div>
   </div>
-  <div id="daily-card" class="daily-card" onclick="window.location.href=window.getLocalizedUrl('/daily')" style="opacity:0;transition:opacity .2s;">
-  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
-    <div class="daily-badge" style="margin-bottom:0;"><span class="daily-badge-dot"></span><span data-i18n="daily_badge"></span></div>
-    
-    <div id="daily-streak-badge" class="streak-badge" onclick="event.stopPropagation();if(currentUser){this.style.opacity='.5';pullFromSupabase().then(()=>{renderStreakOnCard();updateDailyCard();this.style.opacity='1';});}" title="Tap to sync streak" style="cursor:pointer">
-      <span class="streak-badge-fire">🔥</span>
-      <span class="streak-badge-count" id="daily-streak-count">1</span>
-      <span class="streak-badge-label" data-i18n="streak_label"></span>
+<div class="daily-card-row">
+  <div id="daily-card" class="daily-card daily-card-half" onclick="window.location.href=window.getLocalizedUrl('/turbo')" style="opacity:0;transition:opacity .2s;">
+    <div class="daily-card-icon">🧮</div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
+      <div class="daily-badge" style="margin-bottom:0;"><span class="daily-badge-dot"></span><span data-i18n="daily_badge"></span></div>
+      <div id="daily-streak-badge" class="streak-badge" onclick="event.stopPropagation();if(currentUser){this.style.opacity='.5';pullFromSupabase().then(()=>{renderStreakOnCard();updateDailyCard();this.style.opacity='1';});}" title="Tap to sync streak" style="cursor:pointer">
+        <span class="streak-badge-fire">🔥</span>
+        <span class="streak-badge-count" id="daily-streak-count">1</span>
+      </div>
     </div>
+    <div class="daily-title" data-i18n="daily_title"></div>
+    <div class="daily-sub" data-i18n="daily_sub"></div>
+    <div id="daily-your-time" class="daily-your-time" style="display:none"></div>
+    <div id="daily-next-reset" style="display:none;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:4px;"></div>
   </div>
-  
-  <div class="daily-title" data-i18n="daily_title"></div>
-  <div class="daily-sub" data-i18n="daily_sub"></div>
-  <div id="daily-your-time" class="daily-your-time" style="display:none"></div>
-  <div id="daily-next-reset" style="display:none;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:4px;"></div>
+
+  <div id="circuit-card" class="daily-card daily-card-half" onclick="window.location.href=window.getLocalizedUrl('/circuit')" style="opacity:0;transition:opacity .2s;">
+    <div class="daily-card-icon">🔀</div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
+      <div class="daily-badge" style="margin-bottom:0;"><span class="daily-badge-dot"></span><span data-i18n="daily_badge"></span></div>
+      <div id="circuit-streak-badge" class="streak-badge" onclick="event.stopPropagation();if(typeof currentUser!=='undefined'&&currentUser){this.style.opacity='.5';pullFromSupabase().then(()=>{updateCircuitCard();this.style.opacity='1';});}" title="Tap to sync streak" style="cursor:pointer; display:none;">
+        <span class="streak-badge-fire">🔥</span>
+        <span class="streak-badge-count" id="circuit-streak-count">1</span>
+      </div>
+    </div>
+    <div class="daily-title" data-i18n="circuit_card_title"></div>
+    <div class="daily-sub" data-i18n="mode_circuit_desc"></div>
+    <div id="circuit-your-time" class="daily-your-time" style="display:none"></div>
+    <div id="circuit-next-reset" style="display:none;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:4px;"></div>
+  </div>
 </div>
 <div class="mode-grid" data-nosnippet>
   <div class="mode-card" onclick="window.location.href=window.getLocalizedUrl('/lightning')">
@@ -90,10 +105,13 @@
     </div>
   </div>
 
-  <div class="mode-card" onclick="window.location.href=window.getLocalizedUrl('/campaign')">
+  <div class="mode-card" onclick="window.location.href=window.getLocalizedUrl('/campaign')" style="position:relative;">
     <div class="mode-icon">🗺️</div>
     <div>
-      <div class="mode-title" data-i18n="mode_campaign"></div>
+      <div class="mode-title" style="display:flex;align-items:center;gap:8px;">
+        <span data-i18n="mode_campaign"></span>
+        <span style="background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:4px;flex-shrink:0;" data-i18n="campaign_new_levels"></span>
+      </div>
       <div class="mode-desc" data-i18n="mode_campaign_desc"></div>
     </div>
   </div>

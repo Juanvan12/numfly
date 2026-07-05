@@ -19,7 +19,6 @@ function startSpeed(){
   speed.startedAt=Date.now();
   speed.originalDur=_dur;
   speed.opBag=[];
-  speed.gameSeed=Date.now()%0xFFFFFF;
   recentQs.speed=new Set();
   document.getElementById('s-score').textContent=0;
   document.getElementById('s-hs-display').textContent=activeChallengeMode==='challenge'?0:getSpeedDurHS(diff.speed,_dur);

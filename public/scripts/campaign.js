@@ -113,20 +113,44 @@ const CAMPAIGN_LEVELS = [
   {level:98, mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:18, lives:1, questionTimer:true, seed:'cmp_98'},
   {level:99, mode:'time_attack', ops:['add','sub','mul','div','pct'],diff:'hard',   target:20, timeLimit:45, seed:'cmp_99'},
   {level:100,mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:22, lives:1, questionTimer:true, seed:'cmp_100', boss:true},
+  // ── World 11: Legend (101-110) — pure speed, extreme time limits ─────────
+  {level:101,mode:'time_attack', ops:['add','sub','mul','div'],      diff:'hard',   target:14, timeLimit:30, seed:'cmp_101'},
+  {level:102,mode:'survival',    ops:['add','sub','mul','div'],      diff:'hard',   target:16, lives:1, questionTimer:true, seed:'cmp_102'},
+  {level:103,mode:'time_attack', ops:['add','sub','mul','div','pct'],diff:'hard',   target:14, timeLimit:30, seed:'cmp_103'},
+  {level:104,mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:16, lives:1, questionTimer:true, seed:'cmp_104'},
+  {level:105,mode:'time_attack', ops:['add','sub','mul','div','pct'],diff:'hard',   target:18, timeLimit:32, seed:'cmp_105'},
+  {level:106,mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:16, lives:1, questionTimer:true, seed:'cmp_106'},
+  {level:107,mode:'time_attack', ops:['add','sub','mul','div','pct'],diff:'hard',   target:20, timeLimit:35, seed:'cmp_107'},
+  {level:108,mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:18, lives:1, questionTimer:true, seed:'cmp_108'},
+  {level:109,mode:'time_attack', ops:['add','sub','mul','div','pct'],diff:'hard',   target:22, timeLimit:38, seed:'cmp_109'},
+  {level:110,mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:24, lives:1, questionTimer:true, seed:'cmp_110', boss:true},
+  // ── World 12: Apex (111-120) — survival 1 life + brutal time attack ──────
+  {level:111,mode:'time_attack', ops:['add','sub','mul','div'],      diff:'hard',   target:16, timeLimit:28, seed:'cmp_111'},
+  {level:112,mode:'survival',    ops:['add','sub','mul','div'],      diff:'hard',   target:18, lives:1, questionTimer:true, seed:'cmp_112'},
+  {level:113,mode:'time_attack', ops:['add','sub','mul','div','pct'],diff:'hard',   target:16, timeLimit:28, seed:'cmp_113'},
+  {level:114,mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:18, lives:1, questionTimer:true, seed:'cmp_114'},
+  {level:115,mode:'time_attack', ops:['add','sub','mul','div','pct'],diff:'hard',   target:20, timeLimit:30, seed:'cmp_115'},
+  {level:116,mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:18, lives:1, questionTimer:true, seed:'cmp_116'},
+  {level:117,mode:'time_attack', ops:['add','sub','mul','div','pct'],diff:'hard',   target:22, timeLimit:32, seed:'cmp_117'},
+  {level:118,mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:20, lives:1, questionTimer:true, seed:'cmp_118'},
+  {level:119,mode:'time_attack', ops:['add','sub','mul','div','pct'],diff:'hard',   target:24, timeLimit:35, seed:'cmp_119'},
+  {level:120,mode:'survival',    ops:['add','sub','mul','div','pct'],diff:'hard',   target:26, lives:1, questionTimer:true, seed:'cmp_120', boss:true},
 ];
 
 // World definitions — used for map headers
 const CAMPAIGN_WORLDS = [
-  {world:1,  firstLevel:1,  lastLevel:10,  labelKey:'campaign_world_1'},
-  {world:2,  firstLevel:11, lastLevel:20,  labelKey:'campaign_world_2'},
-  {world:3,  firstLevel:21, lastLevel:30,  labelKey:'campaign_world_3'},
-  {world:4,  firstLevel:31, lastLevel:40,  labelKey:'campaign_world_4'},
-  {world:5,  firstLevel:41, lastLevel:50,  labelKey:'campaign_world_5'},
-  {world:6,  firstLevel:51, lastLevel:60,  labelKey:'campaign_world_6'},
-  {world:7,  firstLevel:61, lastLevel:70,  labelKey:'campaign_world_7'},
-  {world:8,  firstLevel:71, lastLevel:80,  labelKey:'campaign_world_8'},
-  {world:9,  firstLevel:81, lastLevel:90,  labelKey:'campaign_world_9'},
-  {world:10, firstLevel:91, lastLevel:100, labelKey:'campaign_world_10'},
+  {world:1,  firstLevel:1,   lastLevel:10,  labelKey:'campaign_world_1'},
+  {world:2,  firstLevel:11,  lastLevel:20,  labelKey:'campaign_world_2'},
+  {world:3,  firstLevel:21,  lastLevel:30,  labelKey:'campaign_world_3'},
+  {world:4,  firstLevel:31,  lastLevel:40,  labelKey:'campaign_world_4'},
+  {world:5,  firstLevel:41,  lastLevel:50,  labelKey:'campaign_world_5'},
+  {world:6,  firstLevel:51,  lastLevel:60,  labelKey:'campaign_world_6'},
+  {world:7,  firstLevel:61,  lastLevel:70,  labelKey:'campaign_world_7'},
+  {world:8,  firstLevel:71,  lastLevel:80,  labelKey:'campaign_world_8'},
+  {world:9,  firstLevel:81,  lastLevel:90,  labelKey:'campaign_world_9'},
+  {world:10, firstLevel:91,  lastLevel:100, labelKey:'campaign_world_10'},
+  {world:11, firstLevel:101, lastLevel:110, labelKey:'campaign_world_11', isNew:true},
+  {world:12, firstLevel:111, lastLevel:120, labelKey:'campaign_world_12', isNew:true},
 ];
 
 // Campaign state
@@ -234,11 +258,12 @@ function renderCampaignMap() {
   if (!el) return;
   let html = '';
   CAMPAIGN_WORLDS.forEach(world => {
-    // World header — always visible, spans full grid width
+    const newBadge = world.isNew
+      ? ` <span style="background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:4px;vertical-align:middle;margin-left:6px;">${t('campaign_new_levels')}</span>`
+      : '';
     html += `<div class="campaign-world-header">
-      <span class="campaign-world-label">${t(world.labelKey)}</span>
+      <span class="campaign-world-label">${t(world.labelKey)}${newBadge}</span>
     </div>`;
-    // Level buttons for this world
     html += '<div class="campaign-world-row">';
     CAMPAIGN_LEVELS.filter(lvl => lvl.level >= world.firstLevel && lvl.level <= world.lastLevel).forEach(lvl => {
       const unlocked = lvl.level <= progress.highestUnlocked;
@@ -260,6 +285,7 @@ function renderCampaignMap() {
   });
   el.innerHTML = html;
 }
+
 function showCampaignIntro(levelCfg, onDone) {
   const isBoss = !!levelCfg.boss;
   const modeDesc = levelCfg.mode === 'time_attack'

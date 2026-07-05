@@ -89,7 +89,7 @@ function initApp(){
   applyTranslations();renderHSPanel();renderXPPanel();
   updateDailyCard();
 
-  const gamePages = ['/lightning', '/speed', '/practice', '/campaign', '/daily', '/1v1'];
+  const gamePages = ['/lightning', '/speed', '/practice', '/campaign', '/daily', '/turbo', '/1v1'];
   const isGamePage = gamePages.includes(window.location.pathname);
   const isRootMenu = window.location.pathname === '/' || window.location.pathname === '';
 
@@ -275,11 +275,6 @@ async function handleLogin(user,isFreshLogin=false){
 }
 
 async function fetchProfile(userId){
-  // 15s timeout — Supabase free tier can take 10-12s on cold start after OAuth
-  const withTimeout=(promise,ms)=>Promise.race([
-    promise,
-    new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout after '+ms+'ms')),ms))
-  ]);
   try{
     const{data,error}=await withTimeout(
       sb.from('profiles').select('*').eq('id',userId).maybeSingle(),
@@ -776,18 +771,45 @@ async function doGoogleLogin(){
 document.getElementById('google-confirm-btn').onclick = async () => {
     notice.remove();
 
-    const redirectTo = window.location.origin;
+    const isTauri = !!window.__TAURI_INTERNALS__;
+    const redirectTo = isTauri
+        ? 'numfly://login-callback'
+        : window.location.origin;
 
-    const { error } = await sb.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-            redirectTo: redirectTo,
-            queryParams: { access_type: 'offline', prompt: 'consent' }
+    if (isTauri) {
+        const { data, error } = await sb.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: redirectTo,
+                queryParams: { access_type: 'offline', prompt: 'consent' },
+                skipBrowserRedirect: true,
+            }
+        });
+        if (error) {
+            const errEl = document.getElementById('auth-error');
+            if (errEl) errEl.textContent = error.message;
+            return;
         }
-    });
-    if (error) {
-        const errEl = document.getElementById('auth-error');
-        if (errEl) errEl.textContent = error.message;
+        
+        if (data?.url) {
+            if (typeof window.tauriOpenUrl === 'function') {
+                await window.tauriOpenUrl(data.url);
+            } else {
+                window.location.href = data.url; 
+            }
+        }
+    } else {
+        const { error } = await sb.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: redirectTo,
+                queryParams: { access_type: 'offline', prompt: 'consent' }
+            }
+        });
+        if (error) {
+            const errEl = document.getElementById('auth-error');
+            if (errEl) errEl.textContent = error.message;
+        }
     }
 };
 }
@@ -1086,9 +1108,9 @@ async function pullFromSupabase(){
       if(fs.stats&&typeof fs.stats==='object'){
         // Restore all numeric stat fields from server snapshot
         const numKeys=['totalAnswers','totalCorrect','totalWrong','totalPlayTime',
-          'longestSpeedStreak','currentSpeedStreak','longestLightningStreak','longestCorrectSequence','longestCorrectSequenceMedHard','longestCorrectSequenceMedHard',
+          'longestSpeedStreak','currentSpeedStreak','longestLightningStreak','longestCorrectSequence','longestCorrectSequenceMedHard',
           'practiceCorrect','practiceWrong','currentPracticeStreak','longestPracticeStreak',
-          'tipSessions','dailyCompleted','dailyBestStreak'];
+          'tipSessions','dailyCompleted','dailyBestStreak','circuitCurrentStreak','circuitBestStreak'];
         numKeys.forEach(k=>{if(typeof fs.stats[k]==='number')stats[k]=fs.stats[k];});
         if(typeof fs.stats.dailyBestTime==='number')stats.dailyBestTime=fs.stats.dailyBestTime;
         if(typeof fs.stats.dailyWorstTime==='number')stats.dailyWorstTime=fs.stats.dailyWorstTime;
@@ -1148,7 +1170,7 @@ async function pullFromSupabase(){
           'diffOpCorrect','diffOpWrong','modeAnswers','modeCorrect','modePlayTime'];
         objKeys.forEach(k=>{if(op[k]&&typeof op[k]==='object')Object.assign(stats[k],op[k]);});
         const dailyNumKeys=['dailyCompleted','dailyBestStreak','totalWrong','tipSessions',
-          'totalAnswers','totalCorrect','totalPlayTime','practiceCorrect','practiceWrong'];
+          'totalAnswers','totalCorrect','totalPlayTime','practiceCorrect','practiceWrong','circuitCurrentStreak','circuitBestStreak'];
         dailyNumKeys.forEach(k=>{if(typeof op[k]==='number')stats[k]=op[k];});
         if(op.dailyBestTime)stats.dailyBestTime=op.dailyBestTime;
         if(op.dailyWorstTime)stats.dailyWorstTime=op.dailyWorstTime;

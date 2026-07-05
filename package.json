@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "numfly",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -9,13 +9,14 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "tauri": "tauri"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",
-    "@capacitor/android": "^8.3.1",
-    "@capacitor/app": "^8.1.0",
-    "@capacitor/core": "^8.3.1",
+    "@tauri-apps/cli": "^2.11.2",
+    "@tauri-apps/plugin-deep-link": "^2.4.9",
+    "@tauri-apps/plugin-shell": "^2.3.5",
     "astro": "^6.1.5"
   },
   "devDependencies": {
