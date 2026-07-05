@@ -89,3 +89,17 @@ const currentLang = Astro.params.lang;
    {page === 'circuit' && <CircuitComponent />}
  </Layout>
 }
+
+{page === 'daily' && (
+  <script is:inline>
+    function initDailyPage() {
+      if (typeof openDailyChallenge === 'function' && typeof _appInitialised !== 'undefined' && _appInitialised) {
+        if (typeof applyTranslations === 'function') applyTranslations();
+        openDailyChallenge();
+      } else {
+        setTimeout(initDailyPage, 50);
+      }
+    }
+    initDailyPage();
+  </script>
+)}
