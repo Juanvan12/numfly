@@ -60,13 +60,11 @@
 <div class="daily-card-row">
   <div id="daily-card" class="daily-card daily-card-half" onclick="window.location.href=window.getLocalizedUrl('/turbo')" style="opacity:0;transition:opacity .2s;">
     <div class="daily-card-icon">🧮</div>
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
-      <div class="daily-badge" style="margin-bottom:0;"><span class="daily-badge-dot"></span><span data-i18n="daily_badge"></span></div>
-      <div id="daily-streak-badge" class="streak-badge" onclick="event.stopPropagation();if(currentUser){this.style.opacity='.5';pullFromSupabase().then(()=>{renderStreakOnCard();updateDailyCard();this.style.opacity='1';});}" title="Tap to sync streak" style="cursor:pointer">
-        <span class="streak-badge-fire">🔥</span>
-        <span class="streak-badge-count" id="daily-streak-count">1</span>
-      </div>
-    </div>
+    <div class="daily-badge"><span class="daily-badge-dot"></span><span data-i18n="daily_badge"></span></div>
+<div id="daily-streak-badge" class="streak-badge streak-badge-corner" onclick="event.stopPropagation();if(currentUser){this.style.opacity='.5';pullFromSupabase().then(()=>{renderStreakOnCard();updateDailyCard();this.style.opacity='1';});}" title="Tap to sync streak" style="cursor:pointer">
+  <span class="streak-badge-fire">🔥</span>
+  <span class="streak-badge-count" id="daily-streak-count">1</span>
+</div>
     <div class="daily-title" data-i18n="daily_title"></div>
     <div class="daily-sub" data-i18n="daily_sub"></div>
     <div id="daily-your-time" class="daily-your-time" style="display:none"></div>
@@ -75,13 +73,11 @@
 
   <div id="circuit-card" class="daily-card daily-card-half" onclick="window.location.href=window.getLocalizedUrl('/circuit')" style="opacity:0;transition:opacity .2s;">
     <div class="daily-card-icon">🔀</div>
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
-      <div class="daily-badge" style="margin-bottom:0;"><span class="daily-badge-dot"></span><span data-i18n="daily_badge"></span></div>
-      <div id="circuit-streak-badge" class="streak-badge" onclick="event.stopPropagation();if(typeof currentUser!=='undefined'&&currentUser){this.style.opacity='.5';pullFromSupabase().then(()=>{updateCircuitCard();this.style.opacity='1';});}" title="Tap to sync streak" style="cursor:pointer; display:none;">
-        <span class="streak-badge-fire">🔥</span>
-        <span class="streak-badge-count" id="circuit-streak-count">1</span>
-      </div>
-    </div>
+    <div class="daily-badge"><span class="daily-badge-dot"></span><span data-i18n="daily_badge"></span></div>
+<div id="circuit-streak-badge" class="streak-badge streak-badge-corner" onclick="event.stopPropagation();if(typeof currentUser!=='undefined'&&currentUser){this.style.opacity='.5';pullFromSupabase().then(()=>{updateCircuitCard();this.style.opacity='1';});}" title="Tap to sync streak" style="cursor:pointer; display:none;">
+  <span class="streak-badge-fire">🔥</span>
+  <span class="streak-badge-count" id="circuit-streak-count">1</span>
+</div>
     <div class="daily-title" data-i18n="circuit_card_title"></div>
     <div class="daily-sub" data-i18n="mode_circuit_desc"></div>
     <div id="circuit-your-time" class="daily-your-time" style="display:none"></div>

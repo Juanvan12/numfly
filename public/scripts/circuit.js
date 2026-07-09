@@ -4,10 +4,10 @@
 // Deterministic per UTC day (reuses the same seededRand pattern as daily.js),
 // generated entirely client-side. No backend / precompute step required.
 
-const CIRCUIT_SIZE = 3;
+let CURRENT_CIRCUIT_SIZE = 3;
 const CIRCUIT_COLORS = ['#47b3ff', '#ff4d6b', '#7ee8a2', '#f9ab00'];
 const CIRCUIT_OPS = ['+', '-', '×', '÷'];
-const CIRCUIT_HINT_COOLDOWN_MS = 30000;
+let CIRCUIT_HINT_COOLDOWN_MS = 30000;
 
 let circuitState = {
   puzzle: null,
@@ -17,7 +17,7 @@ let circuitState = {
   elapsedMs: 0,
   done: false,
   lastHintAt: 0,
-  hintCellIdx: null,
+  hintCellIndices: [],
   hintTimer: null,
   hintTargetValue: null,
   hintStep: -1,
@@ -37,14 +37,14 @@ function getCircuitSeed(dateStr, salt){
 }
 
 // ── Cell index helpers ───────────────────────────────────────────────────────
-function rc(idx){ return [Math.floor(idx/CIRCUIT_SIZE), idx%CIRCUIT_SIZE]; }
-function idxOf(r,c){ return r*CIRCUIT_SIZE+c; }
+function rc(idx){ return [Math.floor(idx/CURRENT_CIRCUIT_SIZE), idx%CURRENT_CIRCUIT_SIZE]; }
+function idxOf(r,c){ return r*CURRENT_CIRCUIT_SIZE+c; }
 function neighbors(idx){
   const [r,c]=rc(idx); const out=[];
   if(r>0) out.push(idxOf(r-1,c));
-  if(r<CIRCUIT_SIZE-1) out.push(idxOf(r+1,c));
+  if(r<CURRENT_CIRCUIT_SIZE-1) out.push(idxOf(r+1,c));
   if(c>0) out.push(idxOf(r,c-1));
-  if(c<CIRCUIT_SIZE-1) out.push(idxOf(r,c+1));
+  if(c<CURRENT_CIRCUIT_SIZE-1) out.push(idxOf(r,c+1));
   return out;
 }
 function borderKey(a,b){ return a<b ? a+'_'+b : b+'_'+a; }
@@ -52,7 +52,12 @@ function borderKey(a,b){ return a<b ? a+'_'+b : b+'_'+a; }
 // ── Generation ────────────────────────────────────────────────────────────────
 function generateCircuitPuzzle(){
   const dateStr = getCircuitDateStr();
-  const total = CIRCUIT_SIZE*CIRCUIT_SIZE;
+  const baseSeed = getCircuitSeed(dateStr);
+  const dayIndex = Math.floor(Date.parse(dateStr+'T00:00:00Z') / 86400000);
+  CURRENT_CIRCUIT_SIZE = (dayIndex % 2 === 0) ? 4 : 3;
+  const isHard = CURRENT_CIRCUIT_SIZE === 3 ? (Math.floor(dayIndex / 2) % 2 === 0) : false;
+  CIRCUIT_HINT_COOLDOWN_MS = CURRENT_CIRCUIT_SIZE === 4 ? 15000 : 30000;
+  const total = CURRENT_CIRCUIT_SIZE*CURRENT_CIRCUIT_SIZE;
 
   for (let attempt=0; attempt<200; attempt++){
     const rng = seededRand(getCircuitSeed(dateStr, attempt));
@@ -60,7 +65,7 @@ function generateCircuitPuzzle(){
     const shuffle = (arr)=>{ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
 
     // 1) Blocked cells — scale with grid size
-    const maxBlocked = Math.max(0, CIRCUIT_SIZE*CIRCUIT_SIZE - 8);
+    const maxBlocked = Math.max(0, CURRENT_CIRCUIT_SIZE*CURRENT_CIRCUIT_SIZE - (CURRENT_CIRCUIT_SIZE === 4 ? 16 : 8));
     const blockedCount = maxBlocked > 0 ? ri(0, maxBlocked) : 0;
     const blocked = new Set();
     let order = shuffle([...Array(total).keys()]);
@@ -83,7 +88,7 @@ function generateCircuitPuzzle(){
       const region = regions[ti];
       const path = findHamiltonianPath(region, rng);
       if (!path){ ok=false; break; }
-      const built = buildArithmeticOnPath(path, rng);
+      const built = buildArithmeticOnPath(path, rng, isHard);
       if (!built){ ok=false; break; }
       targets.push({ value: built.value, path, nums: built.nums, ops: built.ops, color: CIRCUIT_COLORS[ti], pathLen: path.length, solved:false });
     }
@@ -197,12 +202,12 @@ function dfsPath(path, visited, set, target, rng){
 
 // Picks numbers (max 2 digits) for each cell on the path and operators between
 // consecutive cells so the left-to-right result is an integer target, 1-999.
-function buildArithmeticOnPath(path, rng){
+function buildArithmeticOnPath(path, rng, isHard=false){
   const ri = (lo,hi)=>Math.floor(rng()*(hi-lo+1))+lo;
   // Short paths can use ×/÷; longer paths stick to +/- to keep numbers manageable
   const opPool = path.length <= 3 ? ['+','-','×','÷'] : ['+','-','+','-','+']; // bias +/-
   for (let attempt=0; attempt<400; attempt++){
-    const nums = path.map(()=>ri(1,15)); // small numbers: 1–15
+    const nums = path.map(()=>ri(1,isHard?25:15)); // small numbers: 1–15 (or up to 25 if hard)
     const ops = [];
     let val = nums[0];
     let valid = true;
@@ -236,7 +241,7 @@ function shuffleArr(arr, rng){
 }
 
 function finalizeCircuitPuzzle(dateStr, blocked, targetsRaw, rng){
-  const total = CIRCUIT_SIZE*CIRCUIT_SIZE;
+  const total = CURRENT_CIRCUIT_SIZE*CURRENT_CIRCUIT_SIZE;
   const cells = Array.from({length:total}, (_,i)=>({ idx:i, blocked: blocked.has(i), num:null }));
   const targets = targetsRaw.map(tg=>{
     tg.path.forEach((cellIdx, i)=>{ cells[cellIdx].num = tg.nums[i]; });
@@ -251,18 +256,18 @@ function finalizeCircuitPuzzle(dateStr, blocked, targetsRaw, rng){
     }
   });
   const borders = {};
-  for (let r=0;r<CIRCUIT_SIZE;r++){
-    for (let c=0;c<CIRCUIT_SIZE;c++){
+  for (let r=0;r<CURRENT_CIRCUIT_SIZE;r++){
+    for (let c=0;c<CURRENT_CIRCUIT_SIZE;c++){
       const a = idxOf(r,c);
       if (cells[a].blocked) continue;
-      if (c<CIRCUIT_SIZE-1){
+      if (c<CURRENT_CIRCUIT_SIZE-1){
         const b = idxOf(r,c+1);
         if (!cells[b].blocked){
           const key = borderKey(a,b);
           borders[key] = pathOpByBorder[key] || CIRCUIT_OPS[Math.floor(rng()*4)];
         }
       }
-      if (r<CIRCUIT_SIZE-1){
+      if (r<CURRENT_CIRCUIT_SIZE-1){
         const b = idxOf(r+1,c);
         if (!cells[b].blocked){
           const key = borderKey(a,b);
@@ -275,7 +280,7 @@ function finalizeCircuitPuzzle(dateStr, blocked, targetsRaw, rng){
   // Shuffle target display order so color never implies difficulty/index
   const shuffledTargets = shuffleArr(targets, rng);
 
-  return { dateStr, size: CIRCUIT_SIZE, cells, borders, targets: shuffledTargets };
+  return { dateStr, size: CURRENT_CIRCUIT_SIZE, cells, borders, targets: shuffledTargets };
 }
 
 // ── Persistence ───────────────────────────────────────────────────────────────
@@ -301,32 +306,71 @@ function loadCircuitProgress(dateStr){
 function clearCircuitProgress(dateStr){
   try{ localStorage.removeItem(circuitLocalKey(dateStr)+'_progress'); }catch(e){}
 }
+
+function clearCircuitLocalState(){
+  try{
+    const today=getCircuitDateStr();
+    const d=new Date();d.setUTCDate(d.getUTCDate()-1);
+    const yesterday=`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+    localStorage.removeItem(circuitLocalKey(today));
+    localStorage.removeItem(circuitLocalKey(yesterday));
+    localStorage.removeItem(circuitLocalKey(today)+'_progress');
+    localStorage.removeItem(circuitLocalKey(yesterday)+'_progress');
+  }catch(e){}
+}
+
+function getCircuitStreak(){
+  try{
+    const s=JSON.parse(localStorage.getItem('numfly_circuit_streak')||'null');
+    if(!s||!s.count)return{count:0,lastDate:''};
+    const today=getCircuitDateStr();
+    const d=new Date(today+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()-1);
+    const yesterday = `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+    if(s.lastDate!==today&&s.lastDate!==yesterday){
+      try{localStorage.setItem('numfly_circuit_streak',JSON.stringify({count:0,lastDate:s.lastDate}));}catch(e){}
+      return{count:0,lastDate:s.lastDate};
+    }
+    return s;
+  }catch(e){return{count:0,lastDate:''};}
+}
+function updateCircuitStreak(dateStr){
+  const s=getCircuitStreak();
+  const d=new Date(dateStr+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()-1);
+  const yesterday = `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+  let newCount;
+  if(s.lastDate===dateStr){
+    newCount=s.count;
+  } else if(s.lastDate===yesterday){
+    newCount=s.count+1;
+  } else {
+    newCount=1;
+  }
+  const updated={count:newCount,lastDate:dateStr};
+  try{localStorage.setItem('numfly_circuit_streak',JSON.stringify(updated));}catch(e){}
+  if(typeof currentUser !== 'undefined' && currentUser && typeof scheduleSync === 'function') scheduleSync();
+  return updated;
+}
+
 async function saveCircuitResult(dateStr, timeMs){
   clearCircuitProgress(dateStr);
   try{ localStorage.setItem(circuitLocalKey(dateStr), JSON.stringify({time_ms:timeMs})); }catch(e){}
+
+  // Streak must update unconditionally, independent of whether `stats` exists
+  const streak = updateCircuitStreak(dateStr);
+
   // Update stats for achievements
   if(typeof stats !== 'undefined'){
     if(!stats.circuitBestTime || timeMs < stats.circuitBestTime) stats.circuitBestTime = timeMs;
-    // Circuit streak: count consecutive UTC days with a circuit completion
-    const today = dateStr;
-    const yesterday = (()=>{ const d=new Date(today+'T00:00:00Z'); d.setUTCDate(d.getUTCDate()-1); return d.toISOString().slice(0,10); })();
-    const prevKey = circuitLocalKey(yesterday);
-    let prevDone = null;
-    try{ const r=localStorage.getItem(prevKey); if(r) prevDone=JSON.parse(r); }catch(e){}
-    const prevStreak = stats.circuitCurrentStreak || 0;
-    stats.circuitCurrentStreak = prevDone ? prevStreak + 1 : 1;
+    stats.circuitCurrentStreak = streak.count;
     stats.circuitBestStreak = Math.max(stats.circuitBestStreak||0, stats.circuitCurrentStreak);
     if(typeof saveGuestState==='function') saveGuestState();
   }
   if (typeof sb!=='undefined' && sb && typeof currentUser!=='undefined' && currentUser){
     try{
-      // Await the upsert so the leaderboard query (fired right after this
-      // returns) doesn't race ahead of the write and find "no entries".
       await sb.from('circuit_entries').upsert({user_id:currentUser.id,challenge_date:dateStr,time_ms:timeMs},{onConflict:'user_id,challenge_date'});
     }catch(e){ console.warn('[Numfly] circuit save error:', e); }
-    // Update circuit streak on user_progress for leaderboard
-    if(typeof stats!=='undefined' && stats.circuitCurrentStreak){
-      try{ await sb.from('user_progress').update({circuit_streak_count:stats.circuitCurrentStreak,circuit_streak_last_date:dateStr}).eq('user_id',currentUser.id); }catch(e){}
+    if(streak.count){
+      try{ await sb.from('user_progress').update({circuit_streak_count:streak.count,circuit_streak_last_date:dateStr}).eq('user_id',currentUser.id); }catch(e){}
     }
   }
 }
@@ -335,7 +379,7 @@ async function saveCircuitResult(dateStr, timeMs){
 function initCircuit(){
   const dateStr = getCircuitDateStr();
   const existing = loadCircuitResult(dateStr);
-  circuitState = { puzzle: null, currentPath: [], startTime:0, timer:null, elapsedMs:0, done:false, lastHintAt:0, hintCellIdx:null, hintTimer:null, hintTargetValue:null, hintStep:-1 };
+  circuitState = { puzzle: null, currentPath: [], startTime:0, timer:null, elapsedMs:0, done:false, lastHintAt:0, hintCellIndices:[], hintTimer:null, hintTargetValue:null, hintStep:-1 };
 
   const puzzle = generateCircuitPuzzle();
   if (!puzzle){
@@ -413,7 +457,7 @@ function startCircuitTimer(){
   }, 100);
 }
 function fmtCircuitTime(ms){
-  if (ms < 60000) return (ms/1000).toFixed(1)+'s';
+  if (ms < 60000) return (ms/1000).toFixed(2)+'s';
   const m = Math.floor(ms/60000);
   const s = ((ms%60000)/1000).toFixed(2);
   return m+'m '+s+'s';
@@ -440,7 +484,7 @@ function renderCircuitGrid(locked){
   svg.setAttribute('viewBox', `0 0 ${SIZE*CELL} ${SIZE*CELL}`);
   let html = '';
 
-  // Cells
+// Cells
   puzzle.cells.forEach(cell=>{
     const [r,c] = rc(cell.idx);
     const x=c*CELL, y=r*CELL;
@@ -448,7 +492,7 @@ function renderCircuitGrid(locked){
     const fill = cell.blocked ? 'var(--cc-blocked, #2a2a35)'
       : lockedTarget ? lockedTarget.color
       : 'var(--cc-cell, #14141c)';
-    const isHint = circuitState.hintCellIdx === cell.idx;
+    const isHint = circuitState.hintCellIndices && circuitState.hintCellIndices.includes(cell.idx);
     html += `<rect class="cc-cell" data-idx="${cell.idx}" x="${x+3}" y="${y+3}" width="${CELL-6}" height="${CELL-6}" rx="10"
       fill="${fill}" opacity="${cell.blocked?0.55:1}" stroke="${isHint?'#fff':'rgba(255,255,255,.08)'}" stroke-width="${isHint?3:1}"></rect>`;
     if (!cell.blocked && cell.num!==null && cell.num!==undefined){
@@ -456,6 +500,10 @@ function renderCircuitGrid(locked){
       html += `<text x="${x+CELL/2}" y="${y+CELL/2+8}" text-anchor="middle" font-family="DM Mono, monospace" font-size="26" fill="${textColor}" pointer-events="none">${cell.num}</text>`;
     }
   });
+
+  if (circuitState.hintCellIndices && circuitState.hintCellIndices.length > 1){
+    html += pathPolyline(circuitState.hintCellIndices, CELL, 'rgba(255,255,255,0.7)', 5);
+  }
 
 // Border symbols — hide every border touching a locked cell (any side)
   const lockedCellSet = new Set();
@@ -530,13 +578,13 @@ function attachCircuitPointerHandlers(svg){
     if (cell.blocked || isCellLocked(idx)) return;
     // Capture pointer so pointermove keeps firing even as finger slides across cells
     try { svg.setPointerCapture(e.pointerId); } catch(_){}
-    // Clear hint if tapping a different cell
-    if (circuitState.hintCellIdx !== null && circuitState.hintCellIdx !== idx){
-      const hintRect = e.currentTarget.querySelector(`.cc-cell[data-idx="${circuitState.hintCellIdx}"]`);
-      if (hintRect){ hintRect.setAttribute('stroke','rgba(255,255,255,.08)'); hintRect.setAttribute('stroke-width','1'); }
-      circuitState.hintCellIdx = null;
+    
+    // Clear hint if tapping
+    if (circuitState.hintCellIndices && circuitState.hintCellIndices.length > 0){
+      circuitState.hintCellIndices = [];
       circuitState.hintTargetValue = null;
       circuitState.hintStep = -1;
+      renderCircuitGrid(false);
     }
     // Always start a fresh path from the touched cell
     circuitState.currentPath = [idx];
@@ -625,7 +673,7 @@ function updateCircuitPathVisual(){
     if (path.includes(idx)){
       rect.setAttribute('stroke', '#e8ff47');
       rect.setAttribute('stroke-width','2');
-    } else if (circuitState.hintCellIdx === idx){
+    } else if (circuitState.hintCellIndices && circuitState.hintCellIndices.includes(idx)){
       rect.setAttribute('stroke', '#fff');
       rect.setAttribute('stroke-width','3');
     } else {
@@ -679,24 +727,31 @@ function evalPathValue(path){
 
 // ── Hint ──────────────────────────────────────────────────────────────────────
 function useCircuitHint(){
+  // Add safety check: exit if puzzle is not initialized
+  if (!circuitState.puzzle) return; 
+
   const now = Date.now();
   if (now - circuitState.lastHintAt < CIRCUIT_HINT_COOLDOWN_MS) return;
+  
   const unresolved = circuitState.puzzle.targets.filter(t=>!t.solved);
   if (!unresolved.length) return;
+  
   const target = unresolved[0];
-  // If hinting the same target again, advance to the next cell in its path; otherwise restart at cell 0
+  
+  if (!circuitState.hintCellIndices) circuitState.hintCellIndices = [];
+  
   if (circuitState.hintTargetValue === target.value && circuitState.hintStep < target.path.length-1){
     circuitState.hintStep++;
+    circuitState.hintCellIndices.push(target.path[circuitState.hintStep]);
   } else {
     circuitState.hintTargetValue = target.value;
     circuitState.hintStep = 0;
+    circuitState.hintCellIndices = [target.path[0]];
   }
   circuitState.lastHintAt = now;
-  circuitState.hintCellIdx = target.path[circuitState.hintStep];
   circuitDragging = false;
   renderCircuitGrid(false);
   startCircuitHintCooldownUI();
-  // No auto-clear — hint stays highlighted until the cell gets used or another hint is requested
 }
 function startCircuitHintCooldownUI(){
   const btn = document.getElementById('cc-hint-btn');
@@ -735,7 +790,7 @@ async function updateCircuitCard(){
   const allTiers=['tier-yellow','tier-blue','tier-purple','tier-crystal','tier-crown'];
   card.classList.remove(...allTiers);
   if (circuitBadge){
-    const streak = (typeof stats!=='undefined'&&stats.circuitCurrentStreak)||0;
+    const streak = typeof getCircuitStreak==='function'?getCircuitStreak().count:0;
     if (streak>=2){
       circuitBadge.style.display='flex';
       if(circuitStreakCount) circuitStreakCount.textContent=streak;
@@ -887,12 +942,39 @@ async function loadCircuitLeaderboard(tab){
 }
 
 // ── Finish ────────────────────────────────────────────────────────────────────
+async function claimPendingCircuitEntry(){
+  if(!currentUser||!sb)return;
+  try{
+    const raw=localStorage.getItem('numfly_pending_circuit');
+    if(!raw)return;
+    const{dateStr,time_ms}=JSON.parse(raw);
+    if(!dateStr||!time_ms)return;
+    if(dateStr!==getCircuitDateStr())return;
+    const{error}=await withTimeout(sb.from('circuit_entries').upsert({user_id:currentUser.id,challenge_date:dateStr,time_ms},{onConflict:'user_id,challenge_date'}));
+    if(!error){
+      localStorage.removeItem('numfly_pending_circuit');
+      localStorage.setItem(circuitLocalKey(dateStr),JSON.stringify({time_ms}));
+      if(typeof updateCircuitCard==='function') updateCircuitCard();
+      const resultScreen=document.getElementById('screen-circuit-result');
+      if(resultScreen&&resultScreen.classList.contains('active')){
+        loadCircuitLeaderboard(_crCurrentTab||'friends');
+      }
+      if(typeof scheduleSync === 'function') scheduleSync();
+    }
+  }catch(e){}
+}
+
 async function finishCircuit(){
   circuitState.done = true;
   clearInterval(circuitState.timer);
   const ms = Date.now()-circuitState.startTime;
   circuitState.elapsedMs = ms;
   await saveCircuitResult(circuitState.puzzle.dateStr, ms);
+  
+  if (typeof currentUser === 'undefined' || !currentUser) {
+    try { localStorage.setItem('numfly_pending_circuit', JSON.stringify({dateStr: circuitState.puzzle.dateStr, time_ms: ms})); } catch(e){}
+  }
+
   showCircuitResult(ms, false);
   if (typeof recordAnswer === 'function'){
     // Hook into existing XP/stats pipeline if available — adjust event name

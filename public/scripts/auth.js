@@ -153,6 +153,7 @@ sb.auth.onAuthStateChange((event,session)=>{
           _currentLoginUserId=null;
           showLoginOverlay(false);
           clearDailyLocalState();
+          if (typeof clearCircuitLocalState === 'function') clearCircuitLocalState();
           updateSocialUI();
         }
       }).catch(()=>{
@@ -161,6 +162,7 @@ sb.auth.onAuthStateChange((event,session)=>{
         _currentLoginUserId=null;
         showLoginOverlay(false);
         clearDailyLocalState();
+        if (typeof clearCircuitLocalState === 'function') clearCircuitLocalState();
         updateSocialUI();
       });
     } else {
@@ -169,6 +171,7 @@ sb.auth.onAuthStateChange((event,session)=>{
       _currentLoginUserId=null;
       showLoginOverlay(false);
       clearDailyLocalState();
+      if (typeof clearCircuitLocalState === 'function') clearCircuitLocalState();
       updateSocialUI();
     }
   }
@@ -232,7 +235,10 @@ async function handleLogin(user,isFreshLogin=false){
       // Re-render streak badge with freshly-synced streak count from Supabase
       renderStreakOnCard();
       // 4b. Claim any daily challenge time the user completed as a guest
-      claimPendingDailyEntry();
+      await claimPendingDailyEntry();
+      if (typeof claimPendingCircuitEntry === 'function') {
+        await claimPendingCircuitEntry();
+      }
       console.log('[Numfly] login pipeline complete — profile:',currentProfile?.username||'none');
 
       // If profile is null after pipeline, DB was too slow (cold start).
@@ -827,6 +833,8 @@ async function doSignOut(){
     localStorage.removeItem('numfly_campaign');
     localStorage.removeItem('numfly_daily_progress');
     localStorage.removeItem('numfly_pending_daily');
+    localStorage.removeItem('numfly_circuit_streak');
+    localStorage.removeItem('numfly_pending_circuit');
   } catch(e) {}
 
   window.location.href = '/';
@@ -1212,6 +1220,29 @@ async function pullFromSupabase(){
       if(currentUser)pushToSupabase();
     }
   }
+
+  if(prog&&prog.circuit_streak_count!=null){
+    const local=typeof getCircuitStreak==='function'?getCircuitStreak():{count:0,lastDate:''};
+    const serverCount=prog.circuit_streak_count||0;
+    const serverDate=prog.circuit_streak_last_date||'';
+    const todayStr=typeof getCircuitDateStr==='function'?getCircuitDateStr():'';
+    const yestD=new Date(todayStr+'T12:00:00Z'); yestD.setUTCDate(yestD.getUTCDate()-1);
+    const yesterdayStr=`${yestD.getUTCFullYear()}-${String(yestD.getUTCMonth()+1).padStart(2,'0')}-${String(yestD.getUTCDate()).padStart(2,'0')}`;
+    const serverExpired=serverDate&&serverDate!==todayStr&&serverDate!==yesterdayStr;
+    const effectiveServerCount=serverExpired?0:serverCount;
+    const serverAhead=!serverExpired&&(
+      serverDate>local.lastDate
+      ||(serverDate===local.lastDate&&serverCount>=local.count)
+      ||(serverCount>local.count)
+    );
+    if(serverAhead){
+      const merged={count:effectiveServerCount,lastDate:serverDate||local.lastDate};
+      try{localStorage.setItem('numfly_circuit_streak',JSON.stringify(merged));}catch(e){}
+    } else if(local.count>effectiveServerCount&&local.lastDate>=serverDate){
+      if(currentUser)pushToSupabase();
+    }
+  }
+
   const{data:achs}=await withTimeout(sb.from('user_achievements').select('achievement_id').eq('user_id',currentUser.id));
   if(achs)achs.forEach(r=>earnedAchievements.add(r.achievement_id));
 _cloudDataLoaded=true; 
